@@ -156,8 +156,6 @@ char  *apply(char operator, int arguments[]){
     printf("Your char is not in this variable\n");
   }
 
- 
-
 }
 
 char *eval(pair *head){
@@ -192,13 +190,13 @@ char *eval(pair *head){
 
 
 int main(char *argc, char **argv[]){
-
+  
   char str[20];
-   while(1){
+  
+   while(1){     
   printf("repl>");
   fgets (str, 20, stdin);
   printf("=>");
-  // printf("%s\n" ,str);
   printf("%s\n", eval(read(str)));
 
   }
