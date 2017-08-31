@@ -1,7 +1,7 @@
 # c48
 Contact: sdmay18-35@iastate.edu
 
-Hacky basic calculator, But it works.
+A hacky basic calculator. Only works for single digit numbers.
 
 Quick start:
 
