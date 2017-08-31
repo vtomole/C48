@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 
-
+//Linked list implementation taken from: http://www.zentut.com/c-tutorial/c-linked-list/
 typedef struct node{
     int data;
     struct node* next;
@@ -441,22 +441,6 @@ pair read(char *program){
 
  }
    
- /*switch(my_char){
-    case '1':
-      printf("It's one\n");
-      break;
-    case 'b':
-      printf("It's a b\n");
-      break;
-    case 'I':
-      printf("It's an I\n");
-      break;
-    default:
-	printf("Your char is not in this variable\n");
-	}*/
-
- 
-
   pair1.car = &b;
   pair1.cdr = &pair2;
   //pair1.cdr = &c;
@@ -483,85 +467,56 @@ pair read(char *program){
   return pair1;
 }
 
+char  *apply(char operator, int arguments[]){
+
+  // char answer[10];
+  int i;
+  char* answer = (char*)malloc(8 * sizeof(char));
+  switch(operator){
+  case '+':
+    sprintf(answer, "%d", arguments[0] + arguments[1]);
+	return answer;
+      break;
+    case '-':
+      printf("It's a b\n");
+      break;
+    case '*':
+      printf("It's an I\n");
+      break;
+    default:
+	printf("Your char is not in this variable\n");
+	}
+
+ 
+
+}
+
 char *eval(pair head){
 
   // printf("I'm down here  should be 20  %d\n",   *(int *)head.car);
 
- 
+  char *answer;
+  char operator = '+';
+  int arguments[2] = {1,2};
 
-  
+   answer = apply(operator, arguments);
 
-  char *answer = "Hello";
+  //char *answer = "Hello";
   return answer;
 }
 
-int read_file(){
-  char buff[300];
-  FILE *fp;
-  // fp = fopen("Hello_Liz.sky", "r");
-  //fscanf(fp, "%s", buff);
-
-  // int character =0;
-  /**
-  for(int i =0; i< 10; i++){
-    result = fgets(buff, 30, fp );
-    //character = fgetc(fp);
-    //character = fgets(buff, 30, fp);
-    printf("%s", result);
-    //printf("%c\n", character);
-  }
-  **/
-  fp = fopen("Hello_Liz.sky", "r");
-
-  //fscanf(fp, "%s", buff);
-  // printf("1 : %s\n", buff );
-  char *result;
-   for(int i =0; i< 10; i++){
-    result = fgets(buff, 30, fp );
-    //character = fgetc(fp);
-    printf("%s", result);
-    // printf("%c\n", character);
-     }
-
-  fclose(fp);
-  return 0;
-}
- 
-int write_file(){
-  FILE *fp;
-  fp = fopen("Hello_Liz.sky", "w");
-
-  fputs("Goodbye Victory\n", fp);
-  fclose(fp);
-  
-  return 0;
-}
-  
-
-int  fileio (){
-  return 0;
-}
-
-
-
-
-
 
 int main(char *argc, char **argv[]){
-  //
+
   char str[20];
   // while(1){
-    printf("sky>");
+    printf("repl>");
     fgets (str, 20, stdin);
     printf("=>");
     // printf("%s\n" ,str);
     printf("%s\n", eval(read(str)));
 
     //}
-  //repl(argc, argv);
-  // read_file();
-  //write_file(); 
-  //repl();
   return 0;
   
   }
