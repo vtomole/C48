@@ -1,6 +1,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "vm.h"
+#include "vm.c"
+
+
 
 //Global variables
    
@@ -16,7 +20,7 @@ typedef struct pair{
 }pair;
 
 int command = 0;
-int data;
+
  
 node* head = NULL;
 node* tmp = NULL;
@@ -183,8 +187,7 @@ char *eval(pair *head){
   int arguments[2] = {first,second};
 
   answer = apply(operator, arguments);
-
-  //char *answer = "Hello";
+  
   return answer;
 }
 
@@ -192,8 +195,19 @@ char *eval(pair *head){
 int main(char *argc, char **argv[]){
   
   char str[20];
+  push(3);
+  push(5);
+  push(9);
+  push(1);
+  push(12);
   
-   while(1){     
+
+  //while(!isEmpty()) {
+      int data = peek();
+      printf("%d\n",data);
+      //}
+  
+  while(1){     
   printf("repl>");
   fgets (str, 20, stdin);
   printf("=>");
