@@ -1,8 +1,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctype.h>
 #include "vm.h"
 #include "vm.c"
+#include "lexer.c"
 
 
 
@@ -74,23 +76,21 @@ pair *read(char *program){
   int b = 20;
   int c = 30;
   int count =0;
+  char* token;
 
   pair* head = NULL;
 
  
-  if(program[0] != '('){
-    //It's an atom
 
-  }
-  //It's it's a list
-  else{
+    token = lexer(program);
+
+    printf("Token %s", token);
     const char s[2] = " ";
     const char s1[2] = "(";
-    char *token;
+    
    
     /* get the first token */
     token = strtok(program, s);
-
  
     /* walk through other tokens */
     while( token != NULL ) 
@@ -99,6 +99,7 @@ pair *read(char *program){
 	//token = strtok(program, s1);
 	// printf("Token should not have parentheses %s\n", token);
 	//printf( " %s\n", token );
+	
 	if(token[0] == '('){
 	  operator = token[1];
 	}
@@ -114,7 +115,7 @@ pair *read(char *program){
 	token = strtok(NULL, s);  
 
       }
-  }
+  
    
   pair1.car = &b;
   pair1.cdr = &pair2;
@@ -162,6 +163,8 @@ char  *apply(char operator, int arguments[]){
 
 }
 
+
+
 char *eval(pair *head){
 
   pair *cursor = head;
@@ -169,6 +172,7 @@ char *eval(pair *head){
   char operator;
   char *answer;
   int first,second;
+  
 
   operator = *(char*)head->car;
   //printf("In eval  should be +  %c\n",  operator);
@@ -191,6 +195,27 @@ char *eval(pair *head){
   return answer;
 }
 
+//Walk the absract syntax tree and compile each expreswsion
+void compile(){
+  FILE *fp;
+  fp = fopen("test.assembly", "w");
+
+  fputs("args 0\n", fp);
+  fputs("gvar x\n", fp);
+  fputs("gvar y\n", fp);
+  fputs("gvar =\n", fp);
+  fputs("call 2\n", fp);
+  fclose(fp);
+
+
+
+}
+//Read the assembly file and write in bytes, use fread and fwrite
+void assembler(){
+
+
+}
+
 
 int main(char *argc, char **argv[]){
   
@@ -204,16 +229,17 @@ int main(char *argc, char **argv[]){
 
   //while(!isEmpty()) {
       int data = peek();
-      printf("%d\n",data);
+      //printf("%d\n",data);
       //}
+      //  compile();
   
-  while(1){     
+      // while(1){     
   printf("repl>");
   fgets (str, 20, stdin);
   printf("=>");
   printf("%s\n", eval(read(str)));
 
-  }
+  //}
   return 0;
   
 }
