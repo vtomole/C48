@@ -59,11 +59,41 @@ pair* create1(void* car,void* cdr)
   return pair;
 }
 
-pair* prepend1(pair* head, void *cdr)
+pair* cons(void *car, pair* cdr)
 {
-  pair* new_pair = create1(cdr,head);
-  head = new_pair;
-  return head;
+ 
+  pair* new_pair = create1(car,cdr);
+  car = new_pair;
+  return car;
+}
+
+
+
+
+
+int read_list (pair* list_so_far){
+
+  return 0;
+}
+
+char *micro_read (char* program){
+  
+  char* next_token = read_token(program);
+  
+  pair* list_so_far;
+ 
+  if(strcmp(next_token,"left-paren") == 0){
+    printf("Left parentheses\n");
+
+    read_list(list_so_far);
+
+    }
+  else{
+    return next_token;
+  }
+
+
+  return 0;
 }
 pair *read(char *program){
   pair pair1;
@@ -82,9 +112,9 @@ pair *read(char *program){
 
  
 
-    token = lexer(program);
+  
 
-    printf("Token %s", token);
+   
     const char s[2] = " ";
     const char s1[2] = "(";
     
@@ -124,9 +154,9 @@ pair *read(char *program){
   pair2.car = &b;
   pair2.cdr = &pair3;
   
-  head = prepend1(head, &c);
-  head = prepend1(head, &b);
-  head = prepend1(head, &operator);
+  head = cons(&c,head);
+  head = cons(&b,head);
+  head = cons(&operator, head);
 
   /* while(head != NULL)
      {
@@ -237,6 +267,7 @@ int main(char *argc, char **argv[]){
   printf("repl>");
   fgets (str, 20, stdin);
   printf("=>");
+  micro_read(str);
   printf("%s\n", eval(read(str)));
 
   //}

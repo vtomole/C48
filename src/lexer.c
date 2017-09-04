@@ -11,28 +11,37 @@ static char* indentifier_string;
 static double number_value;
 
 
-
-char* lexer (char *program){
+//Lexer
+char* read_token (char *program){
   static int last_character = ' ';
   int i;
 
-  printf("is alpha-test char %c\n",program[0]);
-  printf("is alpha-test %d\n",isalpha(program[0])); 
+  //printf("is alpha-test char %c\n",program[0]);
+  //printf("is alpha-test %d\n",isalpha(program[0])); 
   for(i =0; i < strlen(program); i++){
- 
-    if(isalpha(program[i]) !=0){
+   
+    if(isalpha(program[i])){
       printf("It is an alphabet\n");
+
+    }
+    //read-number
+    else if(isdigit(program[i])){
+      printf("It is a number\n");
 
     }
     
     else{
       switch(program[i]){
     case '(':
-      return "left-paren-token";
+      return "left-paren";
       break;
     case ')':
-      return "right-paren-token";
+      return "right-paren";
       break;
+
+      case ' ':
+     
+      continue;
     
       
     
