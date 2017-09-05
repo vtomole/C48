@@ -21,28 +21,12 @@ typedef struct pair{
   void *cdr;
 }pair;
 
-const char *type_array[100];
+const char *type_array[1];
 int command = 0;
 
  
 node* head = NULL;
 node* tmp = NULL;
-
- 
-/*
-  return the number of elements in the list
-*/
-int count(node *head)
-{
-  node *cursor = head;
-  int c = 0;
-  while(cursor != NULL)
-    {
-      c++;
-      cursor = cursor->next;
-    }
-  return c;
-}
 
 
 pair* create1(void* car,void* cdr)
@@ -121,13 +105,6 @@ pair *read(char *program){
   char* token, substr;
   
   pair* head = NULL;
-
- 
-
-  int check_digit = isnumber("8");
-
-  printf("The check digit var %d\n", atoi("8"));
-
    
   const char s[2] = " ";
   const char s1[2] = "(";
@@ -135,7 +112,7 @@ pair *read(char *program){
    
   /* get the first token */
   token = strtok(program, s);
- 
+  
   /* walk through other tokens */
   while( token != NULL ) 
     {
@@ -168,7 +145,8 @@ pair *read(char *program){
 	//printf("The token after %s\n", token);
 	if(isnumber(token)){
 	  b = atoi(token);
-	  //printf("This is b %d\n", b);
+	  type_array[count] = "integer";
+	  count++;
 	}
       }
       else{
@@ -245,17 +223,36 @@ char  *apply(char operator, int arguments[]){
 
 }
 
-
+int count (pair* cursor){
+  int c = 0;
+  while(cursor != NULL){
+    c++;
+  cursor = cursor->cdr;
+  }
+  return c;
+}
 
 char *eval(pair *head){
 
   pair *cursor = head;
-  int count=0;
+  int num_nodes=0;
   char operator;
   char *answer;
-  int first,second;
+  int first,second,i;
+  num_nodes = count (head);
   
+  i=0;
+  //if(strcmp(type_array[i], "integer") == 0){
 
+  //  printf("It's an integer\n");
+    
+  // }
+    
+     
+
+  
+  printf("The number of nodes %d\n", num_nodes);
+  
   operator = *(char*)head->car;
   printf("In eval  should be +  %c\n",  operator);
   head =  (pair*)head->cdr;
