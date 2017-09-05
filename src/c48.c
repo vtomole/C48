@@ -21,6 +21,7 @@ typedef struct pair{
   void *cdr;
 }pair;
 
+const char *type_array[100];
 int command = 0;
 
  
@@ -87,13 +88,24 @@ char *micro_read (char* program){
 
     read_list(list_so_far);
 
-    }
+  }
   else{
     return next_token;
   }
 
 
   return 0;
+}
+
+int isnumber (char *s){
+  if(s == NULL || *s == '\0' || isspace(*s)){
+    return 0;
+  }
+  else{
+    char* p;
+    strtod(s, &p);
+    return *p == '\0';
+  }
 }
 pair *read(char *program){
   pair pair1;
@@ -103,48 +115,88 @@ pair *read(char *program){
   char * program_1;
   int i = 0;
   char operator = '+';
-  int b = 20;
+  int b = 20,d;
   int c = 30;
   int count =0;
-  char* token;
-
+  char* token, substr;
+  
   pair* head = NULL;
 
  
 
-  
+  int check_digit = isnumber("8");
+
+  printf("The check digit var %d\n", atoi("8"));
 
    
-    const char s[2] = " ";
-    const char s1[2] = "(";
+  const char s[2] = " ";
+  const char s1[2] = "(";
     
    
-    /* get the first token */
-    token = strtok(program, s);
+  /* get the first token */
+  token = strtok(program, s);
  
-    /* walk through other tokens */
-    while( token != NULL ) 
-      {
-	//if(token[0] == '('){
-	//token = strtok(program, s1);
-	// printf("Token should not have parentheses %s\n", token);
-	//printf( " %s\n", token );
-	
-	if(token[0] == '('){
-	  operator = token[1];
-	}
-	else if (token[1] == ')'){
-     
-	  c = token[0] - '0';
-	}
-	else{
-	  b = token[0] - '0';
+  /* walk through other tokens */
+  while( token != NULL ) 
+    {
+      //if(token[0] == '('){
+      //token = strtok(program, s1);
+      // printf("Token should not have parentheses %s\n", token);
+      //	printf("Strlen of token %d\n", strlen(token));
+      //	printf("Parsing token %c\n", token[strlen (token)- 2]);
+      //printf( " dat token %s\n", token );
 
+
+	
+      if(token[0] == '('){
+	operator = token[1];
+      }
+      else if(token[strlen(token)- 2] == ')'){
+	//printf("Right paren\n");
+	for(i =0; i < strlen(token); i++){
+	  // printf("Token at i %c\n", token[i]);
+	  if(token[i] == ')'){
+	    token[i] = '\0';
+	    // printf("I'm in here folks\n");
+	    break;
+	  }
+	  else{
+	    token[i] = token[i];
+	  }
+	    
 	}
-    
-	token = strtok(NULL, s);  
+	//printf("The token after %s\n", token);
+	if(isnumber(token)){
+	  b = atoi(token);
+	  //printf("This is b %d\n", b);
+	}
+      }
+      else{
+	// printf( "The token at 0 %c\n", token[0]);
+	c = token[0] - '0';
+	//printf("that token as an int %d\n", c);
 
       }
+
+      /*else if (isnumber(token)){
+      //printf("A digit is here\n");
+      // printf("the token %s\n", token);
+      c = atoi(token);
+      printf("this is the c %d\n", c);
+      }
+      else if (token[1] == ')'){
+     
+      d = token[0] - '0';
+      }
+
+      */
+    
+      token = strtok(NULL, s);  
+
+    }
+
+  // printf("value of b %d\n", b);
+  // printf("value of c %d\n", c);
   
    
   pair1.car = &b;
@@ -205,16 +257,16 @@ char *eval(pair *head){
   
 
   operator = *(char*)head->car;
-  //printf("In eval  should be +  %c\n",  operator);
+  printf("In eval  should be +  %c\n",  operator);
   head =  (pair*)head->cdr;
 
   first = *(int*)head->car;
-  //printf("In eval  should be 20  %d\n", first );
+  printf("In eval  should be 20  %d\n", first );
 
   head =  (pair*)head->cdr;
 
   second = *(int*)head->car;
-  //printf("In eval  should be 20  %d\n", second );
+  printf("In eval  should be 20  %d\n", second );
    
   
   
@@ -258,12 +310,12 @@ int main(char *argc, char **argv[]){
   
 
   //while(!isEmpty()) {
-      int data = peek();
-      //printf("%d\n",data);
-      //}
-      //  compile();
+  int data = peek();
+  //printf("%d\n",data);
+  //}
+  //  compile();
   
-      // while(1){     
+  // while(1){     
   printf("repl>");
   fgets (str, 20, stdin);
   printf("=>");
