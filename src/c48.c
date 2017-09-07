@@ -11,10 +11,6 @@
 //Global variables
    
 //Linked list implementation taken from: http://www.zentut.com/c-tutorial/c-linked-list/
-typedef struct node{
-  int data;
-  struct node* next;
-}node;
 
 typedef struct pair{
   void *car;
@@ -25,10 +21,6 @@ const char *type_array[1];
 int command = 0;
 
  
-node* head = NULL;
-node* tmp = NULL;
-
-
 pair* create1(void* car,void* cdr)
 {
   //pair* pair = (pair*)malloc(sizeof(pair));
@@ -173,8 +165,9 @@ pair *read(char *program){
 
     }
 
-  // printf("value of b %d\n", b);
-  // printf("value of c %d\n", c);
+  //printf("value of operator %c\n", operator);
+  //printf("value of b %d\n", b);
+  //printf("value of c %d\n", c);
   
    
   pair1.car = &b;
@@ -184,14 +177,13 @@ pair *read(char *program){
   pair2.car = &b;
   pair2.cdr = &pair3;
   
-  head = cons(&c,head);
+ 
   head = cons(&b,head);
+  head = cons(&c,head);
   head = cons(&operator, head);
 
-  /* while(head != NULL)
-     {
-     // head = head->cdr;
-     count++;*/   
+   
+  
 
   return head;
 
@@ -218,7 +210,7 @@ char  *apply(char operator, int arguments[]){
     return answer;
     break;    
   default:
-    printf("Your char is not in this variable\n");
+    return "Your char is not in this variable\n";
   }
 
 }
@@ -239,7 +231,7 @@ char *eval(pair *head){
   char operator;
   char *answer;
   int first,second,i;
-  num_nodes = count (head);
+  //num_nodes = count (head);
   
   i=0;
   //if(strcmp(type_array[i], "integer") == 0){
@@ -254,7 +246,7 @@ char *eval(pair *head){
   // printf("The number of nodes %d\n", num_nodes);
   
   operator = *(char*)head->car;
-  //printf("In eval  should be +  %c\n",  operator);
+  //printf("In eval  should be +  %c\n", operator );
   head =  (pair*)head->cdr;
 
   first = *(int*)head->car;
@@ -282,6 +274,7 @@ void compile(){
   fputs("args 0\n", fp);
   fputs("gvar x\n", fp);
   fputs("gvar y\n", fp);
+
   fputs("gvar =\n", fp);
   fputs("call 2\n", fp);
   fclose(fp);
@@ -316,7 +309,7 @@ int main(char *argc, char **argv[]){
   printf("repl>");
   fgets (str, 20, stdin);
   printf("=>");
-  micro_read(str);
+  //micro_read(str);
   printf("%s\n", eval(read(str)));
 
   //}
