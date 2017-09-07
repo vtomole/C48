@@ -103,7 +103,7 @@ pair *read(char *program){
     
    
   /* get the first token */
-  token = strtok(program, s);
+  token = strtok(programexit, s);
   
   /* walk through other tokens */
   while( token != NULL ) 
