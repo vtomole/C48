@@ -68,7 +68,7 @@ char *micro_read (char* program){
   pair* list_so_far;
  
   if(strcmp(next_token,"left-paren") == 0){
-    printf("Left parentheses\n");
+    //printf("Left parentheses\n");
 
     read_list(list_so_far);
 
@@ -227,7 +227,7 @@ int count (pair* cursor){
   int c = 0;
   while(cursor != NULL){
     c++;
-  cursor = cursor->cdr;
+    cursor = cursor->cdr;
   }
   return c;
 }
@@ -251,19 +251,19 @@ char *eval(pair *head){
      
 
   
-  printf("The number of nodes %d\n", num_nodes);
+  // printf("The number of nodes %d\n", num_nodes);
   
   operator = *(char*)head->car;
-  printf("In eval  should be +  %c\n",  operator);
+  //printf("In eval  should be +  %c\n",  operator);
   head =  (pair*)head->cdr;
 
   first = *(int*)head->car;
-  printf("In eval  should be 20  %d\n", first );
+  //printf("In eval  should be 20  %d\n", first );
 
   head =  (pair*)head->cdr;
 
   second = *(int*)head->car;
-  printf("In eval  should be 20  %d\n", second );
+  //printf("In eval  should be 20  %d\n", second );
    
   
   
