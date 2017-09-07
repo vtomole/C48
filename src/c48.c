@@ -305,14 +305,14 @@ int main(char *argc, char **argv[]){
   //}
   //  compile();
   
-  // while(1){     
+  while(1){     
   printf("repl>");
   fgets (str, 20, stdin);
   printf("=>");
   //micro_read(str);
   printf("%s\n", eval(read(str)));
 
-  //}
+  }
   return 0;
   
-}
+}//end of main
