@@ -9,7 +9,7 @@
 
 
 //Global variables
-   
+char* str;
 //Linked list implementation taken from: http://www.zentut.com/c-tutorial/c-linked-list/
 
 typedef struct pair{
@@ -103,8 +103,14 @@ pair *read(char *program){
     
    
   /* get the first token */
-  token = strtok(programexit, s);
-  
+  token = strtok(program, s);
+
+  printf("%s", token);
+  if(strcmp(token, "Q\n") == 0){
+    printf("hi");
+    cons(&token ,head);
+    return head;
+  }
   /* walk through other tokens */
   while( token != NULL ) 
     {
@@ -182,9 +188,6 @@ pair *read(char *program){
   head = cons(&c,head);
   head = cons(&operator, head);
 
-   
-  
-
   return head;
 
 }
@@ -208,7 +211,7 @@ char  *apply(char operator, int arguments[]){
   case '/':
     sprintf(answer, "%d", arguments[0] / arguments[1]);
     return answer;
-    break;    
+    break;
   default:
     return "Your char is not in this variable\n";
   }
@@ -292,11 +295,11 @@ void assembler(){
 int main(char *argc, char **argv[]){
   
   char str[20];
-  push(3);
-  push(5);
-  push(9);
-  push(1);
-  push(12);
+  //push(3);
+  //push(5);
+  //push(9);
+  //push(1);
+  //push(12);
   
 
   //while(!isEmpty()) {
@@ -305,14 +308,14 @@ int main(char *argc, char **argv[]){
   //}
   //  compile();
   
-  while(1){     
+  do{     
   printf("repl>");
   fgets (str, 20, stdin);
   printf("=>");
   //micro_read(str);
   printf("%s\n", eval(read(str)));
 
-  }
+  }while(strcmp(str, "Q"));
   return 0;
   
 }//end of main
