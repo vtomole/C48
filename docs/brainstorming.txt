@@ -8,8 +8,10 @@ http://users.cms.caltech.edu/~mvanier/hacking/rants/scalable_computer_programmin
 6. Run-time checking for errors that can't be caught at compile time, like array bounds and division by zero
 7. Support for assertions and design by contract
 8. A powerful, statically checked module system
-9. Support for object-oriented programming
+9. Support for object-oriented programming - encapsulation, Abstraction
 10. Support for functional programming
 11. Structural macros
 12. Support for components
 14. A simple, consistent, and readable syntax.
+15. loops
+
