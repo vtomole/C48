@@ -90,7 +90,7 @@ pair *read(char *program){
 
   char * program_1;
   int i = 0;
-  char operator = '+';
+  char operator = '+', char_quit = 'q';
   int b = 20,d;
   int c = 30;
   int count =0;
@@ -105,11 +105,13 @@ pair *read(char *program){
   /* get the first token */
   token = strtok(program, s);
 
-  printf("%s", token);
-  if(strcmp(token, "Q\n") == 0){
-    printf("hi");
-    cons(&token ,head);
-    return head;
+  //printf("%s", token);
+  if(strcmp(token, "q\n") == 0){
+    //operator = 'q';
+    operator = 'q';
+    head = cons(&operator, head);
+    //cons(&token ,head);
+    //return head;
   }
   /* walk through other tokens */
   while( token != NULL ) 
@@ -171,9 +173,9 @@ pair *read(char *program){
 
     }
 
-  printf("value of operator %c\n", operator);
-  printf("value of b(var 1) %d\n", b);
-  printf("value of c(var 2) %d\n", c);
+  //printf("value of operator %c\n", operator);
+  //printf("value of b(var 1) %d\n", b);
+  // printf("value of c(var 2) %d\n", c);
   
    
   pair1.car = &b;
@@ -244,7 +246,9 @@ char *eval(pair *head){
   // }
     
      
-
+  if( *(char*)head->car == 'q'){
+    exit(0);
+  }
   
   // printf("The number of nodes %d\n", num_nodes);
   
@@ -308,14 +312,15 @@ int main(char *argc, char **argv[]){
   //}
   //  compile();
   
-  do{     
+  while (1){     
   printf("repl>");
   fgets (str, 20, stdin);
-  printf("=>");
+  //printf("=>");
   //micro_read(str);
-  printf("%s\n", eval(read(str)));
+  printf("=>%s\n", eval(read(str)));
+ 
 
-  }while(strcmp(str, "Q"));
+  }
   return 0;
   
 }//end of main
