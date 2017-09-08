@@ -20,4 +20,7 @@ repl>(/ 6 2)
 =>3
 repl>(* 6 7)
 =>42
+repl>q  ;;Enter q to quit the REPL
+vtomole@vtomole:~/c48/src$ 
+
 </pre></code>

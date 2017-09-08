@@ -9,7 +9,7 @@
 
 
 //Global variables
-   
+char* str;
 //Linked list implementation taken from: http://www.zentut.com/c-tutorial/c-linked-list/
 
 typedef struct pair{
@@ -90,7 +90,7 @@ pair *read(char *program){
 
   char * program_1;
   int i = 0;
-  char operator = '+';
+  char operator = '+', char_quit = 'q';
   int b = 20,d;
   int c = 30;
   int count =0;
@@ -104,7 +104,15 @@ pair *read(char *program){
    
   /* get the first token */
   token = strtok(program, s);
-  
+
+  //printf("%s", token);
+  if(strcmp(token, "q\n") == 0){
+    //operator = 'q';
+    operator = 'q';
+    head = cons(&operator, head);
+    //cons(&token ,head);
+    //return head;
+  }
   /* walk through other tokens */
   while( token != NULL ) 
     {
@@ -165,9 +173,9 @@ pair *read(char *program){
 
     }
 
-  printf("value of operator %c\n", operator);
-  printf("value of b(var 1) %d\n", b);
-  printf("value of c(var 2) %d\n", c);
+  //printf("value of operator %c\n", operator);
+  //printf("value of b(var 1) %d\n", b);
+  // printf("value of c(var 2) %d\n", c);
   
    
   pair1.car = &b;
@@ -181,9 +189,6 @@ pair *read(char *program){
   head = cons(&b,head);
   head = cons(&c,head);
   head = cons(&operator, head);
-
-   
-  
 
   return head;
 
@@ -208,7 +213,7 @@ char  *apply(char operator, int arguments[]){
   case '/':
     sprintf(answer, "%d", arguments[0] / arguments[1]);
     return answer;
-    break;    
+    break;
   default:
     return "Your char is not in this variable\n";
   }
@@ -241,7 +246,9 @@ char *eval(pair *head){
   // }
     
      
-
+  if( *(char*)head->car == 'q'){
+    exit(0);
+  }
   
   // printf("The number of nodes %d\n", num_nodes);
   
@@ -292,11 +299,11 @@ void assembler(){
 int main(char *argc, char **argv[]){
   
   char str[20];
-  push(3);
-  push(5);
-  push(9);
-  push(1);
-  push(12);
+  //push(3);
+  //push(5);
+  //push(9);
+  //push(1);
+  //push(12);
   
 
   //while(!isEmpty()) {
@@ -305,12 +312,13 @@ int main(char *argc, char **argv[]){
   //}
   //  compile();
   
-  while(1){     
+  while (1){     
   printf("repl>");
   fgets (str, 20, stdin);
-  printf("=>");
+  //printf("=>");
   //micro_read(str);
-  printf("%s\n", eval(read(str)));
+  printf("=>%s\n", eval(read(str)));
+ 
 
   }
   return 0;
