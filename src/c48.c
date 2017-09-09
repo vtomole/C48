@@ -5,6 +5,9 @@
 #include "vm.h"
 #include "vm.c"
 #include "lexer.c"
+#include "hash.c"
+
+ 
 
 
 
@@ -12,10 +15,16 @@
    
 //Linked list implementation taken from: http://www.zentut.com/c-tutorial/c-linked-list/
 
+
 typedef struct pair{
   void *car;
   void *cdr;
 }pair;
+
+typedef struct eval_arguments {
+  pair *head;
+  hashtable_t *environment;
+}eval_arguments;
 
 const char *type_array[1];
 int command = 0;
@@ -23,6 +32,7 @@ int command = 0;
  
 pair* create1(void* car,void* cdr)
 {
+ 
   //pair* pair = (pair*)malloc(sizeof(pair));
   pair* pair = malloc(sizeof(pair));
   if(pair == NULL)
@@ -83,10 +93,11 @@ int isnumber (char *s){
     return *p == '\0';
   }
 }
-pair *read(char *program){
+struct eval_arguments read(char *program){
   pair pair1;
   pair pair2;
   pair pair3;
+  hashtable_t *environment = ht_create(65536);
 
   char * program_1;
   int i = 0;
@@ -177,15 +188,15 @@ pair *read(char *program){
   pair2.car = &b;
   pair2.cdr = &pair3;
   
- 
+  ht_set(environment, "key1", "inky" ); 
   head = cons(&b,head);
   head = cons(&c,head);
   head = cons(&operator, head);
 
    
-  
+  eval_arguments exp_env = {head,environment};
 
-  return head;
+  return exp_env;
 
 }
 char  *apply(char operator, int arguments[]){
@@ -224,14 +235,18 @@ int count (pair* cursor){
   return c;
 }
 
-char *eval(pair *head){
 
+char *eval(eval_arguments exp_env){
+
+  pair* head = exp_env.head;
+  hashtable_t *environment = exp_env.environment;
   pair *cursor = head;
   int num_nodes=0;
   char operator;
   char *answer;
   int first,second,i;
   //num_nodes = count (head);
+  
   
   i=0;
   //if(strcmp(type_array[i], "integer") == 0){
@@ -241,25 +256,31 @@ char *eval(pair *head){
   // }
     
      
-
+  // printf( "%s\n", ht_get(environment, "key1" ) );
+  
   
   // printf("The number of nodes %d\n", num_nodes);
   
   operator = *(char*)head->car;
   //printf("In eval  should be +  %c\n", operator );
+ 
   head =  (pair*)head->cdr;
+  
 
   first = *(int*)head->car;
   //printf("In eval  should be 20  %d\n", first );
+ 
 
   head =  (pair*)head->cdr;
+  
 
   second = *(int*)head->car;
   //printf("In eval  should be 20  %d\n", second );
-   
+ 
   
   
   int arguments[2] = {first,second};
+  printf( "%s\n", ht_get(environment, "key1" ) );
 
   answer = apply(operator, arguments);
   
@@ -304,13 +325,14 @@ int main(char *argc, char **argv[]){
   //printf("%d\n",data);
   //}
   //  compile();
+ 
   
   while(1){     
-  printf("repl>");
-  fgets (str, 20, stdin);
-  printf("=>");
-  //micro_read(str);
-  printf("%s\n", eval(read(str)));
+    printf("repl>");
+    fgets (str, 20, stdin);
+    printf("=>");
+    //micro_read(str);
+    printf("%s\n", eval(read(str)));
 
   }
   return 0;
