@@ -81,7 +81,7 @@ struct eval_arguments read(char *program){
   /* get the first token */
   token = strtok(program, s);
 
-  //printf("%s", token);
+  printf("%s\n", token);
   if(strcmp(token, "q\n") == 0){
     //operator = 'q';
     operator = 'q';
@@ -91,31 +91,27 @@ struct eval_arguments read(char *program){
   }
   /* walk through other tokens */
   while( token != NULL ) 
-    {
-      //if(token[0] == '('){
-      //token = strtok(program, s1);
-      // printf("Token should not have parentheses %s\n", token);
-      //	printf("Strlen of token %d\n", strlen(token));
-      //	printf("Parsing token %c\n", token[strlen (token)- 2]);
-      //printf( " dat token %s\n", token );
-
-
-	
-      if(token[0] == '('){
+    {	// can take if out
+      if(token[0] == '(')
+	{
 	operator = token[1];
-      }
-      else if(token[strlen(token)- 2] == ')'){
+	}
+      else if(token[strlen(token)- 2] == ')')
+	{
 	//printf("Right paren\n");
-	for(i =0; i < strlen(token); i++){
+	for(i =0; i < strlen(token); i++)
+	  {
 	  // printf("Token at i %c\n", token[i]);
-	  if(token[i] == ')'){
+	  if(token[i] == ')')
+	    {
 	    token[i] = '\0';
 	    // printf("I'm in here folks\n");
 	    break;
-	  }
-	  else{
+	    }
+	  else
+	    {
 	    token[i] = token[i];
-	  }
+	    }
 	    
 	}
 	//printf("The token after %s\n", token);
@@ -133,27 +129,13 @@ struct eval_arguments read(char *program){
 	//printf("that token as an int %d\n", c);
 
       }
-
-      /*else if (isnumber(token)){
-      //printf("A digit is here\n");
-      // printf("the token %s\n", token);
-      c = atoi(token);
-      printf("this is the c %d\n", c);
-      }
-      else if (token[1] == ')'){
-     
-      d = token[0] - '0';
-      }
-
-      */
-    
       token = strtok(NULL, s);  
 
     }
 
-  /*printf("value of operator %c\n", operator);
+  printf("value of operator %c\n", operator);
     printf("value of b(var 1) %d\n", b);
-    printf("value of c(var 2) %d\n", c);*/
+    printf("value of c(var 2) %d\n", c);
   
    
   pair1.car = &b;
