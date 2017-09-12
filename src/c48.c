@@ -196,7 +196,7 @@ struct eval_arguments read(char *program){
   pair2.car = &b;
   pair2.cdr = &pair3;
   
-  ht_set(environment, "key1", "inky" ); 
+  
   head = cons(&b,head);
   head = cons(&c,head);
   head = cons(&operator, head);
@@ -255,7 +255,7 @@ char *eval(eval_arguments exp_env){
   char *answer;
   int first,second,i;
   //num_nodes = count (head);
-  
+  //  
   
   i=0;
   //if(strcmp(type_array[i], "integer") == 0){
@@ -292,7 +292,8 @@ char *eval(eval_arguments exp_env){
   
   
   int arguments[2] = {first,second};
-  printf( "%s\n", ht_get(environment, "key1" ) );
+ht_set(environment, "key1", "inky" ); 
+ printf( "%s\n", ht_get(environment, "key1" ) );
 
   answer = apply(operator, arguments);
   
