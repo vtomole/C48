@@ -1,2 +1,2 @@
 all:
-	gcc c48.c -o c48
+	gcc repl.c -o repl
