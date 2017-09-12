@@ -5,7 +5,7 @@ char  *apply(char operator, int arguments[]){
   switch(operator){
   case '+':
     sprintf(answer, "%d", arguments[0] + arguments[1]);
-    return ahnswer;
+    return answer;
     break;
   case '-':
     sprintf(answer, "%d", arguments[0] - arguments[1]);
