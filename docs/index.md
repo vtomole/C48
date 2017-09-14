@@ -1,5 +1,5 @@
 c48 Documentation site
 
-[title](https://vtomole.github.io/c48/docs.pdf)
+[Fucntions 9/14](https://vtomole.github.io/c48/docs.pdf)
 
 
