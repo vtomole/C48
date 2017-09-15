@@ -1,7 +1,17 @@
+/*
+strat over the program split.
+make token as string array.
+then count number of tokens.
+then make token array.
+categorize them based on different values.
+ */
+//https://llvm.org/docs/tutorial/LangImpl01.html#language
+
 struct Token {
   char* name;
   char* value;
 };
+
 
 static char* indentifier_string;
 static double number_value;
@@ -18,8 +28,10 @@ typedef struct eval_arguments {
   hashtable_t *environment;
 }eval_arguments;
 
-pair* create_pair(void* car,void* cdr)
+pair* create1(void* car,void* cdr)
 {
+ 
+  //pair* pair = (pair*)malloc(sizeof(pair));
   pair* pair = malloc(sizeof(pair));
   if(pair == NULL)
     {
@@ -35,7 +47,7 @@ pair* create_pair(void* car,void* cdr)
 pair* cons(void *car, pair* cdr)
 {
  
-  pair* new_pair = create_pair(car,cdr);
+  pair* new_pair = create1(car,cdr);
   car = new_pair;
   return car;
 }
@@ -51,6 +63,18 @@ int isnumber (char *s){
     return *p == '\0';
   }
 }
+const char operators[] ="+-*%/";
+int isoperator(char *s)
+{
+  for(int i =0;i<5;i++)
+    {
+      if(strcmp(token,operators[i]))
+	{
+	  return 1;
+	}
+    }
+  return 0;
+  }
 
 struct eval_arguments read(char *program){
   pair pair1;
@@ -67,88 +91,48 @@ struct eval_arguments read(char *program){
   char* token, substr;
   
   pair* head = NULL;   
-  const char s[2] = " ";
-  const char s1[2] = "(";
-    
+  const char s[] = "()\n\t\r\f ";   
    
   /* get the first token */
   token = strtok(program, s);
 
-  printf("%s\n", token);
-  if(strcmp(token, "q\n") == 0){
+  /*  //printf("%s\n", token);
+  if(strcmp(token, "q\n") == 0)
+    {
     if(strlen(program)==1)
       {
-    //operator = 'q';
-    operator = 'q';
-    head = cons(&operator, head); 
+	operator = 'q';
+	head = cons(&operator, head); 
       }
     else
       {
 	printf("Invalid Input please insert q to quit");
       }
-    //cons(&token ,head);
-    //return head;
-  }
-  /* walk through other tokens */
-  while( token != NULL ) 
-    {	// can take if out
-      if(token[0] == '(')
-	{
-	operator = token[1];
-	}
-      else if(token[strlen(token)- 2] == ')')
-	{
-	//printf("Right paren\n");
-	for(i =0; i < strlen(token); i++)
-	  {
-	  // printf("Token at i %c\n", token[i]);
-	  if(token[i] == ')')
-	    {
-	    token[i] = '\0';
-	    // printf("I'm in here folks\n");
-	    break;
-	    }
-	  else
-	    {
-	    token[i] = token[i];
-	    }
-	    
-	}
-	//printf("The token after %s\n", token);
-	if(isnumber(token)){
-	  b = atoi(token);
-	  head = cons(&b,head);
-	   
-	  //type_array[count] = "integer";
-	  count++;
-	}
-      }
-      else{
-	// printf( "The token at 0 %c\n", token[0]);
-	c = token[0] - '0';
-	//printf("that token as an int %d\n", c);
-
-      }
-      token = strtok(NULL, s);  
-
     }
-
-  printf("value of operator %c\n", operator);
-    printf("value of b(var 1) %d\n", b);
-    printf("value of c(var 2) %d\n", c);
+  */
+  int  num_token =0;
+while( token != NULL )
+  {
+    num_token ++;
+    if(!((isnumber(token)||(isoperator(token)))
+      {
+	printf("invalid input") ;
+      }
+	else if ((isnumber(token))
+	  {
+	    Token token+num_token;
+	    token+num_token.name ="number"+num_token;
+	    token+num_token.value =token;
+	    
+	  }
+	  else 
+	  {
+	    Token token+num_token;
+	    token+num_token.name ="operator"+num_token;
+	    token+num_token.value =token;
+	  }
+  }
   
-   
-  pair1.car = &b;
-  pair1.cdr = &pair2;
-  
-  //pair1.cdr = &c;
-  pair2.car = &b;
-  pair2.cdr = &pair3;
-  
-  
-  head = cons(&b,head);
-  head = cons(&c,head);
-  head = cons(&operator, head);
 
    
   eval_arguments exp_env = {head,environment};
@@ -226,4 +210,3 @@ char *micro_read (char* program){
 
   return 0;
 }
-
