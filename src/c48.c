@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <limits.h>
 #include "vm.h"
 #include "vm.c"
 #include "lexer.c"
+#include "hash.c"
 
 
 
@@ -12,16 +14,39 @@
 char* str;
 //Linked list implementation taken from: http://www.zentut.com/c-tutorial/c-linked-list/
 
+enum pair_type {Symbol,String, Number, List, Procedure, Lambda};
+
 typedef struct pair{
   void *car;
+  enum pair_type type;
   void *cdr;
 }pair;
+
+struct object{
+  char* type;
+  char* value;
+}type;
+
+struct env{
+  char* variable;
+  pair* value;
+}env;
+  
+
+
+typedef struct token_list{
+  struct object val;
+  struct token_list *next;
+}token_list;
+
+
+
 
 const char *type_array[1];
 int command = 0;
 
  
-pair* create1(void* car,void* cdr)
+pair* create1(void* car,enum pair_type type, void* cdr)
 {
   //pair* pair = (pair*)malloc(sizeof(pair));
   pair* pair = malloc(sizeof(pair));
@@ -31,15 +56,32 @@ pair* create1(void* car,void* cdr)
       exit(0);
     }
   pair->car = car;
+  pair-> type = type;
   pair->cdr = cdr;
  
   return pair;
 }
 
-pair* cons(void *car, pair* cdr)
+token_list* cons1(struct object val, struct token_list *cdr)
 {
  
-  pair* new_pair = create1(car,cdr);
+  //pair* pair = (pair*)malloc(sizeof(pair));
+  token_list* pair = malloc(sizeof(pair));
+  if(pair == NULL)
+    {
+      printf("Error creating a new node.\n");
+      exit(0);
+    }
+  pair->val = val;
+   pair->next = cdr;
+ 
+  return pair;
+}
+
+pair* cons(void *car,enum pair_type type, pair* cdr)
+{
+ 
+  pair* new_pair = create1(car,type,cdr);
   car = new_pair;
   return car;
 }
@@ -109,7 +151,7 @@ pair *read(char *program){
   if(strcmp(token, "q\n") == 0){
     //operator = 'q';
     operator = 'q';
-    head = cons(&operator, head);
+    //head = cons(&operator, head);
     //cons(&token ,head);
     //return head;
   }
@@ -186,12 +228,24 @@ pair *read(char *program){
   pair2.cdr = &pair3;
   
  
-  head = cons(&b,head);
-  head = cons(&c,head);
-  head = cons(&operator, head);
+  head = cons(&b,Number,head);
+  head = cons(&c,Number,head);
+  head = cons(&operator,Symbol, head);
 
   return head;
 
+}
+
+int self_evaluatingp (pair *exp){
+  if(exp->type == Number){
+    return 0;
+  }
+  else if (exp->type == String){
+    return 0;
+  }
+  else {
+    return 1;
+  }
 }
 char  *apply(char operator, int arguments[]){
   
@@ -229,7 +283,92 @@ int count (pair* cursor){
   return c;
 }
 
-char *eval(pair *head){
+char* car (struct pair *list){
+  if(list){
+    return list->car;
+  }
+  return 0;
+}
+
+pair* cdr( struct pair *list){
+  return list -> cdr;
+  
+}
+
+void printInt(void *n)
+{
+   printf("%d\n", *(int *)n);
+}
+
+
+void printChar(void *n)
+{
+   printf("%s\n", (char *)n);
+}
+
+void print(pair *list){
+  if(list){
+    
+    //printf("%s\n", first(list));
+    // print_token_list(rest(list));
+    printf("List is here\n");
+    switch(list->type){
+  case Number:
+    printf("It's a number\n");
+    printInt(list->car);
+    
+    break;
+    case Symbol:
+      printf("It's a symbol\n");
+      printChar(list->car);
+      break;
+
+    case String:
+      printf("It's a string\n");
+      printChar(list->car);
+      break;
+  default:
+    break;
+  }
+
+ }
+  else{
+    printf("List is not here\n");
+  }
+
+}
+
+char* first (struct token_list *list){
+  if(list){
+    return list->val.value;
+  }
+  return 0;
+}
+
+token_list* rest( struct token_list *list){
+  return list ->  next;
+  
+}
+
+void print_token_list(struct token_list *list){
+  if(list){
+    printf("%s\n", first(list));
+    print_token_list(rest(list));
+
+ }
+
+}
+
+pair* lookup_variable_value(pair* exp, pair *env){
+
+  print(exp);
+  //printChar(exp);
+  return exp;
+
+
+
+}
+pair *eval(pair *head, pair *env){
 
   pair *cursor = head;
   int num_nodes=0;
@@ -237,23 +376,57 @@ char *eval(pair *head){
   char *answer;
   int first,second,i;
   //num_nodes = count (head);
+ 
+  if(head == NULL){
+    return NULL;
+  }
   
+
+  if(self_evaluatingp (head) == 0){
+    printf("It's self-evaluating\n");
+    return head;
+  }
+  if(head->type == Symbol){
+    return lookup_variable_value (head, env);
+  }
+      
+
+  
+
+  /* if(strcmp (head->type, "number") == 0){
+    return 
+
+    }*/
+
+  
+ 
   i=0;
   //if(strcmp(type_array[i], "integer") == 0){
 
   //  printf("It's an integer\n");
     
   // }
+
+  
     
-     
+  switch(head->type){
+  case Symbol:
+    operator = *(char*)head->car;
+    break;
+  default:
+    break;
+  }
+    
   if( *(char*)head->car == 'q'){
     exit(0);
   }
   
   // printf("The number of nodes %d\n", num_nodes);
+ 
   
-  operator = *(char*)head->car;
   //printf("In eval  should be +  %c\n", operator );
+
+  
   head =  (pair*)head->cdr;
 
   first = *(int*)head->car;
@@ -270,7 +443,7 @@ char *eval(pair *head){
 
   answer = apply(operator, arguments);
   
-  return answer;
+  return head;
 }
 
 //Walk the absract syntax tree and compile each expreswsion
@@ -299,6 +472,70 @@ void assembler(){
 int main(char *argc, char **argv[]){
   
   char str[20];
+  struct pair *list = NULL;
+  struct  token_list *token_list = NULL;
+  struct object object1;
+  pair* code_tree = NULL;
+  char* operator = "square";
+  char* string = "\"A string\"";
+  int b = 20, c = 30;
+  // hashtable_t *env = ht_create( 65536 );
+  pair* env;
+
+  
+
+  object1.type = "identifier";
+  object1.value = "open_paren";
+  token_list = cons1(object1, token_list);
+  
+  object1.type = "operator";
+  object1.value = "+";
+  token_list = cons1(object1, token_list);
+  
+  object1.type = "identifier";
+  object1.value = "open_paren";
+  token_list = cons1(object1, token_list);
+  
+  object1.type = "operator";
+  object1.value = "+";
+  token_list = cons1(object1, token_list);
+  
+  object1.type = "num";
+  object1.value = "2";
+  token_list = cons1(object1, token_list);
+
+  object1.type = "num";
+  object1.value = "3";
+  token_list = cons1(object1, token_list);
+  
+  object1.type = "identifier";
+  object1.value = "closed_paren";
+  token_list = cons1(object1, token_list);
+  
+  object1.type = "num";
+  object1.value = "7";
+  token_list = cons1(object1, token_list);
+ 
+  object1.type = "identifier";
+  object1.value = "closed_paren";
+
+  //print_token_list(token_list);
+
+  char *ptr = malloc(strlen(operator) + 1);
+  strcpy(ptr, operator);
+
+  char *ptr_string = malloc(strlen(string) + 1);
+  strcpy(ptr_string, string);
+  //code_tree = cons(&b,Number,code_tree);
+  //code_tree = cons(&c,Number,code_tree);
+  code_tree = cons(ptr,Symbol, code_tree);
+  //code_tree = cons(ptr_string, String, code_tree);
+  
+
+  // print(code_tree);
+  print(eval(code_tree, env));
+ 
+
   //push(3);
   //push(5);
   //push(9);
@@ -312,7 +549,7 @@ int main(char *argc, char **argv[]){
   //}
   //  compile();
   
-  while (1){     
+  /* while (1){     
   printf("repl>");
   fgets (str, 20, stdin);
   //printf("=>");
@@ -320,7 +557,7 @@ int main(char *argc, char **argv[]){
   printf("=>%s\n", eval(read(str)));
  
 
-  }
+  }*/
   return 0;
   
 }//end of main
