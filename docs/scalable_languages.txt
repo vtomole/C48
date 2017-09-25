@@ -1,0 +1,15 @@
+http://users.cms.caltech.edu/~mvanier/hacking/rants/scalable_computer_programming_languages.html
+
+1. Garbage collection
+2. No pointers or pointer arithmetic
+3. Foreign function interface to C
+4. Static type checking with type inference
+5. Exception Handling
+6. Run-time checking for errors that can't be caught at compile time, like array bounds and division by zero
+7. Support for assertions and design by contract
+8. A powerful, statically checked module system
+9. Support for object-oriented programming
+10. Support for functional programming
+11. Structural macros
+12. Support for components
+14. A simple, consistent, and readable syntax.

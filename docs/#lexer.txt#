@@ -1,0 +1,2 @@
+list * read-token (){
+  if(it is whitepace 
