@@ -1,5 +1,5 @@
 all:
-	gcc src/repl.c -o repl
+	gcc repl.c -o repl
 	./repl
 
 run:
