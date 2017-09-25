@@ -80,6 +80,8 @@ struct identifier* read_number (char* program, int index){
 
 }
 //Lexer
+
+//TODO: check for Booleans, Characters, Strings
 token_list* list_lexer (char *program){
   static int last_character = ' ';
   int i;
@@ -95,26 +97,26 @@ token_list* list_lexer (char *program){
   //printf("is alpha-test char %c\n",program[0]);
   //printf("is alpha-test %d\n",isalpha(program[0])); 
   for(i =0; i < strlen(program); i++){
-
+    //Check if it's whitespace
     if(iswhitespace(program[i])){
 	
       }
-      
+    //check if it is an open parentheses
       else if (program[i] == '('){
 	 object1.type = "identifier";
 	 object1.value = "open_paren";
 	 token_list = cons1(object1, token_list);
 
       }
+    //check if it is a closed parentheses
      else if (program[i] == ')'){
 	 object1.type = "identifier";
 	 object1.value = "closed_paren";
 	 token_list = cons1(object1, token_list);
 
       }    
-      
+    //check if its in the alphabet
      else if (isalpha(program[i])){
-
       
       object1.type = "symbol";
       id =  read_identifier(program, i);
@@ -124,7 +126,7 @@ token_list* list_lexer (char *program){
       token_list = cons1(object1, token_list);
 
     }
-    //read-number
+    //check if its a number
     else if(isdigit(program[i])){
       object1.type = "num";
       id =  read_number(program, i);
@@ -134,7 +136,7 @@ token_list* list_lexer (char *program){
       token_list = cons1(object1, token_list);
 
     }
-    
+    //invalid syntax
     else{
       printf("Illegal syntax\n");
       
