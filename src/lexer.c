@@ -68,14 +68,15 @@ struct identifier* read_identifier (char* program, int index){
 
 }
 
-char* read_number (char* program, int index){
-  char *number;
+struct identifier* read_number (char* program, int index){
+  struct identifier *identifier1;
   const char s[2] = " ";
   program = chopN( program, index );
   char *string = strdup(program);
-  number= strtok(string, s);
+  identifier1->identifier_token= strtok(string, s);
+  identifier1->length = strlen(identifier1->identifier_token);
   
-  return number;
+  return identifier1;
 
 }
 //Lexer
@@ -125,12 +126,12 @@ token_list* list_lexer (char *program){
     }
     //read-number
     else if(isdigit(program[i])){
-      printf("It's a number\n");
-       object1.type = "num";
-       object1.value = read_number(program, i);
-       printf("Number value %s\n" , object1.value);
-        program = chopN( program, i );
-       token_list = cons1(object1, token_list);
+      object1.type = "num";
+      id =  read_number(program, i);
+      object1.value = id->identifier_token;
+      program = chopN( program, id->length ); 
+      printf("NUMBER VALUE %s\n", object1.value);
+      token_list = cons1(object1, token_list);
 
     }
     
