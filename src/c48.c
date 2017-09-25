@@ -2,54 +2,58 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <limits.h>
 #include "vm.h"
 #include "vm.c"
 #include "lexer.c"
 #include "hash.c"
 
- 
-
 
 
 //Global variables
 char* str;
-
 //Linked list implementation taken from: http://www.zentut.com/c-tutorial/c-linked-list/
 
-// creating a node structure for linked list
+enum pair_type {Symbol,String, Number, List, Procedure, Lambda};
+
 typedef struct pair{
   void *car;
+  enum pair_type type;
   void *cdr;
 }pair;
 
-//structure for evaluation
-typedef struct eval_arguments {
-  pair *head;
-  hashtable_t *environment;
-}eval_arguments;
+struct env{
+  char* variable;
+  pair* value;
+}env;
+
 
 const char *type_array[1];
 int command = 0;
 
-// get data from the nodes
-pair* create1(void* car,void* cdr)
+ 
+pair* create1(void* car,enum pair_type type, void* cdr)
 {
-  pair* pair = malloc(sizof(pair));
+  //pair* pair = (pair*)malloc(sizeof(pair));
+  pair* pair = malloc(sizeof(pair));
   if(pair == NULL)
     {
       printf("Error creating a new node.\n");
       exit(0);
     }
   pair->car = car;
+  pair-> type = type;
   pair->cdr = cdr;
  
   return pair;
 }
 
-pair* cons(void *car, pair* cdr)
+
+
+pair* cons(void *car,enum pair_type type, pair* cdr)
 {
  
-  pair* new_pair = create1(car,cdr);
+  pair* new_pair = create1(car,type,cdr);
   car = new_pair;
   return car;
 }
@@ -57,35 +61,13 @@ pair* cons(void *car, pair* cdr)
 
 
 
-//does nothing
+
 int read_list (pair* list_so_far){
 
   return 0;
 }
 
-char *micro_read (char* program){
-  
-  char* next_token = read_token(program);
-  
-  pair* list_so_far;
- 
-  if(strcmp(next_token,"left-paren") == 0){
-    //printf("Left parentheses\n");
 
-    read_list(list_so_far);
-
-  }
-  else{
-    return next_token;
-  }
-
-
-  return 0;
-}
-
-/*
- * Check if the passed char value if a number
- */
 int isnumber (char *s){
   if(s == NULL || *s == '\0' || isspace(*s)){
     return 0;
@@ -96,15 +78,10 @@ int isnumber (char *s){
     return *p == '\0';
   }
 }
-
-/*
- * read program check for valid operators and number
- */
-struct eval_arguments read(char *program){
+pair *read(char *program){
   pair pair1;
   pair pair2;
   pair pair3;
-  hashtable_t *environment = ht_create(65536);
 
   char * program_1;
   int i = 0;
@@ -124,13 +101,13 @@ struct eval_arguments read(char *program){
   token = strtok(program, s);
 
   //printf("%s", token);
-  if(strcmp(token, "q\n") == 0)
-    {
-    //chek if operator = 'q';
-    // quit
-    operatr = 'q';
-    head = cons(&operator, head);
-    }
+  if(strcmp(token, "q\n") == 0){
+    //operator = 'q';
+    operator = 'q';
+    //head = cons(&operator, head);
+    //cons(&token ,head);
+    //return head;
+  }
   /* walk through other tokens */
   while( token != NULL ) 
     {
@@ -203,17 +180,25 @@ struct eval_arguments read(char *program){
   pair2.car = &b;
   pair2.cdr = &pair3;
   
-  
-  head = cons(&b,head);
-  head = cons(&c,head);
-  head = cons(&operator, head);
+ 
+  head = cons(&b,Number,head);
+  head = cons(&c,Number,head);
+  head = cons(&operator,Symbol, head);
 
-   
-  eval_arguments exp_env = {head,environment};
+  return head;
 
-  return exp_env;
+}
 
-
+int self_evaluatingp (pair *exp){
+  if(exp->type == Number){
+    return 0;
+  }
+  else if (exp->type == String){
+    return 0;
+  }
+  else {
+    return 1;
+  }
 }
 char  *apply(char operator, int arguments[]){
   
@@ -251,60 +236,147 @@ int count (pair* cursor){
   return c;
 }
 
+char* car (struct pair *list){
+  if(list){
+    return list->car;
+  }
+  return 0;
+}
 
-char *eval(eval_arguments exp_env){
+pair* cdr( struct pair *list){
+  return list -> cdr;
+  
+}
 
-  pair* head = exp_env.head;
-  hashtable_t *environment = exp_env.environment;
+void printInt(void *n)
+{
+   printf("%d\n", *(int *)n);
+}
+
+
+void printChar(void *n)
+{
+   printf("%s\n", (char *)n);
+}
+
+void print(pair *list){
+  if(list){
+    
+    //printf("%s\n", first(list));
+    // print_token_list(rest(list));
+    printf("List is here\n");
+    switch(list->type){
+  case Number:
+    //printf("It's a number\n");
+    printInt(list->car);
+    
+    break;
+    case Symbol:
+      printf("It's a symbol\n");
+      printChar(list->car);
+      break;
+
+    case String:
+      // printf("It's a string\n");
+      printChar(list->car);
+      break;
+  default:
+    break;
+  }
+
+ }
+  else{
+    // printf("List is not here\n");
+  }
+
+}
+
+
+pair* lookup_variable_value(pair* exp, pair *env){
+
+  print(exp);
+  //printChar(exp);
+  return exp;
+
+
+
+}
+pair *eval(pair *head, pair *env){
+
   pair *cursor = head;
   int num_nodes=0;
   char operator;
   char *answer;
   int first,second,i;
   //num_nodes = count (head);
-  //  
+ 
+  if(head == NULL){
+    return NULL;
+  }
   
+
+  if(self_evaluatingp (head) == 0){
+    printf("It's self-evaluating\n");
+    return head;
+  }
+  if(head->type == Symbol){
+    return lookup_variable_value (head, env);
+  }
+      
+
+  
+
+  /* if(strcmp (head->type, "number") == 0){
+    return 
+
+    }*/
+
+  
+ 
   i=0;
   //if(strcmp(type_array[i], "integer") == 0){
 
   //  printf("It's an integer\n");
     
   // }
-    
-     
 
+  
+    
+  switch(head->type){
+  case Symbol:
+    operator = *(char*)head->car;
+    break;
+  default:
+    break;
+  }
+    
   if( *(char*)head->car == 'q'){
     exit(0);
   }
-
   
   // printf("The number of nodes %d\n", num_nodes);
-  
-  operator = *(char*)head->car;
-  //printf("In eval  should be +  %c\n", operator );
  
-  head =  (pair*)head->cdr;
   
+  //printf("In eval  should be +  %c\n", operator );
+
+  
+  head =  (pair*)head->cdr;
 
   first = *(int*)head->car;
   //printf("In eval  should be 20  %d\n", first );
- 
 
   head =  (pair*)head->cdr;
-  
 
   second = *(int*)head->car;
   //printf("In eval  should be 20  %d\n", second );
- 
+   
   
   
   int arguments[2] = {first,second};
-ht_set(environment, "key1", "inky" ); 
- printf( "%s\n", ht_get(environment, "key1" ) );
 
   answer = apply(operator, arguments);
   
-  return answer;
+  return head;
 }
 
 //Walk the absract syntax tree and compile each expreswsion
@@ -333,6 +405,42 @@ void assembler(){
 int main(char *argc, char **argv[]){
   
   char str[20];
+  struct pair *list = NULL;
+  struct  token_list *token_list = NULL;
+  struct object object1;
+  pair* code_tree = NULL;
+  char* operator = "square";
+  char* string = "\"A string\"";
+  int b = 20, c = 30;
+  // hashtable_t *env = ht_create( 65536 );
+  pair* env;
+
+ 
+
+    
+  //printf("IDENTIFIER %s\n",read_identifier("Hello how are you doing?", 6));
+  list_lexer("Hello how are you doing?");
+  //list_lexer("11 12 45 87 98 45 8476 2635");
+  
+
+  
+  //print_token_list(token_list);
+
+  char *ptr = malloc(strlen(operator) + 1);
+  strcpy(ptr, operator);
+
+  char *ptr_string = malloc(strlen(string) + 1);
+  strcpy(ptr_string, string);
+  //code_tree = cons(&b,Number,code_tree);
+  //code_tree = cons(&c,Number,code_tree);
+  code_tree = cons(ptr,Symbol, code_tree);
+  //code_tree = cons(ptr_string, String, code_tree);
+  
+
+  // print(code_tree);
+  print(eval(code_tree, env));
+ 
+
   //push(3);
   //push(5);
   //push(9);
@@ -345,16 +453,16 @@ int main(char *argc, char **argv[]){
   //printf("%d\n",data);
   //}
   //  compile();
- 
   
-
-  while (1){     
+  /* while (1){     
   printf("repl>");
   fgets (str, 20, stdin);
   //printf("=>");
   //micro_read(str);
   printf("=>%s\n", eval(read(str)));
-  }
+ 
+
+  }*/
   return 0;
   
 }//end of main
