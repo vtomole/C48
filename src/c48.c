@@ -22,24 +22,10 @@ typedef struct pair{
   void *cdr;
 }pair;
 
-struct object{
-  char* type;
-  char* value;
-}type;
-
 struct env{
   char* variable;
   pair* value;
 }env;
-  
-
-
-typedef struct token_list{
-  struct object val;
-  struct token_list *next;
-}token_list;
-
-
 
 
 const char *type_array[1];
@@ -62,21 +48,7 @@ pair* create1(void* car,enum pair_type type, void* cdr)
   return pair;
 }
 
-token_list* cons1(struct object val, struct token_list *cdr)
-{
- 
-  //pair* pair = (pair*)malloc(sizeof(pair));
-  token_list* pair = malloc(sizeof(pair));
-  if(pair == NULL)
-    {
-      printf("Error creating a new node.\n");
-      exit(0);
-    }
-  pair->val = val;
-   pair->next = cdr;
- 
-  return pair;
-}
+
 
 pair* cons(void *car,enum pair_type type, pair* cdr)
 {
@@ -95,25 +67,6 @@ int read_list (pair* list_so_far){
   return 0;
 }
 
-char *micro_read (char* program){
-  
-  char* next_token = read_token(program);
-  
-  pair* list_so_far;
- 
-  if(strcmp(next_token,"left-paren") == 0){
-    //printf("Left parentheses\n");
-
-    read_list(list_so_far);
-
-  }
-  else{
-    return next_token;
-  }
-
-
-  return 0;
-}
 
 int isnumber (char *s){
   if(s == NULL || *s == '\0' || isspace(*s)){
@@ -314,7 +267,7 @@ void print(pair *list){
     printf("List is here\n");
     switch(list->type){
   case Number:
-    printf("It's a number\n");
+    //printf("It's a number\n");
     printInt(list->car);
     
     break;
@@ -324,7 +277,7 @@ void print(pair *list){
       break;
 
     case String:
-      printf("It's a string\n");
+      // printf("It's a string\n");
       printChar(list->car);
       break;
   default:
@@ -333,7 +286,7 @@ void print(pair *list){
 
  }
   else{
-    printf("List is not here\n");
+    // printf("List is not here\n");
   }
 
 }
@@ -482,6 +435,10 @@ int main(char *argc, char **argv[]){
   // hashtable_t *env = ht_create( 65536 );
   pair* env;
 
+ 
+
+    
+  printf("IDENTIFIER %s\n",read_identifier("Hello how are you doing?", 6));
   
 
   object1.type = "identifier";
