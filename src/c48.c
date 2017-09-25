@@ -438,7 +438,9 @@ int main(char *argc, char **argv[]){
  
 
     
-  printf("IDENTIFIER %s\n",read_identifier("Hello how are you doing?", 6));
+  //printf("IDENTIFIER %s\n",read_identifier("Hello how are you doing?", 6));
+  list_lexer("Hello how are you doing?");
+  //list_lexer("11 12 45 87 98 45 8476 2635");
   
 
   object1.type = "identifier";

@@ -5,6 +5,11 @@ struct object{
   char* value;
 }object;
 
+struct identifier{
+  char* identifier_token;
+  int length;
+}identifier;
+
 typedef struct token_list{
   struct object val;
   struct token_list *next;
@@ -51,16 +56,26 @@ int iswhitespace (char c){
   }
 }
 
-char* read_identifier (char* program, int index){
-  char *identifier=  "hi";
-  char *identifier1;
+struct identifier* read_identifier (char* program, int index){
+  struct identifier *identifier1;
   const char s[2] = " ";
   program = chopN( program, index );
-  printf("PROGRAM: %s\n", program);
   char *string = strdup(program);
-  identifier1=   strtok(string, s);
+  identifier1->identifier_token= strtok(string, s);
+  identifier1->length = strlen(identifier1->identifier_token);
   
   return identifier1;
+
+}
+
+char* read_number (char* program, int index){
+  char *number;
+  const char s[2] = " ";
+  program = chopN( program, index );
+  char *string = strdup(program);
+  number= strtok(string, s);
+  
+  return number;
 
 }
 //Lexer
@@ -70,6 +85,7 @@ token_list* list_lexer (char *program){
    
   struct  token_list *token_list = NULL;
   struct object object1;
+  struct identifier *id;
 
    object1.type = "identifier";
    object1.value = "open_paren";
@@ -79,7 +95,6 @@ token_list* list_lexer (char *program){
   //printf("is alpha-test %d\n",isalpha(program[0])); 
   for(i =0; i < strlen(program); i++){
 
-    printf("program at i %c\n", program[i]);
     if(iswhitespace(program[i])){
 	
       }
@@ -101,18 +116,26 @@ token_list* list_lexer (char *program){
 
       
       object1.type = "symbol";
-      object1.value = read_identifier(program, i);
+      id =  read_identifier(program, i);
+      object1.value = id->identifier_token;
+      program = chopN( program, id->length ); 
       printf("IDENTIFIER %s\n", object1.value);
       token_list = cons1(object1, token_list);
 
     }
     //read-number
     else if(isdigit(program[i])){
-      printf("It is a number\n");
+      printf("It's a number\n");
+       object1.type = "num";
+       object1.value = read_number(program, i);
+       printf("Number value %s\n" , object1.value);
+        program = chopN( program, i );
+       token_list = cons1(object1, token_list);
 
     }
     
     else{
+      printf("Illegal syntax\n");
       
     }
   }
