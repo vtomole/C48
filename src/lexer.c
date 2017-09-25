@@ -47,6 +47,29 @@ enum Token {
 static char* indentifier_string;
 static double number_value;
 
+char* first (struct token_list *list){
+  if(list){
+    return list->val.value;
+  }
+  return 0;
+}
+
+token_list* rest( struct token_list *list){
+  return list ->  next;
+  
+}
+
+
+
+void print_token_list(struct token_list *list){
+  if(list){
+    printf("%s\n", first(list));
+    print_token_list(rest(list));
+
+ }
+
+}
+
 int iswhitespace (char c){
   if(c == '\n' || c == ' ' ){
     return 1;
@@ -132,7 +155,7 @@ token_list* list_lexer (char *program){
       id =  read_number(program, i);
       object1.value = id->identifier_token;
       program = chopN( program, id->length ); 
-      printf("NUMBER VALUE %s\n", object1.value);
+      //printf("NUMBER VALUE %s\n", object1.value);
       token_list = cons1(object1, token_list);
 
     }
@@ -142,7 +165,7 @@ token_list* list_lexer (char *program){
       
     }
   }
-
+  //print_token_list(token_list);
   return token_list;
 }
 

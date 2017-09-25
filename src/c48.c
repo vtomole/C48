@@ -291,26 +291,6 @@ void print(pair *list){
 
 }
 
-char* first (struct token_list *list){
-  if(list){
-    return list->val.value;
-  }
-  return 0;
-}
-
-token_list* rest( struct token_list *list){
-  return list ->  next;
-  
-}
-
-void print_token_list(struct token_list *list){
-  if(list){
-    printf("%s\n", first(list));
-    print_token_list(rest(list));
-
- }
-
-}
 
 pair* lookup_variable_value(pair* exp, pair *env){
 
