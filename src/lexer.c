@@ -47,6 +47,16 @@ enum Token {
 static char* indentifier_string;
 static double number_value;
 
+
+int count_token_list (token_list* cursor){
+  int c = 0;
+  while(cursor != NULL){
+    c++;
+    cursor = cursor->next;
+  }
+  return c;
+}
+
 char* first (struct token_list *list){
   if(list){
     return list->val.value;
@@ -113,13 +123,45 @@ token_list* list_lexer (char *program){
   struct object object1;
   struct identifier *id;
 
-   object1.type = "identifier";
-   object1.value = "open_paren";
-   token_list = cons1(object1, token_list);
+  object1.type = "identifier";
+  object1.value = "open_paren";
+  token_list = cons1(object1, token_list);
+  
+  /* object1.type = "operator";
+  object1.value = "+";
+  token_list = cons1(object1, token_list);
+  
+  object1.type = "identifier";
+  object1.value = "open_paren";
+  token_list = cons1(object1, token_list);
+  
+  object1.type = "operator";
+  object1.value = "+";
+  token_list = cons1(object1, token_list);
+  
+  object1.type = "num";
+  object1.value = "2";
+  token_list = cons1(object1, token_list);
+
+  object1.type = "num";
+  object1.value = "3";
+  token_list = cons1(object1, token_list);
+  
+  object1.type = "identifier";
+  object1.value = "closed_paren";
+  token_list = cons1(object1, token_list);
+  
+  object1.type = "num";
+  object1.value = "7";
+  token_list = cons1(object1, token_list);
+ 
+  object1.type = "identifier";
+  object1.value = "closed_paren";*/
+
 
   //printf("is alpha-test char %c\n",program[0]);
   //printf("is alpha-test %d\n",isalpha(program[0])); 
-  for(i =0; i < strlen(program); i++){
+   for(i =0; i < strlen(program); i++){
     //Check if it's whitespace
     if(iswhitespace(program[i])){
 	
@@ -155,7 +197,7 @@ token_list* list_lexer (char *program){
       id =  read_number(program, i);
       object1.value = id->identifier_token;
       program = chopN( program, id->length ); 
-      //printf("NUMBER VALUE %s\n", object1.value);
+      printf("NUMBER VALUE %s\n", object1.value);
       token_list = cons1(object1, token_list);
 
     }
@@ -164,8 +206,9 @@ token_list* list_lexer (char *program){
       printf("Illegal syntax\n");
       
     }
-  }
-  //print_token_list(token_list);
+    }
+   printf("The number %d\n", count_token_list(token_list));
+   print_token_list(token_list);
   return token_list;
 }
 

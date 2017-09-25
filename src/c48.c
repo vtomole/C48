@@ -419,45 +419,11 @@ int main(char *argc, char **argv[]){
 
     
   //printf("IDENTIFIER %s\n",read_identifier("Hello how are you doing?", 6));
-  //list_lexer("Hello how are you doing?");
-  list_lexer("11 12 45 87 98 45 8476 2635");
+  list_lexer("Hello how are you doing?");
+  //list_lexer("11 12 45 87 98 45 8476 2635");
   
 
-  object1.type = "identifier";
-  object1.value = "open_paren";
-  token_list = cons1(object1, token_list);
   
-  object1.type = "operator";
-  object1.value = "+";
-  token_list = cons1(object1, token_list);
-  
-  object1.type = "identifier";
-  object1.value = "open_paren";
-  token_list = cons1(object1, token_list);
-  
-  object1.type = "operator";
-  object1.value = "+";
-  token_list = cons1(object1, token_list);
-  
-  object1.type = "num";
-  object1.value = "2";
-  token_list = cons1(object1, token_list);
-
-  object1.type = "num";
-  object1.value = "3";
-  token_list = cons1(object1, token_list);
-  
-  object1.type = "identifier";
-  object1.value = "closed_paren";
-  token_list = cons1(object1, token_list);
-  
-  object1.type = "num";
-  object1.value = "7";
-  token_list = cons1(object1, token_list);
- 
-  object1.type = "identifier";
-  object1.value = "closed_paren";
-
   //print_token_list(token_list);
 
   char *ptr = malloc(strlen(operator) + 1);
