@@ -19,7 +19,24 @@ typedef struct token_list{
 char * chopN(char * charBuffer, int n )
 {   
    return charBuffer + n;   
-}   
+}
+
+
+token_list* reverse_tokenlist(token_list* head)
+{
+    token_list* prev    = NULL;
+    token_list* current = head;
+    token_list* next;
+    while (current != NULL)
+    {
+        next  = current->next;
+        current->next = prev;
+        prev = current;
+        current = next;
+    }
+    head = prev;
+    return head;
+}
 
 token_list* cons1(struct object val, struct token_list *cdr)
 {
@@ -199,14 +216,25 @@ token_list* list_lexer (char *program){
 	if(token[0] == '('){
 	 
 	  memmove(token, token+1, strlen(token));
-	  
+
+
+	  object1.type = "left_paren";
+	  object1.value = "(";
+	  token_list = cons1(object1, token_list);
 	  object1.type = token_type(token);
 	  object1.value = token;
 	  token_list = cons1(object1, token_list);
+
+	  
 	  
 	}
 	else if (token[1] == ')'){
 
+
+	  object1.type = "right_paren";
+	  object1.value = "(";
+	  token_list = cons1(object1, token_list);
+	  
 	  token[strlen(token)-1] = 0;
 	  object1.type = token_type(token);
 	  object1.value = token;
@@ -233,7 +261,7 @@ token_list* list_lexer (char *program){
 
     }
 
-     print_token_list(token_list);
+    print_token_list(reverse_tokenlist(token_list));
 
 
   return token_list;
@@ -336,6 +364,6 @@ token_list* list_lexer_tmp (char *program){
     }
     }
    printf("The number %d\n", count_token_list(token_list));
-   print_token_list(token_list);
+   //print_token_list(reverse_token_list(token_list));
   return token_list;
 }
