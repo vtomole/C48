@@ -7,6 +7,7 @@
 #include "vm.c"
 #include "lexer.c"
 #include "hash.c"
+#include "../tests/tests.c"
 
 
 
@@ -308,6 +309,7 @@ pair *eval(pair *head, pair *env){
   char operator;
   char *answer;
   int first,second,i;
+ 
   //num_nodes = count (head);
  
   if(head == NULL){
@@ -414,15 +416,16 @@ int main(char *argc, char **argv[]){
   int b = 20, c = 30;
   // hashtable_t *env = ht_create( 65536 );
   pair* env;
+  char* result = NULL;
 
  
 
     
   //printf("IDENTIFIER %s\n",read_identifier("Hello how are you doing?", 6));
   //print_token_list(list_lexer("(set position (* 60 (+ initial rate)))"));
-  print_token_list(list_lexer("(+ (+ 2 3) 7)"));
+  // print_token_list(list_lexer("(+ (+ 2 3) 7)"), result);
   //list_lexer("11 12 45 87 98 45 8476 2635");
-  
+  tests();
 
   
   //print_token_list(token_list);
