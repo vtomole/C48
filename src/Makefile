@@ -1,6 +1,8 @@
+
 all:
 	gcc repl.c -o repl
 	./repl
 
-run:
+clean:
+	rm c48
 	

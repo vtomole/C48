@@ -86,13 +86,40 @@ token_list* rest( struct token_list *list){
   
 }
 
+//https://stackoverflow.com/questions/14259540/c-programming-strcat-using-pointer
+char *scat(char *s,char *t)
+{
+    char *p=malloc(strlen(s)+strlen(t)+1);    /* 3: you will have to reserve memory to hold the copy. */
+    int ptr =0, temp = 0;                   /* 4 initialise some helpers */
 
+    while(s[temp]!='\0'){                  /* 5. use the temp to "walk" over string 1 */
+        p[ptr++] = s[temp++];
+    }
+    temp=0;
+    while(t[temp]!='\0'){                   /* and string two */
+        p[ptr++]=t[temp++];
+    }
+    return p;
+}
 
-void print_token_list(struct token_list *list){
-  if(list){
+char* print_token_list(struct token_list *list, char* result){
+  if(result == NULL){
+    result = first(list);
+    printf("I'm here twice\n");
+    //print_token_list(rest(list), result);
+    
+   
+  }
+   if(list && result !=NULL){
+     
+     result = scat(result, first(list));
+    printf("The result %s\n", result);
     printf("%s\n", first(list));
-    print_token_list(rest(list));
+    print_token_list(rest(list), result);
 
+  }
+  else{
+  return result;
   }
 
 }
