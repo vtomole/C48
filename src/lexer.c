@@ -124,40 +124,19 @@ char*  append(char* s, char c)
 	return s;
 }
 
-char *my_strtok (char *string, char delimeter){
 
-  char *token;
-  int i;
-
-  
-
-  for(i =0; i <strlen(string); i++){
-    if(string[i]==delimeter){
-      return token;
-    }
-
-    else{
-       
-      token = append (token, string[i]);
-     
-
-    }
-
-  }
-
-}
 
 struct identifier* read_identifier (char* program, int index){
   struct identifier *identifier1;
   
-  char s = ' ';
+  const char s[2] = " ";
   
   program = chopN( program, index );
   
   char *string = strdup(program);
   printf("the string %s\n", string);
   
-  identifier1->identifier_token= my_strtok(string, s);
+  identifier1->identifier_token= strtok(string, s);
   printf("In read_identifier\n");
   identifier1->length = strlen(identifier1->identifier_token);
   if(identifier1 == NULL){
@@ -189,6 +168,9 @@ char* token_type (char* token){
   }
   else if (isdigit(token[0])){
     return "num";
+  }
+  else{
+    return "identifier";
   }
 
 
@@ -231,13 +213,14 @@ token_list* list_lexer (char *program){
 	else if (token[1] == ')'){
 
 
-	  object1.type = "right_paren";
-	  object1.value = "(";
-	  token_list = cons1(object1, token_list);
-	  
+	    
 	  token[strlen(token)-1] = 0;
 	  object1.type = token_type(token);
 	  object1.value = token;
+	  token_list = cons1(object1, token_list);
+
+	  object1.type = "right_paren";
+	  object1.value = "(";
 	  token_list = cons1(object1, token_list);
      
 	 
@@ -261,10 +244,10 @@ token_list* list_lexer (char *program){
 
     }
 
-    print_token_list(reverse_tokenlist(token_list));
+   
 
 
-  return token_list;
+  return  reverse_tokenlist(token_list);
 }
 
 
