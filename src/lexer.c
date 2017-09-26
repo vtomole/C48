@@ -106,13 +106,13 @@ char* print_token_list(struct token_list *list, char* result){
   if(result == NULL){
     result = first(list);
     printf("I'm here twice\n");
-    //print_token_list(rest(list), result);
+    print_token_list(rest(list), result);
     
    
   }
-   if(list && result !=NULL){
+  else if(list && result !=NULL){
      
-     result = scat(result, first(list));
+    result = scat(result, first(list));
     printf("The result %s\n", result);
     printf("%s\n", first(list));
     print_token_list(rest(list), result);
