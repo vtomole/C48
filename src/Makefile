@@ -2,5 +2,5 @@ all:
 	gcc repl.c -o repl
 	./repl
 
-run:
-	
+c48:
+	gcc c48.c -o c48
