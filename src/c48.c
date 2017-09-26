@@ -7,6 +7,7 @@
 #include "vm.c"
 #include "lexer.c"
 #include "hash.c"
+#include "../tests/lexer_tests.c"
 #include "../tests/tests.c"
 
 
