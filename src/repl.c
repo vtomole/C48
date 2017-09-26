@@ -388,7 +388,9 @@ int main(char *argc, char **argv[]){
   char str[20];
   struct pair *list = NULL;
   struct  token_list *token_list = NULL;
+  struct  token_list *token_list2 = NULL;
   struct object object1;
+  constructor_cell* cell = NULL;
   pair* code_tree = NULL;
   char* operator = "third";
   char* string = "\"A string\"";
@@ -419,6 +421,35 @@ int main(char *argc, char **argv[]){
   code_tree = cons(ptr,Symbol, code_tree);
   //code_tree = cons(ptr_string, String, code_tree);
   
+  object1.type = "left_paren";
+  object1.value = "(";
+  token_list = cons1(object1, token_list);
+
+  object1.type = "identifier";
+  object1.value = "+";
+  token_list = cons1(object1, token_list);
+
+  object1.type = "num";
+  object1.value = "137";
+  token_list = cons1(object1, token_list);
+
+  object1.type = "num";
+  object1.value = "349";
+  token_list = cons1(object1, token_list);
+
+  object1.type = "right_paren";
+  object1.value = ")";
+  token_list = cons1(object1, token_list);
+
+  printf("TRYING TO PRINT IT %s\n", token_list->val.value);
+
+   void *ptr1 = &token_list;
+   //printf("%s\n", *(char **)ptr1->val.value);
+   token_list2 = (struct token_list*)ptr1;
+
+   // printf("%s\n", token_list2->val.value);
+
+  parse(token_list, cell);
 
   // print(code_tree);
   //print(eval(code_tree, env));
