@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <limits.h>
 #include "lexer.c"
+#include "parser.c"
 #include "vm.h"
 #include "vm.c"
 #include "hash.c"
