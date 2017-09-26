@@ -250,13 +250,13 @@ pair* cdr( struct pair *list){
 
 void printInt(void *n)
 {
-   printf("%d\n", *(int *)n);
+  printf("%d\n", *(int *)n);
 }
 
 
 void printChar(void *n)
 {
-   printf("%s\n", (char *)n);
+  printf("%s\n", (char *)n);
 }
 
 void print(pair *list){
@@ -264,15 +264,15 @@ void print(pair *list){
     
     //printf("%s\n", first(list));
     // print_token_list(rest(list));
-    printf("List is here\n");
+    // printf("List is here\n");
     switch(list->type){
-  case Number:
-    //printf("It's a number\n");
-    printInt(list->car);
+    case Number:
+      //printf("It's a number\n");
+      printInt(list->car);
     
-    break;
+      break;
     case Symbol:
-      printf("It's a symbol\n");
+      // printf("It's a symbol\n");
       printChar(list->car);
       break;
 
@@ -280,11 +280,11 @@ void print(pair *list){
       // printf("It's a string\n");
       printChar(list->car);
       break;
-  default:
-    break;
-  }
+    default:
+      break;
+    }
 
- }
+  }
   else{
     // printf("List is not here\n");
   }
@@ -316,7 +316,7 @@ pair *eval(pair *head, pair *env){
   
 
   if(self_evaluatingp (head) == 0){
-    printf("It's self-evaluating\n");
+    //printf("It's self-evaluating\n");
     return head;
   }
   if(head->type == Symbol){
@@ -327,9 +327,9 @@ pair *eval(pair *head, pair *env){
   
 
   /* if(strcmp (head->type, "number") == 0){
-    return 
+     return 
 
-    }*/
+     }*/
 
   
  
@@ -409,7 +409,7 @@ int main(char *argc, char **argv[]){
   struct  token_list *token_list = NULL;
   struct object object1;
   pair* code_tree = NULL;
-  char* operator = "square";
+  char* operator = "third";
   char* string = "\"A string\"";
   int b = 20, c = 30;
   // hashtable_t *env = ht_create( 65536 );
@@ -419,7 +419,8 @@ int main(char *argc, char **argv[]){
 
     
   //printf("IDENTIFIER %s\n",read_identifier("Hello how are you doing?", 6));
-  list_lexer("Hello how are you doing?");
+  //print_token_list(list_lexer("(set position (* 60 (+ initial rate)))"));
+  print_token_list(list_lexer("(+ (+ 2 3) 7)"));
   //list_lexer("11 12 45 87 98 45 8476 2635");
   
 
@@ -438,7 +439,7 @@ int main(char *argc, char **argv[]){
   
 
   // print(code_tree);
-  print(eval(code_tree, env));
+  //print(eval(code_tree, env));
  
 
   //push(3);
@@ -455,14 +456,14 @@ int main(char *argc, char **argv[]){
   //  compile();
   
   /* while (1){     
-  printf("repl>");
-  fgets (str, 20, stdin);
-  //printf("=>");
-  //micro_read(str);
-  printf("=>%s\n", eval(read(str)));
+     printf("repl>");
+     fgets (str, 20, stdin);
+     //printf("=>");
+     //micro_read(str);
+     printf("=>%s\n", eval(read(str)));
  
 
-  }*/
+     }*/
   return 0;
   
 }//end of main

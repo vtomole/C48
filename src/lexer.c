@@ -18,8 +18,25 @@ typedef struct token_list{
 //Chop off first N characters
 char * chopN(char * charBuffer, int n )
 {   
-   return charBuffer + n;   
-}   
+  return charBuffer + n;   
+}
+
+
+token_list* reverse_tokenlist(token_list* head)
+{
+  token_list* prev    = NULL;
+  token_list* current = head;
+  token_list* next;
+  while (current != NULL)
+    {
+      next  = current->next;
+      current->next = prev;
+      prev = current;
+      current = next;
+    }
+  head = prev;
+  return head;
+}
 
 token_list* cons1(struct object val, struct token_list *cdr)
 {
@@ -32,7 +49,7 @@ token_list* cons1(struct object val, struct token_list *cdr)
       exit(0);
     }
   pair->val = val;
-   pair->next = cdr;
+  pair->next = cdr;
  
   return pair;
 }
@@ -76,7 +93,7 @@ void print_token_list(struct token_list *list){
     printf("%s\n", first(list));
     print_token_list(rest(list));
 
- }
+  }
 
 }
 
@@ -89,14 +106,42 @@ int iswhitespace (char c){
   }
 }
 
+char*  append(char* s, char c)
+{
+
+  int len = strlen(s);
+
+  printf("Char s %s\n", s);
+
+  printf("Length %c\n", s[1]);
+	
+	 
+  s[len-1] = c;
+  printf("In append\n");
+	
+  s[len+1] = '\0';
+
+  return s;
+}
+
+
+
 struct identifier* read_identifier (char* program, int index){
   struct identifier *identifier1;
-  const char s[2] = " ";
-  program = chopN( program, index );
-  char *string = strdup(program);
-  identifier1->identifier_token= strtok(string, s);
-  identifier1->length = strlen(identifier1->identifier_token);
   
+  const char s[2] = " ";
+  
+  program = chopN( program, index );
+  
+  char *string = strdup(program);
+  printf("the string %s\n", string);
+  
+  identifier1->identifier_token= strtok(string, s);
+  printf("In read_identifier\n");
+  identifier1->length = strlen(identifier1->identifier_token);
+  if(identifier1 == NULL){
+    printf("It's null\n");
+  }
   return identifier1;
 
 }
@@ -114,8 +159,144 @@ struct identifier* read_number (char* program, int index){
 }
 //Lexer
 
+
+
+char* token_type (char* token){
+
+  if (isalpha(token[0])){
+    return "symbol";
+  }
+  else if (isdigit(token[0])){
+    return "num";
+  }
+  else{
+    return "identifier";
+  }
+
+
+}
+
+int count_chars(char* string, char ch)
+{
+  int count = 0;
+  int i;
+
+  // We are computing the length once at this point
+  // because it is a relatively lengthy operation,
+  // and we don't want to have to compute it anew
+  // every time the i < length condition is checked.
+  int length = strlen(string);
+
+  for (i = 0; i < length; i++)
+    {
+      if (string[i] == ch)
+        {
+	  count++;
+        }
+    }
+
+  return count;
+}
+
 //TODO: check for Booleans, Characters, Strings
 token_list* list_lexer (char *program){
+  static int last_character = ' ';
+  int i;
+   
+  struct  token_list *token_list = NULL;
+  struct object object1;
+  struct identifier *id;
+  const char s[2] = " ";
+  char *token;
+  int num_right; 
+
+  const char *right_par = ")";
+   
+  program = strdup(program);
+  /* get the first token */
+  token = strtok(program, s);
+
+ 
+  /* walk through other tokens */
+  while( token != NULL ) 
+    {
+      num_right = count_chars(token, ')');
+	
+      if(token[0] == '('){
+	 
+	memmove(token, token+1, strlen(token));
+
+
+	object1.type = "left_paren";
+	object1.value = "(";
+	token_list = cons1(object1, token_list);
+	object1.type = token_type(token);
+	object1.value = token;
+	token_list = cons1(object1, token_list);
+
+	  
+	  
+      }
+      else if ( num_right>= 1){ 
+
+
+	    
+	token[strlen(token)-num_right] = 0;
+	 
+	object1.type = token_type(token);
+	object1.value = token;
+	 
+	token_list = cons1(object1, token_list);
+
+	object1.type = "right_paren";
+	object1.value = ")";
+	token_list = cons1(object1, token_list);
+	
+	 
+	for(i =1; i < num_right; i++){
+	    
+	     
+	  object1.type = "right_paren";
+	  object1.value = ")";
+	  token_list = cons1(object1, token_list);
+
+	}
+	    
+	 
+     
+	 
+      }
+      else{
+	object1.type = token_type(token);
+	object1.value = token;
+	token_list = cons1(object1, token_list);
+
+      }
+    
+      token = strtok(NULL, s);  
+
+    }
+
+  if(token_list == NULL){
+
+    object1.type = "identifier";
+    object1.value = "open_paren";
+    token_list = cons1(object1, token_list);
+
+  }
+
+   
+
+
+  return  reverse_tokenlist(token_list);
+}
+
+
+
+
+
+//TODO: check for Booleans, Characters, Strings
+token_list* list_lexer_tmp (char *program){
   static int last_character = ' ';
   int i;
    
@@ -128,60 +309,59 @@ token_list* list_lexer (char *program){
   token_list = cons1(object1, token_list);
   
   /* object1.type = "operator";
-  object1.value = "+";
-  token_list = cons1(object1, token_list);
+     object1.value = "+";
+     token_list = cons1(object1, token_list);
   
-  object1.type = "identifier";
-  object1.value = "open_paren";
-  token_list = cons1(object1, token_list);
+     object1.type = "identifier";
+     object1.value = "open_paren";
+     token_list = cons1(object1, token_list);
   
-  object1.type = "operator";
-  object1.value = "+";
-  token_list = cons1(object1, token_list);
+     object1.type = "operator";
+     object1.value = "+";
+     token_list = cons1(object1, token_list);
   
-  object1.type = "num";
-  object1.value = "2";
-  token_list = cons1(object1, token_list);
-
-  object1.type = "num";
-  object1.value = "3";
-  token_list = cons1(object1, token_list);
+     object1.type = "num";
+     object1.value = "2";
+     token_list = cons1(object1, token_list);
+     object1.type = "num";
+     object1.value = "3";
+     token_list = cons1(object1, token_list);
   
-  object1.type = "identifier";
-  object1.value = "closed_paren";
-  token_list = cons1(object1, token_list);
+     object1.type = "identifier";
+     object1.value = "closed_paren";
+     token_list = cons1(object1, token_list);
   
-  object1.type = "num";
-  object1.value = "7";
-  token_list = cons1(object1, token_list);
+     object1.type = "num";
+     object1.value = "7";
+     token_list = cons1(object1, token_list);
  
-  object1.type = "identifier";
-  object1.value = "closed_paren";*/
+     object1.type = "identifier";
+     object1.value = "closed_paren";*/
 
 
   //printf("is alpha-test char %c\n",program[0]);
   //printf("is alpha-test %d\n",isalpha(program[0])); 
-   for(i =0; i < strlen(program); i++){
+  for(i =0; i < strlen(program); i++){
     //Check if it's whitespace
     if(iswhitespace(program[i])){
 	
-      }
+    }
     //check if it is an open parentheses
-      else if (program[i] == '('){
-	 object1.type = "identifier";
-	 object1.value = "open_paren";
-	 token_list = cons1(object1, token_list);
+    else if (program[i] == '('){
+      object1.type = "identifier";
+      object1.value = "open_paren";
+      token_list = cons1(object1, token_list);
 
-      }
+    }
     //check if it is a closed parentheses
-     else if (program[i] == ')'){
-	 object1.type = "identifier";
-	 object1.value = "closed_paren";
-	 token_list = cons1(object1, token_list);
+    else if (program[i] == ')'){
+      object1.type = "identifier";
+      object1.value = "closed_paren";
+      token_list = cons1(object1, token_list);
 
-      }    
+    }    
     //check if its in the alphabet
-     else if (isalpha(program[i])){
+    else if (isalpha(program[i])){
       
       object1.type = "symbol";
       id =  read_identifier(program, i);
@@ -206,9 +386,8 @@ token_list* list_lexer (char *program){
       printf("Illegal syntax\n");
       
     }
-    }
-   printf("The number %d\n", count_token_list(token_list));
-   print_token_list(token_list);
+  }
+  printf("The number %d\n", count_token_list(token_list));
+  //print_token_list(reverse_token_list(token_list));
   return token_list;
 }
-
