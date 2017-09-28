@@ -420,17 +420,31 @@ int main(char *argc, char **argv[]){
   //code_tree = cons(&c,Number,code_tree);
   code_tree = cons(ptr,Symbol, code_tree);
   //code_tree = cons(ptr_string, String, code_tree);
+
   
+  void *ptr3;
   object1.type = "left_paren";
   object1.value = "(";
   token_list = cons1(object1, token_list);
 
-  void *ptr3 = &token_list->val;
-  printf("%s %s \n", ((struct object*)ptr3)->value, ((struct object*)ptr3)->type);
-
+  //ptr3 = &token_list->val;
+  // printf("%s %s \n", ((struct object*)ptr3)->value, ((struct object*)ptr3)->type);
+  
+  
   object1.type = "identifier";
   object1.value = "+";
   token_list = cons1(object1, token_list);
+
+    
+  // printf("%s %s \n", ((struct object*)ptr3)->value, ((struct object*)ptr3)->type);
+ 
+  
+  //printf("%s %s \n", token_list2->val.value, token_list2->val.type);
+
+    char* a = "hello";
+    ptr3 = &a;
+    a = *(char **)ptr3;
+    printf("SHOULD PRINT HELLO %s\n",a );
 
   object1.type = "num";
   object1.value = "137";
@@ -444,7 +458,18 @@ int main(char *argc, char **argv[]){
   object1.value = ")";
   token_list = cons1(object1, token_list);
 
-  printf("TRYING TO PRINT IT %s\n", token_list->val.value);
+  while(&token_list->val !=NULL){
+  ptr3 = &token_list->val;
+  printf("%s %s \n", ((struct object*)ptr3)->value, ((struct object*)ptr3)->type);
+  ptr3 = &token_list->next;
+  token_list = *(struct token_list**)ptr3;
+  
+  }
+   
+
+   
+
+  // printf("TRYING TO PRINT IT %s\n", token_list->val.value);
 
    void *ptr1 = &token_list;
    //printf("%s\n", *(char **)ptr1->val.value);

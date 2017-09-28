@@ -12,7 +12,7 @@ typedef struct type_list{
   struct type_list *next;
 }type_list;
 
-//fine
+//Use this when you dereference void pointer to pointer fine
 char* get_car(void* car){
   return *(char**)car;
 }
