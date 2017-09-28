@@ -425,6 +425,9 @@ int main(char *argc, char **argv[]){
   object1.value = "(";
   token_list = cons1(object1, token_list);
 
+  void *ptr3 = &token_list->val;
+  printf("%s %s \n", ((struct object*)ptr3)->value, ((struct object*)ptr3)->type);
+
   object1.type = "identifier";
   object1.value = "+";
   token_list = cons1(object1, token_list);
