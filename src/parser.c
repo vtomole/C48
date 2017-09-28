@@ -30,6 +30,17 @@ constructor_cell* cons2(void* first_element, void* list){
   return cell;
 }
 
+//prints the parameters in a list
+void print_token_list2(token_list* token_list){
+  void* ptr;
+  while(&token_list->val !=NULL){
+    ptr = &token_list->val;
+    printf("%s %s \n", ((struct object*)ptr)->value, ((struct object*)ptr)->type);
+    ptr = &token_list->next;
+    token_list = *(struct token_list**)ptr;
+  }
+}
+
 //recursively adds the token_lists to the code tree
 constructor_cell* parse(token_list* token_list, constructor_cell* code_tree){
   if(token_list == NULL){

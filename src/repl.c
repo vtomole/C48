@@ -457,14 +457,15 @@ int main(char *argc, char **argv[]){
   object1.type = "right_paren";
   object1.value = ")";
   token_list = cons1(object1, token_list);
-
-  while(&token_list->val !=NULL){
+  
+  print_token_list2(token_list);
+  //needs to be functionalized
+  /*while(&token_list->val !=NULL){
   ptr3 = &token_list->val;
   printf("%s %s \n", ((struct object*)ptr3)->value, ((struct object*)ptr3)->type);
   ptr3 = &token_list->next;
   token_list = *(struct token_list**)ptr3;
-  
-  }
+  }*/
    
 
    
@@ -488,7 +489,6 @@ int main(char *argc, char **argv[]){
   //push(9);
   //push(1);
   //push(12);
-  
 
   //while(!isEmpty()) {
   int data = peek();
