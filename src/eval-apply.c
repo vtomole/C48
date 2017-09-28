@@ -1,3 +1,15 @@
+/**
+ * Executes the operation returning the result
+ * This function implements our defined functions among other operation native to c
+ * Parameters:
+ * - operator the function or operation to perform
+ * - arguments[] an array containing the nessecary arguments to execute the command
+ * Return Value:
+ * - answer the result of the operation
+ * Example call:
+ * apply('+', int[1,2])
+ * expected return val: 3
+ */ 
 char  *apply(char operator, int arguments[]){
   
   int i;
@@ -23,8 +35,19 @@ char  *apply(char operator, int arguments[]){
     return "Your char is not in this variable\n";
   }
 
-}
+}//end of apply
 
+/**
+ * Evaluates the given arguements to create the code tree that apply will execute over
+ * This function takes in an expression and and the environment hash table and creates the tree
+ * Parameters:
+ * - exp_env the expresssion and the environment the expression is in
+ * Return Value:
+ * - answer the head of the code tree
+ * Example call:
+ * 
+ * expected return val: 
+ */ 
 char *eval(eval_arguments exp_env){
 
   pair* head = exp_env.head;
@@ -79,4 +102,19 @@ char *eval(eval_arguments exp_env){
     answer = apply(operator, arguments);
   }
   return answer;
+}//end of eval
+
+/**
+ * Prints the code tree returned by eval
+ * This function is primarily for testing our tree generation
+ * Parameters:
+ * - answer the head of the code tree to print
+ * Return Value:
+ * - none
+ * Example call:
+ * print(eval());
+ * expected return val: null
+ */ 
+void print(char* answer){
+  //TODO
 }
