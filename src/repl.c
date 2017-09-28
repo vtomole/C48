@@ -391,7 +391,7 @@ int main(char *argc, char **argv[]){
   struct  token_list *token_list2 = NULL;
   struct object object1;
   constructor_cell* cell = NULL;
-  pair* code_tree = NULL;
+  constructor_cell* code_tree = NULL;
   char* operator = "third";
   char* string = "\"A string\"";
   int b = 20, c = 30;
@@ -416,13 +416,10 @@ int main(char *argc, char **argv[]){
 
   char *ptr_string = malloc(strlen(string) + 1);
   strcpy(ptr_string, string);
-  //code_tree = cons(&b,Number,code_tree);
-  //code_tree = cons(&c,Number,code_tree);
-  code_tree = cons(ptr,Symbol, code_tree);
-  //code_tree = cons(ptr_string, String, code_tree);
 
+  code_tree = cons2(ptr, code_tree);
   
-  void *ptr3;
+  //void *ptr3;
   object1.type = "left_paren";
   object1.value = "(";
   token_list = cons1(object1, token_list);
@@ -441,10 +438,10 @@ int main(char *argc, char **argv[]){
   
   //printf("%s %s \n", token_list2->val.value, token_list2->val.type);
 
-    char* a = "hello";
+  /* char* a = "hello";
     ptr3 = &a;
     a = *(char **)ptr3;
-    printf("SHOULD PRINT HELLO %s\n",a );
+    printf("SHOULD PRINT HELLO %s\n",a );*/
 
   object1.type = "num";
   object1.value = "137";
@@ -459,26 +456,17 @@ int main(char *argc, char **argv[]){
   token_list = cons1(object1, token_list);
   
   print_token_list2(token_list);
-  //needs to be functionalized
-  /*while(&token_list->val !=NULL){
-  ptr3 = &token_list->val;
-  printf("%s %s \n", ((struct object*)ptr3)->value, ((struct object*)ptr3)->type);
-  ptr3 = &token_list->next;
-  token_list = *(struct token_list**)ptr3;
-  }*/
-   
-
-   
+  printf("////////////////////////////////////////////\n");
+  code_tree = parse(token_list, cell);
+  //print_token_list2(code_tree->car);
 
   // printf("TRYING TO PRINT IT %s\n", token_list->val.value);
 
-   void *ptr1 = &token_list;
+  //void *ptr1 = &token_list;
    //printf("%s\n", *(char **)ptr1->val.value);
-   token_list2 = (struct token_list*)ptr1;
+   //token_list2 = (struct token_list*)ptr1;
 
    // printf("%s\n", token_list2->val.value);
-
-  parse(token_list, cell);
 
   // print(code_tree);
   //print(eval(code_tree, env));
@@ -491,7 +479,7 @@ int main(char *argc, char **argv[]){
   //push(12);
 
   //while(!isEmpty()) {
-  int data = peek();
+  //int data = peek();
   //printf("%d\n",data);
   //}
   //  compile();

@@ -41,13 +41,19 @@ void print_token_list2(token_list* token_list){
   }
 }
 
+//prints the parameters in a list
+void print_code_tree(constructor_cell* code_tree){
+  print_token_list2(code_tree->cdr);
+}
+
 //recursively adds the token_lists to the code tree
 constructor_cell* parse(token_list* token_list, constructor_cell* code_tree){
   if(token_list == NULL){
     return code_tree;
   }
   code_tree = cons2(&token_list, &code_tree);
-  //printf("%s", get_car(code_tree->car));
+  print_token_list2(token_list);
+  printf("///////////////////////////\n");
   parse(token_list->next, code_tree);
 }
 
