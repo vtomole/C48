@@ -11,30 +11,25 @@
 #include "../tests/lexer_tests.c"
 #include "../tests/tests.c"
 //#include "read_2.c"
-//#include "eval-apply.c"
+#include "eval-apply.c"
 #include "compiler.c"
 
 
 
-enum pair_type {Symbol,String, Number, List, Procedure, Lambda};
+
 
 typedef struct pair{
   void *car;
-  enum pair_type type;
+  enum type type;
   void *cdr;
 }pair;
-
-struct env{
-  char* variable;
-  pair* value;
-}env;
 
 
 const char *type_array[1];
 int command = 0;
 
  
-pair* create1(void* car,enum pair_type type, void* cdr)
+pair* create1(void* car,enum type type, void* cdr)
 {
   //pair* pair = (pair*)malloc(sizeof(pair));
   pair* pair = malloc(sizeof(pair));
@@ -52,7 +47,7 @@ pair* create1(void* car,enum pair_type type, void* cdr)
 
 
 
-pair* cons(void *car,enum pair_type type, pair* cdr)
+pair* cons(void *car,enum type type, pair* cdr)
 {
  
   pair* new_pair = create1(car,type,cdr);
@@ -202,32 +197,7 @@ int self_evaluatingp (pair *exp){
     return 1;
   }
 }
-char  *apply(char operator, int arguments[]){
-  
-  int i;
-  char* answer = (char*)malloc(8 * sizeof(char));
-  switch(operator){
-  case '+':
-    sprintf(answer, "%d", arguments[0] + arguments[1]);
-    return answer;
-    break;
-  case '-':
-    sprintf(answer, "%d", arguments[0] - arguments[1]);
-    return answer;
-    break;
-  case '*':
-    sprintf(answer, "%d", arguments[0] * arguments[1]);
-    return answer;
-    break;
-  case '/':
-    sprintf(answer, "%d", arguments[0] / arguments[1]);
-    return answer;
-    break;
-  default:
-    return "Your char is not in this variable\n";
-  }
 
-}
 
 int count (pair* cursor){
   int c = 0;
@@ -302,84 +272,6 @@ pair* lookup_variable_value(pair* exp, pair *env){
 
 
 
-}
-pair *eval(pair *head, pair *env){
-
-  pair *cursor = head;
-  int num_nodes=0;
-  char operator;
-  char *answer;
-  int first,second,i;
- 
-  //num_nodes = count (head);
- 
-  if(head == NULL){
-    return NULL;
-  }
-  
-
-  if(self_evaluatingp (head) == 0){
-    //printf("It's self-evaluating\n");
-    return head;
-  }
-  if(head->type == Symbol){
-    return lookup_variable_value (head, env);
-  }
-      
-
-  
-
-  /* if(strcmp (head->type, "number") == 0){
-     return 
-
-     }*/
-
-  
- 
-  i=0;
-  //if(strcmp(type_array[i], "integer") == 0){
-
-  //  printf("It's an integer\n");
-    
-  // }
-
-  
-    
-  switch(head->type){
-  case Symbol:
-    operator = *(char*)head->car;
-    break;
-  default:
-    break;
-  }
-    
-  if( *(char*)head->car == 'q'){
-    exit(0);
-  }
-  
-  // printf("The number of nodes %d\n", num_nodes);
- 
-  
-  //printf("In eval  should be +  %c\n", operator );
-
-  
-  head =  (pair*)head->cdr;
-
-  first = *(int*)head->car;
-  //printf("In eval  should be 20  %d\n", first );
-
-  head =  (pair*)head->cdr;
-
-  second = *(int*)head->car;
-  //printf("In eval  should be 20  %d\n", second );
-   
-  
-  
-  int arguments[2] = {first,second};
-
-  answer = apply(operator, arguments);
-  
-  return head;
 }
 
 int main(char *argc, char **argv[]){
