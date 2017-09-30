@@ -1,2 +1,6 @@
 *.~
 *.txt#
+*.c#
+*.#read.c
+*.#print.c
+*repl
