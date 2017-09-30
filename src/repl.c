@@ -13,6 +13,7 @@
 #include "../tests/tests.c"
 //#include "read_2.c"
 #include "eval-apply.c"
+#include "print.c"
 #include "compiler.c"
 
 
@@ -187,18 +188,6 @@ pair *read(char *program){
 
 }
 
-int self_evaluatingp (pair *exp){
-  if(exp->type == Number){
-    return 0;
-  }
-  else if (exp->type == String){
-    return 0;
-  }
-  else {
-    return 1;
-  }
-}
-
 
 int count (pair* cursor){
   int c = 0;
@@ -302,7 +291,7 @@ int main(char *argc, char **argv[]){
   //print_token_list(list_lexer("(set position (* 60 (+ initial rate)))"));
   // print_token_list(list_lexer("(+ (+ 2 3) 7)"), result);
   //list_lexer("11 12 45 87 98 45 8476 2635");
-  tests();
+  //tests();
 
   
   //print_token_list(token_list);
@@ -338,17 +327,25 @@ int main(char *argc, char **argv[]){
 
   expr2 = cons3(expr,expr2);
   
-  expr = create_variable("+");
+  //expr = create_variable("+");
+
+  expr = create_primitiveop("+");
 
   expr2 = cons3(expr,expr2);
   
-  printf("EXPR2 TYPE THE FIRST TIME %s \n", car1(expr2)->type);
-  expr2= cdr1(expr2);
+ 
+  /*expr2= cdr1(expr2);
 
   printf("EXPR2 TYPE SECOND TYPE SHOULD BE NUMBER %s \n", car1(expr2)->type);
 
    expr2= cdr1(expr2);
-    printf("EXPR2 TYPE SECOND TYPE SHOULD BE NUMBER %s \n", car1(expr2)->type);
+   printf("EXPR2 TYPE SECOND TYPE SHOULD BE NUMBER %s \n", car1(expr2)->type);*/
+
+    result_expr = eval(expr2, token_list);
+
+    print1(result_expr);
+
+    //printf("RESULT_EXPR TYPE THE FIRST TIME %s \n", result_expr->type);
 
   //printf("ENUM %d\n",expr.number);
   //expr.symbol.name = "+";
@@ -380,9 +377,9 @@ int main(char *argc, char **argv[]){
   object1.value = ")";
   token_list = cons1(object1, token_list);
   
-  print_token_list2(token_list);
-  printf("////////////////////////////////////////////\n");
-  code_tree = parse(token_list, cell);
+  //print_token_list2(token_list);
+  //printf("////////////////////////////////////////////\n");
+    //code_tree = parse(token_list, cell);
   //print_token_list2(code_tree->car);
 
   // printf("TRYING TO PRINT IT %s\n", token_list->val.value);

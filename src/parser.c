@@ -64,7 +64,7 @@ object* create_number (int number){
   struct object *object1;
   object *test1 = malloc(sizeof(*object1));
   test1->type = "number";
-  test1->number= 20;
+  test1->number= number;
   return test1;
 }
 
@@ -72,6 +72,14 @@ object* create_variable (char* variable){
   struct object *object1;
   object *test1 = malloc(sizeof(*object1));
   test1->type = "variable";
+  test1->variable = variable ;
+  return test1;
+}
+
+object* create_primitiveop (char* variable){
+  struct object *object1;
+  object *test1 = malloc(sizeof(*object1));
+  test1->type = "primop";
   test1->variable = variable ;
   return test1;
 }
