@@ -1,4 +1,4 @@
-int assert (char *input, char* expected){
+int our_assert (char *input, char* expected){
 
   if(strcmp(input,expected) == 0){
     return 0;
@@ -15,11 +15,11 @@ void lexer_tests (){
   int run = 0;
   printf("The result %s\n",print_token_list(list_lexer("(set position (* 60 (+ initial rate)))"), result));
 
-  if(assert(print_token_list(list_lexer("(set position (* 60 (+ initial rate)))"),result), "(setposition(*60(+initialrate)))")== 0){
+  if(our_assert(print_token_list(list_lexer("(set position (* 60 (+ initial rate)))"),result), "(setposition(*60(+initialrate)))")== 0){
     passed++;
   }
   run++;
-  if(assert(print_token_list(list_lexer("(+ (+ 2 3) 7)"),result), "(+(+23)7)")== 0){
+  if(our_assert(print_token_list(list_lexer("(+ (+ 2 3) 7)"),result), "(+(+23)7)")== 0){
     passed++;
   }
   run++;

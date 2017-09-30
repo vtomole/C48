@@ -1,9 +1,9 @@
 //https://llvm.org/docs/tutorial/LangImpl01.html#language
 
-struct object{
+struct token_object{
   char* type;
   char* value;
-}object;
+}token_object;
 
 struct identifier{
   char* identifier_token;
@@ -11,7 +11,7 @@ struct identifier{
 }identifier;
 
 typedef struct token_list{
-  struct object val;
+  struct token_object val;
   struct token_list *next;
 }token_list;
 
@@ -52,6 +52,7 @@ token_list* reverse_tokenlist(token_list* head)
   return head;
 }
 
+
 /**
  * This function does ???
  * Parameters:
@@ -63,7 +64,8 @@ token_list* reverse_tokenlist(token_list* head)
  * 
  * expected return val: 
  */ 
-token_list* cons1(struct object val, struct token_list *cdr)
+token_list* cons1(struct token_object val, struct token_list *cdr)
+
 {
  
   //pair* pair = (pair*)malloc(sizeof(pair));
@@ -372,7 +374,7 @@ token_list* list_lexer (char *program){
   int i;
    
   struct  token_list *token_list = NULL;
-  struct object object1;
+  struct token_object object1;
   struct identifier *id;
   const char s[2] = " ";
   char *token;
@@ -477,7 +479,7 @@ token_list* list_lexer_tmp (char *program){
   int i;
    
   struct  token_list *token_list = NULL;
-  struct object object1;
+  struct token_object object1;
   struct identifier *id;
 
   object1.type = "identifier";
