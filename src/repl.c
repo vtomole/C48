@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <limits.h>
+#include <assert.h>
 #include "lexer.c"
 #include "parser.c"
 #include "vm.h"
@@ -281,7 +282,10 @@ int main(char *argc, char **argv[]){
   struct pair *list = NULL;
   struct  token_list *token_list = NULL;
   struct  token_list *token_list2 = NULL;
-  struct object object1;
+  struct token_object object1;
+  struct object *expr;
+   struct object *expr2;
+  struct object *result_expr = NULL;
   constructor_cell* cell = NULL;
   constructor_cell* code_tree = NULL;
   char* operator = "third";
@@ -314,6 +318,7 @@ int main(char *argc, char **argv[]){
   //void *ptr3;
   object1.type = "left_paren";
   object1.value = "(";
+  
   token_list = cons1(object1, token_list);
 
   //ptr3 = &token_list->val;
@@ -322,6 +327,34 @@ int main(char *argc, char **argv[]){
   
   object1.type = "identifier";
   object1.value = "+";
+
+  expr = create_number (349);
+
+  //printf("THE NUMBER %d\n", expr->number);
+
+  expr2 = cons3(expr,NULL);
+
+  expr = create_number (137);
+
+  expr2 = cons3(expr,expr2);
+  
+  expr = create_variable("+");
+
+  expr2 = cons3(expr,expr2);
+  
+  printf("EXPR2 TYPE THE FIRST TIME %s \n", car1(expr2)->type);
+  expr2= cdr1(expr2);
+
+  printf("EXPR2 TYPE SECOND TYPE SHOULD BE NUMBER %s \n", car1(expr2)->type);
+
+   expr2= cdr1(expr2);
+    printf("EXPR2 TYPE SECOND TYPE SHOULD BE NUMBER %s \n", car1(expr2)->type);
+
+  //printf("ENUM %d\n",expr.number);
+  //expr.symbol.name = "+";
+  //expr = cons3 (expr, result_expr);
+
+  //printf("SYMBOL %s\n", expr->symbol.name);
   token_list = cons1(object1, token_list);
 
     

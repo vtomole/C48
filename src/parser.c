@@ -1,3 +1,5 @@
+//#include "parser.h"
+
 enum type{Symbol, List, Function, String, Number};
 
 typedef struct constructor_cell{
@@ -12,19 +14,72 @@ struct symbol {
 }symbol;
 
 
+
+  
+ 
+
 typedef struct object {
   char* type;
 
+ 
   struct cons_cell{
     
-  struct object *car; 
-  struct object *cdr;
+    struct object *car;
+    struct object *cdr;
   }cons_cell;
+ 
   char* variable;
   char *string;
   int number;
+
  
-}object;
+  }object;
+
+
+object* cons3 (object *car, object *cdr){
+  struct object *object1;
+  object *test1 = malloc(sizeof(*object1));
+  test1->type = "cons";
+  test1->cons_cell.car = car;
+  test1->cons_cell.cdr = cdr;
+  return test1;
+}
+
+object* car1 (object *cell){
+  assert (strcmp(cell->type, "cons") == 0);
+
+  return cell->cons_cell.car;
+}
+
+object* cdr1 (object *cell){
+  assert (strcmp(cell->type, "cons") == 0);
+
+  return cell->cons_cell.cdr;
+}
+
+
+
+
+object* create_number (int number){
+  struct object *object1;
+  object *test1 = malloc(sizeof(*object1));
+  test1->type = "number";
+  test1->number= 20;
+  return test1;
+}
+
+object* create_variable (char* variable){
+  struct object *object1;
+  object *test1 = malloc(sizeof(*object1));
+  test1->type = "variable";
+  test1->variable = variable ;
+  return test1;
+}
+
+
+
+
+
 
 
 
@@ -54,16 +109,6 @@ constructor_cell* cons2(void* first_element, void* list){
 }
 
 
-
-object* cons3(object car, object cdr){
-
-  object *cell = malloc(sizeof(object));
-  //cell->type = List;
-  //cell->car = car;
-    //cell->cdr = cdr;
-  return cell;
-  
-};
 
 //prints the parameters in a list
 void print_token_list2(token_list* token_list){
