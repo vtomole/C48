@@ -20,7 +20,7 @@ typedef struct object {
   struct object *car; 
   struct object *cdr;
   }cons_cell;
-  char* symbol;
+  char* variable;
   char *string;
   int number;
  
