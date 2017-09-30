@@ -1,9 +1,32 @@
-
+enum type{Symbol, List, Function, String, Number};
 
 typedef struct constructor_cell{
   void* car; //first element
   void* cdr; //rest of the list w/ first element
+ 
 }constructor_cell;
+
+struct symbol {
+  char *name;
+  struct symbol *next;
+}symbol;
+
+
+typedef struct object {
+  char* type;
+
+  struct cons_cell{
+    
+  struct object *car; 
+  struct object *cdr;
+  }cons_cell;
+  char* symbol;
+  char *string;
+  int number;
+ 
+}object;
+
+
 
 //constructor_cell* code_tree = NULL; //Put the cells in this
 
@@ -30,12 +53,24 @@ constructor_cell* cons2(void* first_element, void* list){
   return cell;
 }
 
+
+
+object* cons3(object car, object cdr){
+
+  object *cell = malloc(sizeof(object));
+  //cell->type = List;
+  //cell->car = car;
+    //cell->cdr = cdr;
+  return cell;
+  
+};
+
 //prints the parameters in a list
 void print_token_list2(token_list* token_list){
   void* ptr;
   while(&token_list->val !=NULL){
     ptr = &token_list->val;
-    printf("%s %s \n", ((struct object*)ptr)->value, ((struct object*)ptr)->type);
+    printf("%s %s \n", ((struct token_object*)ptr)->value, ((struct token_object*)ptr)->type);
     ptr = &token_list->next;
     token_list = *(struct token_list**)ptr;
   }
