@@ -3,37 +3,35 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <limits.h>
+#include <assert.h>
 #include "lexer.c"
+#include "parser.c"
 #include "vm.h"
 #include "vm.c"
 #include "hash.c"
 #include "../tests/lexer_tests.c"
 #include "../tests/tests.c"
 //#include "read_2.c"
-//#include "eval-apply.c"
+#include "eval-apply.c"
+#include "print.c"
 #include "compiler.c"
 
 
 
-enum pair_type {Symbol,String, Number, List, Procedure, Lambda};
+
 
 typedef struct pair{
   void *car;
-  enum pair_type type;
+  enum type type;
   void *cdr;
 }pair;
-
-struct env{
-  char* variable;
-  pair* value;
-}env;
 
 
 const char *type_array[1];
 int command = 0;
 
  
-pair* create1(void* car,enum pair_type type, void* cdr)
+pair* create1(void* car,enum type type, void* cdr)
 {
   //pair* pair = (pair*)malloc(sizeof(pair));
   pair* pair = malloc(sizeof(pair));
@@ -51,7 +49,7 @@ pair* create1(void* car,enum pair_type type, void* cdr)
 
 
 
-pair* cons(void *car,enum pair_type type, pair* cdr)
+pair* cons(void *car,enum type type, pair* cdr)
 {
  
   pair* new_pair = create1(car,type,cdr);
@@ -190,43 +188,6 @@ pair *read(char *program){
 
 }
 
-int self_evaluatingp (pair *exp){
-  if(exp->type == Number){
-    return 0;
-  }
-  else if (exp->type == String){
-    return 0;
-  }
-  else {
-    return 1;
-  }
-}
-char  *apply(char operator, int arguments[]){
-  
-  int i;
-  char* answer = (char*)malloc(8 * sizeof(char));
-  switch(operator){
-  case '+':
-    sprintf(answer, "%d", arguments[0] + arguments[1]);
-    return answer;
-    break;
-  case '-':
-    sprintf(answer, "%d", arguments[0] - arguments[1]);
-    return answer;
-    break;
-  case '*':
-    sprintf(answer, "%d", arguments[0] * arguments[1]);
-    return answer;
-    break;
-  case '/':
-    sprintf(answer, "%d", arguments[0] / arguments[1]);
-    return answer;
-    break;
-  default:
-    return "Your char is not in this variable\n";
-  }
-
-}
 
 int count (pair* cursor){
   int c = 0;
@@ -302,84 +263,6 @@ pair* lookup_variable_value(pair* exp, pair *env){
 
 
 }
-pair *eval(pair *head, pair *env){
-
-  pair *cursor = head;
-  int num_nodes=0;
-  char operator;
-  char *answer;
-  int first,second,i;
- 
-  //num_nodes = count (head);
- 
-  if(head == NULL){
-    return NULL;
-  }
-  
-
-  if(self_evaluatingp (head) == 0){
-    //printf("It's self-evaluating\n");
-    return head;
-  }
-  if(head->type == Symbol){
-    return lookup_variable_value (head, env);
-  }
-      
-
-  
-
-  /* if(strcmp (head->type, "number") == 0){
-     return 
-
-     }*/
-
-  
- 
-  i=0;
-  //if(strcmp(type_array[i], "integer") == 0){
-
-  //  printf("It's an integer\n");
-    
-  // }
-
-  
-    
-  switch(head->type){
-  case Symbol:
-    operator = *(char*)head->car;
-    break;
-  default:
-    break;
-  }
-    
-  if( *(char*)head->car == 'q'){
-    exit(0);
-  }
-  
-  // printf("The number of nodes %d\n", num_nodes);
- 
-  
-  //printf("In eval  should be +  %c\n", operator );
-
-  
-  head =  (pair*)head->cdr;
-
-  first = *(int*)head->car;
-  //printf("In eval  should be 20  %d\n", first );
-
-  head =  (pair*)head->cdr;
-
-  second = *(int*)head->car;
-  //printf("In eval  should be 20  %d\n", second );
-   
-  
-  
-  int arguments[2] = {first,second};
-
-  answer = apply(operator, arguments);
-  
-  return head;
-}
 
 int main(char *argc, char **argv[]){
 
@@ -387,8 +270,13 @@ int main(char *argc, char **argv[]){
   char str[20];
   struct pair *list = NULL;
   struct  token_list *token_list = NULL;
-  struct object object1;
-  pair* code_tree = NULL;
+  struct  token_list *token_list2 = NULL;
+  struct token_object object1;
+  struct object *expr;
+   struct object *expr2;
+  struct object *result_expr = NULL;
+  constructor_cell* cell = NULL;
+  constructor_cell* code_tree = NULL;
   char* operator = "third";
   char* string = "\"A string\"";
   int b = 20, c = 30;
@@ -403,7 +291,7 @@ int main(char *argc, char **argv[]){
   //print_token_list(list_lexer("(set position (* 60 (+ initial rate)))"));
   // print_token_list(list_lexer("(+ (+ 2 3) 7)"), result);
   //list_lexer("11 12 45 87 98 45 8476 2635");
-  tests();
+  //tests();
 
   
   //print_token_list(token_list);
@@ -413,11 +301,94 @@ int main(char *argc, char **argv[]){
 
   char *ptr_string = malloc(strlen(string) + 1);
   strcpy(ptr_string, string);
-  //code_tree = cons(&b,Number,code_tree);
-  //code_tree = cons(&c,Number,code_tree);
-  code_tree = cons(ptr,Symbol, code_tree);
-  //code_tree = cons(ptr_string, String, code_tree);
+
+  code_tree = cons2(ptr, code_tree);
   
+  //void *ptr3;
+  object1.type = "left_paren";
+  object1.value = "(";
+  
+  token_list = cons1(object1, token_list);
+
+  //ptr3 = &token_list->val;
+  // printf("%s %s \n", ((struct object*)ptr3)->value, ((struct object*)ptr3)->type);
+  
+  
+  object1.type = "identifier";
+  object1.value = "+";
+
+  expr = create_number (349);
+
+  //printf("THE NUMBER %d\n", expr->number);
+
+  expr2 = cons3(expr,NULL);
+
+  expr = create_number (137);
+
+  expr2 = cons3(expr,expr2);
+  
+  //expr = create_variable("+");
+
+  expr = create_primitiveop("+");
+
+  expr2 = cons3(expr,expr2);
+  
+ 
+  /*expr2= cdr1(expr2);
+
+  printf("EXPR2 TYPE SECOND TYPE SHOULD BE NUMBER %s \n", car1(expr2)->type);
+
+   expr2= cdr1(expr2);
+   printf("EXPR2 TYPE SECOND TYPE SHOULD BE NUMBER %s \n", car1(expr2)->type);*/
+
+    result_expr = eval(expr2, token_list);
+
+    print1(result_expr);
+
+    //printf("RESULT_EXPR TYPE THE FIRST TIME %s \n", result_expr->type);
+
+  //printf("ENUM %d\n",expr.number);
+  //expr.symbol.name = "+";
+  //expr = cons3 (expr, result_expr);
+
+  //printf("SYMBOL %s\n", expr->symbol.name);
+  token_list = cons1(object1, token_list);
+
+    
+  // printf("%s %s \n", ((struct object*)ptr3)->value, ((struct object*)ptr3)->type);
+ 
+  
+  //printf("%s %s \n", token_list2->val.value, token_list2->val.type);
+
+  /* char* a = "hello";
+    ptr3 = &a;
+    a = *(char **)ptr3;
+    printf("SHOULD PRINT HELLO %s\n",a );*/
+
+  object1.type = "num";
+  object1.value = "137";
+  token_list = cons1(object1, token_list);
+
+  object1.type = "num";
+  object1.value = "349";
+  token_list = cons1(object1, token_list);
+
+  object1.type = "right_paren";
+  object1.value = ")";
+  token_list = cons1(object1, token_list);
+  
+  //print_token_list2(token_list);
+  //printf("////////////////////////////////////////////\n");
+    //code_tree = parse(token_list, cell);
+  //print_token_list2(code_tree->car);
+
+  // printf("TRYING TO PRINT IT %s\n", token_list->val.value);
+
+  //void *ptr1 = &token_list;
+   //printf("%s\n", *(char **)ptr1->val.value);
+   //token_list2 = (struct token_list*)ptr1;
+
+   // printf("%s\n", token_list2->val.value);
 
   // print(code_tree);
   //print(eval(code_tree, env));
@@ -428,10 +399,9 @@ int main(char *argc, char **argv[]){
   //push(9);
   //push(1);
   //push(12);
-  
 
   //while(!isEmpty()) {
-  int data = peek();
+  //int data = peek();
   //printf("%d\n",data);
   //}
   //  compile();

@@ -5,9 +5,10 @@
 #include <ctype.h>
 #include <limits.h>
 struct object{
+
   char* type;
   char* value;
-}object;
+}token_object;
 
 struct identifier{
   char* identifier_token;
@@ -15,17 +16,31 @@ struct identifier{
 }identifier;
 
 typedef struct token_list{
-  struct object val;
+  struct token_object val;
   struct token_list *next;
 }token_list;
 
+/**
+ * This function advance the pointer to a new location effectivly removing N character from the string
+ * Parameters:
+ * - the buffer to edit
+ * - n the number of characters to chop off
+ * Return Value:
+ * - charBuffer with N characters chopped off 
+ */ 
 //Chop off first N characters
 char * chopN(char * charBuffer, int n )
 {   
   return charBuffer + n;   
 }
 
-
+/**
+ * This function recursivly constructs a the token list in reverse order
+ * Parameters:
+ * - head the start of the token list to reverse
+ * Return Value:
+ * - head the start of the reversed token list
+ */ 
 token_list* reverse_tokenlist(token_list* head)
 {
   token_list* prev    = NULL;
@@ -42,7 +57,20 @@ token_list* reverse_tokenlist(token_list* head)
   return head;
 }
 
-token_list* cons1(struct object val, struct token_list *cdr)
+
+/**
+ * This function does ???
+ * Parameters:
+ * - val ???
+ * - cdr the rest of the tokenlist
+ * Return Value:
+ * - pair
+ * Example call:
+ * 
+ * expected return val: 
+ */ 
+token_list* cons1(struct token_object val, struct token_list *cdr)
+
 {
  
   //pair* pair = (pair*)malloc(sizeof(pair));
@@ -68,7 +96,13 @@ enum Token {
 static char* indentifier_string;
 static double number_value;
 
-
+/**
+ * This function counts the rest of the elements in a tokenlist
+ * Parameters:
+ * - cursor the list of tokens to count
+ * Return Value:
+ * - c the number of tokens in the tokenlist 
+ */ 
 int count_token_list (token_list* cursor){
   int c = 0;
   while(cursor != NULL){
@@ -79,6 +113,16 @@ int count_token_list (token_list* cursor){
 }
 
 
+/**
+ * This function returns the value of the first element in a list
+ * Parameters:
+ * - list the list you want the head of 1
+ * Return Value:
+ * - the value of the first element in the list
+ * Example call:
+ * 
+ * expected return val: 
+ */ 
 char* first (struct token_list *list){
   if(list){
     return list->val.value;
@@ -98,18 +142,40 @@ char* find_type (struct token_list *list){
   return 0;
 }
 
+/**
+ * This function returns the element in the next position in a list
+ * Parameters:
+ * - list the list you are calling rest on
+ * 
+ * Return Value:
+ * - the next element in the list
+ * Example call:
+ * 
+ * expected return val: 
+ */ 
 token_list* rest( struct token_list *list){
   return list ->  next;
   
 }
 
-//https://stackoverflow.com/questions/14259540/c-programming-strcat-using-pointer
+/**
+ * This function does ???
+ * https://stackoverflow.com/questions/14259540/c-programming-strcat-using-pointer
+ * Parameters:
+ * - s ???
+ * - t ???
+ * Return Value:
+ * - p ???
+ * Example call:
+ * 
+ * expected return val: 
+ */ 
 char *scat(char *s,char *t)
 {
-    char *p=malloc(strlen(s)+strlen(t)+1);    /* 3: you will have to reserve memory to hold the copy. */
+    char *p=malloc(strlen(s)+strlen(t)+1);  /* 3: you will have to reserve memory to hold the copy. */
     int ptr =0, temp = 0;                   /* 4 initialise some helpers */
 
-    while(s[temp]!='\0'){                  /* 5. use the temp to "walk" over string 1 */
+    while(s[temp]!='\0'){                   /* 5. use the temp to "walk" over string 1 */
         p[ptr++] = s[temp++];
     }
     temp=0;
@@ -119,6 +185,17 @@ char *scat(char *s,char *t)
     return p;
 }
 
+/**
+ * This function recursivly prints the token list
+ * Parameters:
+ * - list the token to print
+ * - result the tokenlist to print from
+ * Return Value:
+ * - result returns the list of tokens after printing them
+ * Example call:
+ * 
+ * expected return val: 
+ */ 
 char* print_token_list(struct token_list *list, char* result){
   if(result == NULL){
     result = first(list);
@@ -164,6 +241,15 @@ else if(list && result !=NULL){
 }
 
 
+
+/**
+ * This function checks if a given character is whitespace
+ * Parameters:
+ * - c the character to check
+ * Return Value:
+ * - 1 if the character is whitespace
+ * - 0 otherwise 
+ */ 
 int iswhitespace (char c){
   if(c == '\n' || c == ' ' ){
     return 1;
@@ -173,6 +259,17 @@ int iswhitespace (char c){
   }
 }
 
+/**
+ * This function appends a given char to the end of the given string
+ * Parameters:
+ * - s the string to append characters to
+ * - c the char to append
+ * Return Value:
+ * - a string with the given char at the end of the original string
+ * Example call:
+ * append("hello", '!');
+ * expected return val: hello! 
+ */ 
 char*  append(char* s, char c)
 {
 
@@ -191,8 +288,17 @@ char*  append(char* s, char c)
   return s;
 }
 
-
-
+/**
+ * This function reads identifiers from the given program
+ * Parameters:
+ * - program the string containing the code we will run
+ * - the index of the identifier to read
+ * Return Value:
+ * - ???
+ * Example call:
+ * 
+ * expected return val: 
+ */ 
 struct identifier* read_identifier (char* program, int index){
   struct identifier *identifier1;
   
@@ -213,6 +319,17 @@ struct identifier* read_identifier (char* program, int index){
 
 }
 
+/**
+ * This function reads numbers from the given program
+ * Parameters:
+ * - program the string containing the code we will run
+ * - the index of the number to read
+ * Return Value:
+ * - ???
+ * Example call:
+ * 
+ * expected return val: 
+ */ 
 struct identifier* read_number (char* program, int index){
   struct identifier *identifier1;
   const char s[2] = " ";
@@ -222,12 +339,21 @@ struct identifier* read_number (char* program, int index){
   identifier1->length = strlen(identifier1->identifier_token);
   
   return identifier1;
-
 }
-//Lexer
+
+////////////////////////Lexer////////////////////////////////
 
 
-
+/**
+ * This function determines the type used in the creation of a token
+ * Parameters:
+ * - token the string we are creating the token from
+ * Return Value:
+ * - the type the token has
+ * Example call:
+ * token_type('+');
+ * expected return val: identifier
+ */ 
 char* token_type (char* token){
 
   if (isalpha(token[0])){
@@ -243,15 +369,25 @@ char* token_type (char* token){
 
 }
 
-int count_chars(char* string, char ch)
+/**
+ * This function calculates the length of the given string
+ * We are computing the length once at this point
+ *  because it is a relatively lengthy operation,
+ *  and we don't want to have to compute it anew
+ *  every time the i < length condition is checked.
+ * Parameters:
+ * - program the string containing the code we will run
+ * Return Value:
+ * - a list of tokens created by iterating through program
+ * Example call:
+ * List_Lexer_tmp("( + 1 1)");
+ * expected return val: tokenlist of length 5
+ */
+int count_chars(char* string, char ch)//is string here replaceable by program?
 {
   int count = 0;
   int i;
 
-  // We are computing the length once at this point
-  // because it is a relatively lengthy operation,
-  // and we don't want to have to compute it anew
-  // every time the i < length condition is checked.
   int length = strlen(string);
 
   for (i = 0; i < length; i++)
@@ -265,13 +401,24 @@ int count_chars(char* string, char ch)
   return count;
 }
 
+/**
+ * This function creates the preliminary tree
+ * The returned tree is generated by iterating through program and creating tokens for each statement
+ * Parameters:
+ * - program the string containing the code we will run
+ * Return Value:
+ * - a list of tokens created by iterating through program
+ * Example call:
+ * List_Lexer("( + 1 1)");
+ * expected return val: tokenlist of length 5
+ */
 //TODO: check for Booleans, Characters, Strings
 token_list* list_lexer (char *program){
   static int last_character = ' ';
   int i;
    
   struct  token_list *token_list = NULL;
-  struct object object1;
+  struct token_object object1;
   struct identifier *id;
   const char s[2] = " ";
   char *token;
@@ -358,23 +505,32 @@ token_list* list_lexer (char *program){
   return  reverse_tokenlist(token_list);
 }
 
-
-
-
-
+/**
+ * This is a temp version of list_lexer to test the creation of tokens 
+ * This function creates the preliminary tree
+ * The returned tree is generated by iterating through program and creating tokens for each statement
+ * Parameters:
+ * - program the string containing the code we will run
+ * Return Value:
+ * - a list of tokens created by iterating through program
+ * Example call:
+ * List_Lexer_tmp("( + 1 1)");
+ * expected return val: tokenlist of length 5
+ */ 
 //TODO: check for Booleans, Characters, Strings
 token_list* list_lexer_tmp (char *program){
   static int last_character = ' ';
   int i;
    
   struct  token_list *token_list = NULL;
-  struct object object1;
+  struct token_object object1;
   struct identifier *id;
 
   object1.type = "identifier";
   object1.value = "open_paren";
   token_list = cons1(object1, token_list);
-  
+
+  //this section is causing seg_faults
   /* object1.type = "operator";
      object1.value = "+";
      token_list = cons1(object1, token_list);
@@ -456,6 +612,7 @@ token_list* list_lexer_tmp (char *program){
   }
   printf("The number %d\n", count_token_list(token_list));
   //print_token_list(reverse_token_list(token_list));
+  
   return token_list;
 }
 

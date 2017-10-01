@@ -1,4 +1,8 @@
+
 #include "/home/bmathur/c48/src/lexer.c"
+
+int our_assert (char *input, char* expected){
+
 
 int test_num = 0;
 char* result = NULL;
@@ -18,7 +22,7 @@ int are_equal (char *program, char *expected){
 
 
 void lexer_tests (){
-  
+
  
   are_equal("(set position (* 60 (+ initial rate)))", "[left_paren,(][symbol,set][symbol,position][left_paren,(][identifier,*][num,60][left_paren,(][identifier,+][symbol,initial][symbol,rate][right_paren,)][right_paren,)][right_paren,)]");
   are_equal("(+ 137 349)", "[left_paren,(][identifier,+][num,137][num,349][right_paren,)]");

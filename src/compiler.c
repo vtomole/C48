@@ -14,8 +14,8 @@ void compile(){
 
 
 }
+
 //Read the assembly file and write in bytes, use fread and fwrite
 void assembler(){
-
-
+  //TODO
 }
