@@ -1,5 +1,9 @@
 //https://llvm.org/docs/tutorial/LangImpl01.html#language
-
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <limits.h>
 struct object{
   char* type;
   char* value;
@@ -74,9 +78,22 @@ int count_token_list (token_list* cursor){
   return c;
 }
 
+
 char* first (struct token_list *list){
   if(list){
     return list->val.value;
+  }
+  return 0;
+}
+char* find_value (struct token_list *list){
+  if(list){
+    return list->val.value;
+  }
+  return 0;
+}
+char* find_type (struct token_list *list){
+  if(list){
+    return list->val.type;
   }
   return 0;
 }
@@ -105,16 +122,14 @@ char *scat(char *s,char *t)
 char* print_token_list(struct token_list *list, char* result){
   if(result == NULL){
     result = first(list);
-    printf("I'm here twice\n");
     print_token_list(rest(list), result);
-    
    
   }
   else if(list && result !=NULL){
      
     result = scat(result, first(list));
-    printf("The result %s\n", result);
-    printf("%s\n", first(list));
+    //printf("The result %s\n", result);
+    // printf("%s\n", first(list));
     print_token_list(rest(list), result);
 
   }
@@ -123,6 +138,31 @@ char* print_token_list(struct token_list *list, char* result){
   }
 
 }
+
+char* print_token_list_debug(struct token_list *list, char* result){
+  if(result == NULL){
+    result = ("[");
+    result = scat(result,find_type(list));
+    result = scat(result,",");
+    result = scat(result, find_value(list));
+    result = scat(result,"]");
+    print_token_list_debug(rest(list), result);
+
+   
+  }
+else if(list && result !=NULL){
+    result = scat(result,"[");
+    result = scat(result, find_type(list));
+    result = scat(result,",");     
+    result = scat(result, find_value(list));
+    result = scat(result,"]");
+    print_token_list_debug(rest(list), result);
+  }
+  else{
+ return result;
+  }
+}
+
 
 int iswhitespace (char c){
   if(c == '\n' || c == ' ' ){
@@ -418,3 +458,4 @@ token_list* list_lexer_tmp (char *program){
   //print_token_list(reverse_token_list(token_list));
   return token_list;
 }
+
