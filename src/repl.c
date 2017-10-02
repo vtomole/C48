@@ -9,7 +9,7 @@
 #include "vm.h"
 #include "vm.c"
 #include "hash.c"
-#include "../tests/lexer_tests.c"
+//include "../tests/lexer_tests.c"
 #include "../tests/tests.c"
 //#include "read_2.c"
 #include "eval-apply.c"
@@ -294,7 +294,6 @@ pair *eval(pair *head, pair *env){
 
      }*/
 
-  
   //if(strcmp(type_array[i], "integer") == 0){
 
   //  printf("It's an integer\n");

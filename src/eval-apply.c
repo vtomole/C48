@@ -1,36 +1,56 @@
+/**
+ *This function determines whether the given arguement is a number or string
+ * Parameters:
+ * - exp, this is an object containing an arguement value 
+ * Return Value:
+ * - 1 if the given object is a number or a string
+ * - 0 otherwise
+ */
 int self_evaluatingp (object *exp){
   if(strcmp(exp->type, "number") == 0){  
     return 1;
-  }
-  else if (strcmp(exp->type, "string") == 0){
+  }else if(strcmp(exp->type, "string") == 0){
     return 1;
-  }
-  else {
+  }else{
     return 0;
   }
 }
 
+/**
+ *This function determines whether a given expression is primitive
+ * Parameters:
+ * - exp, this is an object containing an expression
+ * Return Value:
+ * - 1 if the given object is a primitive expression
+ * - 0 otherwise
+ */
 int primitivep (object *exp){
   if(strcmp(exp->type, "primop") == 0){  
     return 1;
-  }
-  
-  else {
+  }else{
     return 0;
   }
 }
 
-object *apply_primitive_procedure(object *procedure , object* arguments){
+/**
+ *This function executes our primitive operations i.e. +, -, *, /
+ * Parameters:
+ * - procedure,
+ * - arguments, 
+ * Return Value:
+ * - procedure, 
+ */
+object *apply_primitive_procedure(object *procedure , object *arguments){
   
   if(strcmp(procedure->variable, "+")== 0){
     //printf("ITS A PLUS\n");
     struct object *object1;
-    int first,second,answer;
     object *test1 = malloc(sizeof(*object1));
-    first = car1(arguments)->number;
-    second = car1(cdr1(arguments))->number;
-    answer = first+second;
-    // printf("THE NUMBER %d\n", answer);
+
+    int  first = car1(arguments)->number;
+    int second = car1(cdr1(arguments))->number;
+    int answer = first+second;
+   
     procedure = create_number(answer);
   }
   else{
@@ -38,7 +58,6 @@ object *apply_primitive_procedure(object *procedure , object* arguments){
   }
 
   return procedure;
-
 }
 
 /**
@@ -53,19 +72,17 @@ object *apply_primitive_procedure(object *procedure , object* arguments){
  * apply('+', int[1,2])
  * expected return val: 3
  */ 
-
 object  *apply(object *procedure , object* arguments){
-
 
    if (primitivep(procedure)){
      procedure = apply_primitive_procedure(procedure, arguments);
-    }
-   else{
+    } else{
      printf("Unkown apply procedure\n");
    }
  
   return procedure;
 }
+
 /**
  * Evaluates the given arguements to create the code tree that apply will execute over
  * This function takes in an expression and and the environment hash table and creates the tree
@@ -79,12 +96,10 @@ object  *apply(object *procedure , object* arguments){
  */ 
 object *eval(object* exp, token_list* env ){
   if (self_evaluatingp(exp)){
-   printf("SELFEVALUATING\n");
-    }
-   else{
-     exp = apply(car1(exp), cdr1(exp));
-   }
-
+    printf("SELFEVALUATING\n");
+  } else{
+    exp = apply(car1(exp), cdr1(exp));
+  }
  
   return exp;
 }
