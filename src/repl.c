@@ -371,8 +371,6 @@ pair *eval(pair *head, pair *env){
 
   second = *(int*)head->car;
   //printf("In eval  should be 20  %d\n", second );
-   
-  
   
   int arguments[2] = {first,second};
 
@@ -382,7 +380,6 @@ pair *eval(pair *head, pair *env){
 }
 
 int main(char *argc, char **argv[]){
-
 
   char str[20];
   struct pair *list = NULL;
@@ -423,13 +420,6 @@ int main(char *argc, char **argv[]){
   //print(eval(code_tree, env));
  
 
-  //push(3);
-  //push(5);
-  //push(9);
-  //push(1);
-  //push(12);
-  
-
   //while(!isEmpty()) {
   int data = peek();
   //printf("%d\n",data);
@@ -452,6 +442,4 @@ int main(char *argc, char **argv[]){
 
      }*/
   return 0;
-  
-  
 }//end of main
