@@ -4,6 +4,7 @@ struct token{
   //struct token* next;
 }token;
 
+
 struct object{
   char* type;
   char* value;
@@ -22,26 +23,26 @@ typedef struct token_list {
 static char* indentifier_string;
 static double number_value;
 
-typedef struct pair{
+typedef struct pair_cell{
   void *car;
   void *cdr;
-}pair;
+}pair_cell;
 
 
-typedef struct pair1{
+typedef struct pair_token{
   struct object val;
   struct pair1 *next;
-}pair1;
+}pair_token;
 
-typedef struct eval_arguments1 {
-  pair1 *head;
+typedef struct eval_arguments_token{
+  pair_token *head;
   hashtable_t *environment;
-}eval_arguments1;
+}eval_arguments_token;
 
-typedef struct eval_arguments {
-  pair *head;
+typedef struct eval_arguments_cell{
+  pair_cell *head;
   hashtable_t *environment;
-}eval_arguments;
+}eval_arguments_cell;
 
 token_list* create_token(struct token token, token_list* next)
 {
@@ -65,11 +66,9 @@ token_list* prepend(struct token token, token_list* head)
 }
 
 
-pair* create1(void* car,void* cdr)
+pair_cell* create1(void* car,void* cdr)
 {
- 
-  //pair* pair = (pair*)malloc(sizeof(pair));
-  pair* pair = malloc(sizeof(pair));
+  pair_cell* pair = malloc(sizeof(pair));
   if(pair == NULL)
     {
       printf("Error creating a new node.\n");
@@ -82,39 +81,35 @@ pair* create1(void* car,void* cdr)
 }
 
 
-char* car (struct pair1 *list){
+char* car (struct pair_token *list){
   if(list){
     return list->val.value;
   }
   return 0;
 }
 
-pair1* cdr( struct pair1 *list){
+pair_token* cdr(struct pair_token* list){
   return list -> next;
-  
 }
 
-void print(struct pair1 *list){
+void print(struct pair_token* list){
   if(list){
     printf("%s\n", car(list));
     print(cdr(list));
-
+  }
 }
-}
 
-pair* cons(void *car, pair* cdr)
+pair_token* cons(void *car, pair_token* cdr)
 {
  
-  pair* new_pair = create1(car,cdr);
+  pair_token* new_pair = create1(car,cdr);
   car = new_pair;
   return car;
 }
 
-pair1* cons1(struct object val, struct pair1 *cdr)
+pair_cell* cons1(struct object val, struct pair_cell *cdr)
 {
- 
-  //pair* pair = (pair*)malloc(sizeof(pair));
-  pair1* pair = malloc(sizeof(pair));
+  pair_cell* pair = malloc(sizeof(pair));
   if(pair == NULL)
     {
       printf("Error creating a new node.\n");
@@ -125,9 +120,6 @@ pair1* cons1(struct object val, struct pair1 *cdr)
  
   return pair;
 }
-
-
-
 
 int isnumber (char *s){
   if(s == NULL || *s == '\0' || isspace(*s)){
@@ -152,9 +144,9 @@ int count_tokenlist(token_list *head)
     return c;
 }
 
-int count_nodes1(pair1 *head)
+int count_nodes1(pair_cell *head)
 {
-    pair1 *cursor = head;
+    pair_cell *cursor = head;
     int c = 0;
     while(cursor != NULL)
     {
@@ -164,9 +156,9 @@ int count_nodes1(pair1 *head)
     return c;
 }
 
-int count_nodes(pair *head)
+int count_nodes(pair_token *head)
 {
-    pair *cursor = head;
+    pair_token *cursor = head;
     int c = 0;
     while(cursor != NULL)
     {
@@ -192,11 +184,11 @@ token_list* reverse_tokenlist(token_list* head)
     return head;
 }
 
-pair1* reverse_code_tree(pair1* head)
+pair_cell* reverse_code_tree(pair_cell* head)
 {
-    pair1* prev    = NULL;
-    pair1* current = head;
-    pair1* next;
+    pair_cell* prev    = NULL;
+    pair_cell* current = head;
+    pair_cell* next;
     while (current != NULL)
     {
         next  = current->next;
@@ -207,7 +199,7 @@ pair1* reverse_code_tree(pair1* head)
     head = prev;
     return head;
 }
-
+//pair == pair_token, pair1 == pair_cell
 /*struct eval_arguments read(char *program){
   pair pair1;
   pair pair2;
@@ -419,55 +411,45 @@ head6 = cons
  
   }*/
 
-//Parser
+//Parser//
 
-struct eval_arguments1 parser (struct pair1* token_list){
-pair1* code_tree = NULL;
- pair* head;
- int num_elements = 0;
-   
-      hashtable_t *environment = ht_create(65);
-      // printf("Number of elements %d\n", num_elements);
-   eval_arguments1 exp_env = {code_tree,environment};
- 
- //printf("Token list value %s\n", token_list-> val.value);
- //	 while(token_list != NULL)
- // {
-      if(strcmp(token_list-> val.value, "open_paren") == 0){
-	
-	num_elements++;
-	//code_tree = read_list(token_list, code_tree);
-	//printf("I'm here\n");
-
-	while (strcmp(token_list-> val.value, "closed_paren") != 0){
-	  exp_env = parser(cons1(token_list->val, code_tree));
-	  printf("I'm here\n");
-	}
-	
-      }
-    
-      else{
-		code_tree = cons1(token_list -> val, code_tree);
+struct eval_arguments1 parser (struct pair_cell* token_list){
+  pair_cell* code_tree = NULL;
+  pair* head;
+  int num_elements = 0;
   
-
-      }
-	  
-      //printf("name %s\n", token_list->data.value);
-      //  token_list = token_list->next;
-	  //}   
-	
-   
+  hashtable_t *environment = ht_create(65);
+  // printf("Number of elements %d\n", num_elements);
+  eval_arguments1 exp_env = {code_tree,environment};
+  
+  //printf("Token list value %s\n", token_list-> val.value);
+  //	 while(token_list != NULL)
+  // {
+  if(strcmp(token_list-> val.value, "open_paren") == 0){
+    num_elements++;
+    //code_tree = read_list(token_list, code_tree);
+    //printf("I'm here\n");
     
-
+    while (strcmp(token_list-> val.value, "closed_paren") != 0){
+      exp_env = parser(cons1(token_list->val, code_tree));
+      printf("I'm here\n");
+    }
+    
+  }else{
+    code_tree = cons1(token_list -> val, code_tree);
+  }
+  
+  //printf("name %s\n", token_list->data.value);
+  //  token_list = token_list->next;
+  //}   
   return exp_env;
-
 }
-
-pair1* remove_front(pair1* head)
+ 
+pair_cell* remove_front(pair_cell* head)
 {
     if(head == NULL)
         return NULL;
-    pair1 *front = head;
+    pair_cell *front = head;
     head = head->next;
     front->next = NULL;
     /* is this the last node in the list */
@@ -477,12 +459,11 @@ pair1* remove_front(pair1* head)
     return head;
 }
 
-
-pair1* read_from_tokens (struct pair1* token_list){
+pair_cell* read_from_tokens (struct pair_cell* token_list){
 
 char*  token_value = token_list-> val.value;
  struct object token = token_list->val;
- pair1* empty_list;
+ pair_cell* empty_list;
   
   
   
@@ -494,7 +475,7 @@ char*  token_value = token_list-> val.value;
    return empty_list;
  }
  else{
-   pair1 *l;
+   pair_cell *l;
    // printf("PRINTING THE TOKEN VALUE %s\n", token_value);
    //printf("NUMBER %d\n", strcmp(token_value, "closed_paren"));
   //if(strcmp(token_value, "open_paren") == 0){
