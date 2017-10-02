@@ -8,7 +8,6 @@
 #include "parser.c"
 #include "vm.h"
 #include "vm.c"
-#include "hash.c"
 #include "../tests/lexer_tests.c"
 #include "../tests/tests.c"
 //#include "read_2.c"
@@ -81,7 +80,7 @@ int main(char *argc, char **argv[]){
 
     result_expr = eval(expr2, token_list);
 
-    print1(result_expr);
+    print(result_expr);
 
     //printf("RESULT_EXPR TYPE THE FIRST TIME %s \n", result_expr->type);
 
