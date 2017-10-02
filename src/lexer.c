@@ -4,17 +4,35 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <limits.h>
-struct object{
 
+/**
+ * token_objects is represent the tokens in our token list
+ * Parameters:
+ * - type, a character representing whether the token is an identifier, operator, or an arguement
+ * - value, the original string value of the token. i.e. 5, (, +, etc.
+ */
+struct token_object{
   char* type;
   char* value;
 }token_object;
 
+/**
+ *identifier is
+ * Parameters:
+ * - identifier_token, used to determine the type of identifier 
+ * - length, the length of the identifier plus whitespace
+ */
 struct identifier{
   char* identifier_token;
   int length;
 }identifier;
 
+/**
+ *token_list is a collection of token_objects used to create a code tree
+ * Parameters:
+ * - val, the value of the token_object in the list
+ * - next, points to the next token_object in the list
+ */
 typedef struct token_list{
   struct token_object val;
   struct token_list *next;
@@ -29,8 +47,7 @@ typedef struct token_list{
  * - charBuffer with N characters chopped off 
  */ 
 //Chop off first N characters
-char * chopN(char * charBuffer, int n )
-{   
+char* chopN(char *charBuffer, int n){   
   return charBuffer + n;   
 }
 
@@ -41,22 +58,19 @@ char * chopN(char * charBuffer, int n )
  * Return Value:
  * - head the start of the reversed token list
  */ 
-token_list* reverse_tokenlist(token_list* head)
-{
-  token_list* prev    = NULL;
-  token_list* current = head;
-  token_list* next;
-  while (current != NULL)
-    {
+token_list* reverse_tokenlist(token_list *head){
+  token_list *prev    = NULL;
+  token_list *current = head;
+  token_list *next;
+  while (current != NULL){
       next  = current->next;
       current->next = prev;
       prev = current;
       current = next;
-    }
+  }
   head = prev;
   return head;
 }
-
 
 /**
  * This function does ???
@@ -69,14 +83,11 @@ token_list* reverse_tokenlist(token_list* head)
  * 
  * expected return val: 
  */ 
-token_list* cons1(struct token_object val, struct token_list *cdr)
-
-{
+token_list* cons1(struct token_object val, struct token_list *cdr){
  
-  //pair* pair = (pair*)malloc(sizeof(pair));
-  token_list* pair = malloc(sizeof(pair));
-  if(pair == NULL)
-    {
+  //pair *pair = (pair*)malloc(sizeof(pair));
+  token_list *pair = malloc(sizeof(pair));
+  if(pair == NULL){
       printf("Error creating a new node.\n");
       exit(0);
     }
@@ -86,7 +97,7 @@ token_list* cons1(struct token_object val, struct token_list *cdr)
   return pair;
 }
 
-enum Token {
+enum Token{
   tok_eof = -1,
   tok_def = -2,
   tok_identifier = -4,
@@ -112,7 +123,6 @@ int count_token_list (token_list* cursor){
   return c;
 }
 
-
 /**
  * This function returns the value of the first element in a list
  * Parameters:
@@ -129,12 +139,29 @@ char* first (struct token_list *list){
   }
   return 0;
 }
+
+/**
+ *This function returns the type of th current token from the given token_list
+ * Parameters:
+ * - list, the head of the token_list
+ * Return Value:
+ * - the value of the head token from list
+ * - 0 if list in NULL
+ */
 char* find_value (struct token_list *list){
   if(list){
     return list->val.value;
   }
   return 0;
 }
+
+/**
+ *This function determines the type of the current token from the token_list
+ * Parameters:
+ * - list, the head of the token_list
+ * Return Value:
+ * - character representing the value of the token from list or 0 if list is NULL
+ */
 char* find_type (struct token_list *list){
   if(list){
     return list->val.type;
@@ -155,7 +182,6 @@ char* find_type (struct token_list *list){
  */ 
 token_list* rest( struct token_list *list){
   return list ->  next;
-  
 }
 
 /**
@@ -170,17 +196,18 @@ token_list* rest( struct token_list *list){
  * 
  * expected return val: 
  */ 
-char *scat(char *s,char *t)
-{
+char *scat(char *s,char *t){
     char *p=malloc(strlen(s)+strlen(t)+1);  /* 3: you will have to reserve memory to hold the copy. */
     int ptr =0, temp = 0;                   /* 4 initialise some helpers */
 
     while(s[temp]!='\0'){                   /* 5. use the temp to "walk" over string 1 */
-        p[ptr++] = s[temp++];
+      p[ptr++] = s[temp++];
     }
+
     temp=0;
+
     while(t[temp]!='\0'){                   /* and string two */
-        p[ptr++]=t[temp++];
+      p[ptr++]=t[temp++];
     }
     return p;
 }
@@ -196,27 +223,29 @@ char *scat(char *s,char *t)
  * 
  * expected return val: 
  */ 
-char* print_token_list(struct token_list *list, char* result){
+char* print_token_list(struct token_list *list, char *result){
   if(result == NULL){
     result = first(list);
     print_token_list(rest(list), result);
-   
-  }
-  else if(list && result !=NULL){
-     
+  }else if(list && result !=NULL){ 
     result = scat(result, first(list));
     //printf("The result %s\n", result);
     // printf("%s\n", first(list));
     print_token_list(rest(list), result);
-
-  }
-  else{
+  }else{
   return result;
   }
-
 }
-
-char* print_token_list_debug(struct token_list *list, char* result){
+/**
+ *This is a testing function to test the ability to read from and utilze our token_list
+ *this function is recursive 
+ * Parameters:
+ * - list, the token_list we are testing over
+ * - result, ???
+ * Return Value:
+ * - result, used to recurse through our list
+ */
+char* print_token_list_debug(struct token_list *list, char *result){
   if(result == NULL){
     result = ("[");
     result = scat(result,find_type(list));
@@ -224,23 +253,17 @@ char* print_token_list_debug(struct token_list *list, char* result){
     result = scat(result, find_value(list));
     result = scat(result,"]");
     print_token_list_debug(rest(list), result);
-
-   
-  }
-else if(list && result !=NULL){
+  }else if(list && result !=NULL){
     result = scat(result,"[");
     result = scat(result, find_type(list));
     result = scat(result,",");     
     result = scat(result, find_value(list));
     result = scat(result,"]");
     print_token_list_debug(rest(list), result);
-  }
-  else{
- return result;
+  }else{
+    return result;
   }
 }
-
-
 
 /**
  * This function checks if a given character is whitespace
@@ -251,10 +274,9 @@ else if(list && result !=NULL){
  * - 0 otherwise 
  */ 
 int iswhitespace (char c){
-  if(c == '\n' || c == ' ' ){
+  if(c == '\n' || c == ' '){
     return 1;
-  }
-  else{
+  }else{
     return 0;
   }
 }
@@ -270,19 +292,14 @@ int iswhitespace (char c){
  * append("hello", '!');
  * expected return val: hello! 
  */ 
-char*  append(char* s, char c)
-{
+char* append(char* s, char c){
 
   int len = strlen(s);
 
   printf("Char s %s\n", s);
-
-  printf("Length %c\n", s[1]);
-	
-	 
+  printf("Length %c\n", s[1]); 
   s[len-1] = c;
-  printf("In append\n");
-	
+  printf("In append\n");//used for testing?
   s[len+1] = '\0';
 
   return s;
@@ -301,7 +318,6 @@ char*  append(char* s, char c)
  */ 
 struct identifier* read_identifier (char* program, int index){
   struct identifier *identifier1;
-  
   const char s[2] = " ";
   
   program = chopN( program, index );
@@ -312,11 +328,12 @@ struct identifier* read_identifier (char* program, int index){
   identifier1->identifier_token= strtok(string, s);
   printf("In read_identifier\n");
   identifier1->length = strlen(identifier1->identifier_token);
+
   if(identifier1 == NULL){
     printf("It's null\n");
   }
-  return identifier1;
 
+  return identifier1;
 }
 
 /**
@@ -333,6 +350,7 @@ struct identifier* read_identifier (char* program, int index){
 struct identifier* read_number (char* program, int index){
   struct identifier *identifier1;
   const char s[2] = " ";
+
   program = chopN( program, index );
   char *string = strdup(program);
   identifier1->identifier_token= strtok(string, s);
@@ -343,30 +361,24 @@ struct identifier* read_number (char* program, int index){
 
 ////////////////////////Lexer////////////////////////////////
 
-
 /**
  * This function determines the type used in the creation of a token
  * Parameters:
  * - token the string we are creating the token from
  * Return Value:
- * - the type the token has
+ * - the type the token has, identifier, num, or symbol.
  * Example call:
  * token_type('+');
  * expected return val: identifier
  */ 
 char* token_type (char* token){
-
   if (isalpha(token[0])){
     return "symbol";
-  }
-  else if (isdigit(token[0])){
+  }else if (isdigit(token[0])){
     return "num";
-  }
-  else{
+  }else{
     return "identifier";
   }
-
-
 }
 
 /**
@@ -387,17 +399,13 @@ int count_chars(char* string, char ch)//is string here replaceable by program?
 {
   int count = 0;
   int i;
-
   int length = strlen(string);
 
-  for (i = 0; i < length; i++)
-    {
-      if (string[i] == ch)
-        {
-	  count++;
-        }
-    }
-
+  for (i = 0; i < length; i++){
+      if (string[i] == ch){
+	count++;
+      }
+  }
   return count;
 }
 
@@ -413,48 +421,34 @@ int count_chars(char* string, char ch)//is string here replaceable by program?
  * expected return val: tokenlist of length 5
  */
 //TODO: check for Booleans, Characters, Strings
-token_list* list_lexer (char *program){
-  static int last_character = ' ';
-  int i;
-   
-  struct  token_list *token_list = NULL;
+token_list* list_lexer (char *program){   
+  struct token_list  *token_list = NULL;
   struct token_object object1;
-  struct identifier *id;
-  const char s[2] = " ";
+  struct identifier  *id;
+  static int last_character = ' ';
+  const char  s[2] = " ";
+  const char *right_par = ")";
   char *token;
   int num_right; 
-
-  const char *right_par = ")";
+  int i;
    
   program = strdup(program);
   /* get the first token */
   token = strtok(program, s);
-
  
   /* walk through other tokens */
-  while( token != NULL ) 
-    {
+  while( token != NULL ){
       num_right = count_chars(token, ')');
-	
       if(token[0] == '('){
-	 
-	memmove(token, token+1, strlen(token));
-
+	emmove(token, token+1, strlen(token));
 
 	object1.type = "left_paren";
 	object1.value = "(";
 	token_list = cons1(object1, token_list);
 	object1.type = token_type(token);
 	object1.value = token;
-	token_list = cons1(object1, token_list);
-
-	  
-	  
-      }
-      else if ( num_right>= 1){ 
-
-
-	    
+	token_list = cons1(object1, token_list);	  
+      }else if ( num_right>= 1){    
 	token[strlen(token)-num_right] = 0;
 	 
 	object1.type = token_type(token);
@@ -465,45 +459,26 @@ token_list* list_lexer (char *program){
 	object1.type = "right_paren";
 	object1.value = ")";
 	token_list = cons1(object1, token_list);
-	
 	 
-	for(i =1; i < num_right; i++){
-	    
-	     
+	for(i =1; i < num_right; i++){ 
 	  object1.type = "right_paren";
 	  object1.value = ")";
 	  token_list = cons1(object1, token_list);
-
 	}
-	    
-	 
-     
-	 
-      }
-      else{
+      }else{
 	object1.type = token_type(token);
 	object1.value = token;
 	token_list = cons1(object1, token_list);
-
       }
-    
       token = strtok(NULL, s);  
-
-    }
-
+  }
   if(token_list == NULL){
-
     object1.type = "identifier";
     object1.value = "open_paren";
     token_list = cons1(object1, token_list);
-
   }
-
-   
-
-
   return  reverse_tokenlist(token_list);
-}
+}//end of list_lexer()
 
 /**
  * This is a temp version of list_lexer to test the creation of tokens 
@@ -524,7 +499,7 @@ token_list* list_lexer_tmp (char *program){
    
   struct  token_list *token_list = NULL;
   struct token_object object1;
-  struct identifier *id;
+  struct identifier  *id;
 
   object1.type = "identifier";
   object1.value = "open_paren";
@@ -560,59 +535,42 @@ token_list* list_lexer_tmp (char *program){
  
      object1.type = "identifier";
      object1.value = "closed_paren";*/
-
-
   //printf("is alpha-test char %c\n",program[0]);
   //printf("is alpha-test %d\n",isalpha(program[0])); 
   for(i =0; i < strlen(program); i++){
     //Check if it's whitespace
     if(iswhitespace(program[i])){
-	
-    }
-    //check if it is an open parentheses
-    else if (program[i] == '('){
+      //???
+    }else if (program[i] == '('){      //check if it is an open parentheses
       object1.type = "identifier";
       object1.value = "open_paren";
       token_list = cons1(object1, token_list);
-
-    }
-    //check if it is a closed parentheses
-    else if (program[i] == ')'){
+    }else if (program[i] == ')'){      //check if it is an closed parentheses
       object1.type = "identifier";
       object1.value = "closed_paren";
       token_list = cons1(object1, token_list);
-
-    }    
-    //check if its in the alphabet
-    else if (isalpha(program[i])){
-      
+    }else if (isalpha(program[i])){    //check if its in the alphabet
       object1.type = "symbol";
       id =  read_identifier(program, i);
       object1.value = id->identifier_token;
       program = chopN( program, id->length ); 
       printf("IDENTIFIER %s\n", object1.value);
       token_list = cons1(object1, token_list);
-
-    }
-    //check if its a number
-    else if(isdigit(program[i])){
+    }else if(isdigit(program[i])){    //check if its a number
       object1.type = "num";
       id =  read_number(program, i);
       object1.value = id->identifier_token;
       program = chopN( program, id->length ); 
       printf("NUMBER VALUE %s\n", object1.value);
       token_list = cons1(object1, token_list);
-
-    }
-    //invalid syntax
-    else{
+    }else{                           //Invalid Syntax
       printf("Illegal syntax\n");
-      
     }
   }
+
   printf("The number %d\n", count_token_list(token_list));
   //print_token_list(reverse_token_list(token_list));
   
   return token_list;
-}
+}//end of list_lexer_tmp
 

@@ -9,7 +9,7 @@
 #include "vm.h"
 #include "vm.c"
 #include "hash.c"
-#include "../tests/lexer_tests.c"
+//include "../tests/lexer_tests.c"
 #include "../tests/tests.c"
 //#include "read_2.c"
 #include "eval-apply.c"
@@ -263,9 +263,81 @@ pair* lookup_variable_value(pair* exp, pair *env){
 
 
 }
+pair *eval(pair *head, pair *env){
+
+  pair *cursor = head;
+  int num_nodes=0;
+  char operator;
+  char *answer;
+  int first,second,i;
+ 
+  //num_nodes = count (head);
+ 
+  if(head == NULL){
+    return NULL;
+  }
+  
+
+  if(self_evaluatingp (head) == 0){
+    //printf("It's self-evaluating\n");
+    return head;
+  }
+  if(head->type == Symbol){
+    return lookup_variable_value (head, env);
+  }
+      
+
+  
+
+  /* if(strcmp (head->type, "number") == 0){
+     return 
+
+     }*/
+
+  //if(strcmp(type_array[i], "integer") == 0){
+
+  //  printf("It's an integer\n");
+    
+  // }
+
+  
+    
+  switch(head->type){
+  case Symbol:
+    operator = *(char*)head->car;
+    break;
+  default:
+    break;
+  }
+    
+  if( *(char*)head->car == 'q'){
+    exit(0);
+  }
+  
+  // printf("The number of nodes %d\n", num_nodes);
+ 
+  
+  //printf("In eval  should be +  %c\n", operator );
+
+  
+  head =  (pair*)head->cdr;
+
+  first = *(int*)head->car;
+  //printf("In eval  should be 20  %d\n", first );
+
+  head =  (pair*)head->cdr;
+
+  second = *(int*)head->car;
+  //printf("In eval  should be 20  %d\n", second );
+  
+  int arguments[2] = {first,second};
+
+  answer = apply(operator, arguments);
+  
+  return head;
+}
 
 int main(char *argc, char **argv[]){
-
 
   char str[20];
   struct pair *list = NULL;
@@ -422,6 +494,4 @@ int main(char *argc, char **argv[]){
 
      }*/
   return 0;
-  
-  
 }//end of main
