@@ -14,10 +14,10 @@ struct symbol{//typedef struct symbol???
 
 typedef struct object{
   char* type;
-  struct constructor_cell{
+  struct cons_cell{
     struct object *car;
     struct object *cdr;
-  }constructor_cell;
+  }cons_cell;
  
   char* variable;
   char *string;

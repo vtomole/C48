@@ -440,7 +440,7 @@ token_list* list_lexer (char *program){
   while( token != NULL ){
       num_right = count_chars(token, ')');
       if(token[0] == '('){
-	emmove(token, token+1, strlen(token));
+	memmove(token, token+1, strlen(token));
 
 	object1.type = "left_paren";
 	object1.value = "(";
