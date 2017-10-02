@@ -1,9 +1,3 @@
-
-#include "/home/bmathur/c48/src/lexer.c"
-
-int our_assert (char *input, char* expected){
-
-
 int test_num = 0;
 char* result = NULL;
 
@@ -32,8 +26,4 @@ void lexer_tests (){
   are_equal("(+ 2.7 10 ) ", "[left_paren,(][identifier,+][num,2.7][num,10][right_paren,)]");
   
   
-}
-void main() 
-{
-  lexer_tests();
 }
