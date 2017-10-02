@@ -110,8 +110,6 @@ int main(char *argc, char **argv[]){
   struct object *expr;
    struct object *expr2;
   struct object *result_expr = NULL;
-  constructor_cell* cell = NULL;
-  constructor_cell* code_tree = NULL;
   char* operator = "third";
   char* string = "\"A string\"";
   int b = 20, c = 30;
