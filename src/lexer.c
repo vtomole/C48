@@ -63,10 +63,10 @@ token_list* reverse_tokenlist(token_list *head){
   token_list *current = head;
   token_list *next;
   while (current != NULL){
-      next  = current->next;
-      current->next = prev;
-      prev = current;
-      current = next;
+    next  = current->next;
+    current->next = prev;
+    prev = current;
+    current = next;
   }
   head = prev;
   return head;
@@ -83,14 +83,14 @@ token_list* reverse_tokenlist(token_list *head){
  * 
  * expected return val: 
  */ 
-token_list* cons1(struct token_object val, struct token_list *cdr){
+token_list* prepend_token(struct token_object val, struct token_list *cdr){
  
   //pair *pair = (pair*)malloc(sizeof(pair));
   token_list *pair = malloc(sizeof(pair));
   if(pair == NULL){
-      printf("Error creating a new node.\n");
-      exit(0);
-    }
+    printf("Error creating a new node.\n");
+    exit(0);
+  }
   pair->val = val;
   pair->next = cdr;
  
@@ -197,19 +197,19 @@ token_list* rest( struct token_list *list){
  * expected return val: 
  */ 
 char *scat(char *s,char *t){
-    char *p=malloc(strlen(s)+strlen(t)+1);  /* 3: you will have to reserve memory to hold the copy. */
-    int ptr =0, temp = 0;                   /* 4 initialise some helpers */
+  char *p=malloc(strlen(s)+strlen(t)+1);  /* 3: you will have to reserve memory to hold the copy. */
+  int ptr =0, temp = 0;                   /* 4 initialise some helpers */
 
-    while(s[temp]!='\0'){                   /* 5. use the temp to "walk" over string 1 */
-      p[ptr++] = s[temp++];
-    }
+  while(s[temp]!='\0'){                   /* 5. use the temp to "walk" over string 1 */
+    p[ptr++] = s[temp++];
+  }
 
-    temp=0;
+  temp=0;
 
-    while(t[temp]!='\0'){                   /* and string two */
-      p[ptr++]=t[temp++];
-    }
-    return p;
+  while(t[temp]!='\0'){                   /* and string two */
+    p[ptr++]=t[temp++];
+  }
+  return p;
 }
 
 /**
@@ -233,7 +233,7 @@ char* print_token_list(struct token_list *list, char *result){
     // printf("%s\n", first(list));
     print_token_list(rest(list), result);
   }else{
-  return result;
+    return result;
   }
 }
 /**
@@ -402,9 +402,9 @@ int count_chars(char* string, char ch)//is string here replaceable by program?
   int length = strlen(string);
 
   for (i = 0; i < length; i++){
-      if (string[i] == ch){
-	count++;
-      }
+    if (string[i] == ch){
+      count++;
+    }
   }
   return count;
 }
@@ -438,44 +438,44 @@ token_list* list_lexer (char *program){
  
   /* walk through other tokens */
   while( token != NULL ){
-      num_right = count_chars(token, ')');
-      if(token[0] == '('){
-	memmove(token, token+1, strlen(token));
+    num_right = count_chars(token, ')');
+    if(token[0] == '('){
+      memmove(token, token+1, strlen(token));
 
-	object1.type = "left_paren";
-	object1.value = "(";
-	token_list = cons1(object1, token_list);
-	object1.type = token_type(token);
-	object1.value = token;
-	token_list = cons1(object1, token_list);	  
-      }else if ( num_right>= 1){    
-	token[strlen(token)-num_right] = 0;
+      object1.type = "left_paren";
+      object1.value = "(";
+      token_list = prepend_token(object1, token_list);
+      object1.type = token_type(token);
+      object1.value = token;
+      token_list = prepend_token(object1, token_list);	  
+    }else if ( num_right>= 1){    
+      token[strlen(token)-num_right] = 0;
 	 
-	object1.type = token_type(token);
-	object1.value = token;
+      object1.type = token_type(token);
+      object1.value = token;
 	 
-	token_list = cons1(object1, token_list);
+      token_list = prepend_token(object1, token_list);
 
+      object1.type = "right_paren";
+      object1.value = ")";
+      token_list = prepend_token(object1, token_list);
+	 
+      for(i =1; i < num_right; i++){ 
 	object1.type = "right_paren";
 	object1.value = ")";
-	token_list = cons1(object1, token_list);
-	 
-	for(i =1; i < num_right; i++){ 
-	  object1.type = "right_paren";
-	  object1.value = ")";
-	  token_list = cons1(object1, token_list);
-	}
-      }else{
-	object1.type = token_type(token);
-	object1.value = token;
-	token_list = cons1(object1, token_list);
+	token_list = prepend_token(object1, token_list);
       }
-      token = strtok(NULL, s);  
+    }else{
+      object1.type = token_type(token);
+      object1.value = token;
+      token_list = prepend_token(object1, token_list);
+    }
+    token = strtok(NULL, s);  
   }
   if(token_list == NULL){
     object1.type = "identifier";
     object1.value = "open_paren";
-    token_list = cons1(object1, token_list);
+    token_list = prepend_token(object1, token_list);
   }
   return  reverse_tokenlist(token_list);
 }//end of list_lexer()
@@ -503,38 +503,9 @@ token_list* list_lexer_tmp (char *program){
 
   object1.type = "identifier";
   object1.value = "open_paren";
-  token_list = cons1(object1, token_list);
+  token_list = prepend_token(object1, token_list);
 
-  //this section is causing seg_faults
-  /* object1.type = "operator";
-     object1.value = "+";
-     token_list = cons1(object1, token_list);
-  
-     object1.type = "identifier";
-     object1.value = "open_paren";
-     token_list = cons1(object1, token_list);
-  
-     object1.type = "operator";
-     object1.value = "+";
-     token_list = cons1(object1, token_list);
-  
-     object1.type = "num";
-     object1.value = "2";
-     token_list = cons1(object1, token_list);
-     object1.type = "num";
-     object1.value = "3";
-     token_list = cons1(object1, token_list);
-  
-     object1.type = "identifier";
-     object1.value = "closed_paren";
-     token_list = cons1(object1, token_list);
-  
-     object1.type = "num";
-     object1.value = "7";
-     token_list = cons1(object1, token_list);
  
-     object1.type = "identifier";
-     object1.value = "closed_paren";*/
   //printf("is alpha-test char %c\n",program[0]);
   //printf("is alpha-test %d\n",isalpha(program[0])); 
   for(i =0; i < strlen(program); i++){
@@ -544,25 +515,25 @@ token_list* list_lexer_tmp (char *program){
     }else if (program[i] == '('){      //check if it is an open parentheses
       object1.type = "identifier";
       object1.value = "open_paren";
-      token_list = cons1(object1, token_list);
+      token_list = prepend_token(object1, token_list);
     }else if (program[i] == ')'){      //check if it is an closed parentheses
       object1.type = "identifier";
       object1.value = "closed_paren";
-      token_list = cons1(object1, token_list);
+      token_list = prepend_token(object1, token_list);
     }else if (isalpha(program[i])){    //check if its in the alphabet
       object1.type = "symbol";
       id =  read_identifier(program, i);
       object1.value = id->identifier_token;
       program = chopN( program, id->length ); 
       printf("IDENTIFIER %s\n", object1.value);
-      token_list = cons1(object1, token_list);
+      token_list = prepend_token(object1, token_list);
     }else if(isdigit(program[i])){    //check if its a number
       object1.type = "num";
       id =  read_number(program, i);
       object1.value = id->identifier_token;
       program = chopN( program, id->length ); 
       printf("NUMBER VALUE %s\n", object1.value);
-      token_list = cons1(object1, token_list);
+      token_list = prepend_token(object1, token_list);
     }else{                           //Invalid Syntax
       printf("Illegal syntax\n");
     }

@@ -221,41 +221,6 @@ void printChar(void *n)
   printf("%s\n", (char *)n);
 }
 
-void print(pair *list){
-  if(list){
-    
-    //printf("%s\n", first(list));
-    // print_token_list(rest(list));
-    // printf("List is here\n");
-    switch(list->type){
-    case Number:
-      //printf("It's a number\n");
-      printInt(list->car);
-    
-      break;
-    case Symbol:
-      // printf("It's a symbol\n");
-      printChar(list->car);
-      break;
-
-    case String:
-      // printf("It's a string\n");
-      printChar(list->car);
-      break;
-    default:
-      break;
-    }
-
-  }
-  else{
-    // printf("List is not here\n");
-  }
-
-}
-
-
-
-
 int main(char *argc, char **argv[]){
 
   char str[20];
@@ -331,7 +296,7 @@ int main(char *argc, char **argv[]){
   //expr = cons3 (expr, result_expr);
 
   //printf("SYMBOL %s\n", expr->symbol.name);
-  token_list = cons1(object1, token_list);
+  token_list = prepend_token(object1, token_list);
 
     
   // printf("%s %s \n", ((struct object*)ptr3)->value, ((struct object*)ptr3)->type);
@@ -346,15 +311,15 @@ int main(char *argc, char **argv[]){
 
   object1.type = "num";
   object1.value = "137";
-  token_list = cons1(object1, token_list);
+  token_list = prepend_token(object1, token_list);
 
   object1.type = "num";
   object1.value = "349";
-  token_list = cons1(object1, token_list);
+  token_list = prepend_token(object1, token_list);
 
   object1.type = "right_paren";
   object1.value = ")";
-  token_list = cons1(object1, token_list);
+  token_list = prepend_token(object1, token_list);
   
   //print_token_list2(token_list);
   //printf("////////////////////////////////////////////\n");
