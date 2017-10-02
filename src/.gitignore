@@ -5,3 +5,4 @@
 *.#read.c
 *.#print.c
 *repl
+*#parser.c

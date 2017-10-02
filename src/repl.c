@@ -17,89 +17,6 @@
 #include "compiler.c"
 
 
-
-
-
-typedef struct pair{
-  void *car;
-  enum type type;
-  void *cdr;
-}pair;
-
-
-const char *type_array[1];
-int command = 0;
-
- 
-pair* create1(void* car,enum type type, void* cdr)
-{
-  //pair* pair = (pair*)malloc(sizeof(pair));
-  pair* pair = malloc(sizeof(pair));
-  if(pair == NULL)
-    {
-      printf("Error creating a new node.\n");
-      exit(0);
-    }
-  pair->car = car;
-  pair-> type = type;
-  pair->cdr = cdr;
- 
-  return pair;
-}
-
-
-
-int read_list (pair* list_so_far){
-
-  return 0;
-}
-
-
-int isnumber (char *s){
-  if(s == NULL || *s == '\0' || isspace(*s)){
-    return 0;
-  }
-  else{
-    char* p;
-    strtod(s, &p);
-    return *p == '\0';
-  }
-}
-
-
-
-int count (pair* cursor){
-  int c = 0;
-  while(cursor != NULL){
-    c++;
-    cursor = cursor->cdr;
-  }
-  return c;
-}
-
-char* car (struct pair *list){
-  if(list){
-    return list->car;
-  }
-  return 0;
-}
-
-pair* cdr( struct pair *list){
-  return list -> cdr;
-  
-}
-
-void printInt(void *n)
-{
-  printf("%d\n", *(int *)n);
-}
-
-
-void printChar(void *n)
-{
-  printf("%s\n", (char *)n);
-}
-
 int main(char *argc, char **argv[]){
 
   char str[20];
@@ -110,11 +27,11 @@ int main(char *argc, char **argv[]){
   struct object *expr;
    struct object *expr2;
   struct object *result_expr = NULL;
+  object* code_tree = NULL;
   char* operator = "third";
   char* string = "\"A string\"";
   int b = 20, c = 30;
   // hashtable_t *env = ht_create( 65536 );
-  pair* env;
   char* result = NULL;
 
  
@@ -198,34 +115,7 @@ int main(char *argc, char **argv[]){
   object1.value = ")";
   token_list = prepend_token(object1, token_list);
   
-  //print_token_list2(token_list);
-  //printf("////////////////////////////////////////////\n");
-    //code_tree = parse(token_list, cell);
-  //print_token_list2(code_tree->car);
-
-  // printf("TRYING TO PRINT IT %s\n", token_list->val.value);
-
-  //void *ptr1 = &token_list;
-   //printf("%s\n", *(char **)ptr1->val.value);
-   //token_list2 = (struct token_list*)ptr1;
-
-   // printf("%s\n", token_list2->val.value);
-
-  // print(code_tree);
-  //print(eval(code_tree, env));
- 
-
-  //push(3);
-  //push(5);
-  //push(9);
-  //push(1);
-  //push(12);
-
-  //while(!isEmpty()) {
-  //int data = peek();
-  //printf("%d\n",data);
-  //}
-  //  compile();
+  //print(eval(parse(lexer("(+ 137 349)"))code_tree));
   
   /* while (1){     
      printf("repl>");

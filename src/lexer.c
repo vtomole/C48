@@ -421,7 +421,7 @@ int count_chars(char* string, char ch)//is string here replaceable by program?
  * expected return val: tokenlist of length 5
  */
 //TODO: check for Booleans, Characters, Strings
-token_list* list_lexer (char *program){   
+token_list* lexer (char *program){   
   struct token_list  *token_list = NULL;
   struct token_object object1;
   struct identifier  *id;

@@ -185,12 +185,17 @@ void print_code_tree(constructor_cell* code_tree){
  * -token_list, the list of tokens to add to the code_tree
  * -code_tree, the code_tree being built
  */
-constructor_cell* parse(token_list* token_list, constructor_cell* code_tree){
+
+//Will return object list
+object* parse(token_list* token_list, object* code_tree){
   if(token_list == NULL){
     return code_tree;
   }
 
-  code_tree = construct_cell(&token_list, &code_tree);
+  //Check the properties of token
+  //Create the object.
+
+  code_tree = cons(code_tree, code_tree);
   print_token_list2(token_list);
   // printf("///////////////////////////\n");
   parse(token_list->next, code_tree);
