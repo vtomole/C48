@@ -302,7 +302,7 @@ int main(char *argc, char **argv[]){
   char *ptr_string = malloc(strlen(string) + 1);
   strcpy(ptr_string, string);
 
-  code_tree = cons2(ptr, code_tree);
+  code_tree = construct_cell(ptr, code_tree);
   
   //void *ptr3;
   object1.type = "left_paren";
@@ -377,10 +377,10 @@ int main(char *argc, char **argv[]){
   object1.value = ")";
   token_list = cons1(object1, token_list);
   
-  //print_token_list2(token_list);
-  //printf("////////////////////////////////////////////\n");
-    //code_tree = parse(token_list, cell);
-  //print_token_list2(code_tree->car);
+  print_token_list2(token_list);
+  printf("////////////////////////////////////////\n");
+  code_tree = parse(token_list, cell);
+  //print_code_tree(code_tree->car);
 
   // printf("TRYING TO PRINT IT %s\n", token_list->val.value);
 

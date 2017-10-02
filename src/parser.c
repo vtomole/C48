@@ -104,7 +104,7 @@ char* get_car(void* car){
 }
   
 //Cell constructor
-constructor_cell* cons2(void* first_element, void* list){
+constructor_cell* construct_cell(void* first_element, void* list){
 
   constructor_cell* cell = malloc(sizeof(constructor_cell));
   if(cell == NULL){
@@ -115,8 +115,6 @@ constructor_cell* cons2(void* first_element, void* list){
   cell->cdr = list;
   return cell;
 }
-
-
 
 //prints the parameters in a list
 void print_token_list2(token_list* token_list){
@@ -129,19 +127,14 @@ void print_token_list2(token_list* token_list){
   }
 }
 
-//prints the parameters in a list
-void print_code_tree(constructor_cell* code_tree){
-  print_token_list2(code_tree->cdr);
-}
-
 //recursively adds the token_lists to the code tree
 constructor_cell* parse(token_list* token_list, constructor_cell* code_tree){
   if(token_list == NULL){
     return code_tree;
   }
-  code_tree = cons2(&token_list, &code_tree);
+  code_tree = construct_cell(&token_list, &code_tree);
   print_token_list2(token_list);
-  printf("///////////////////////////\n");
+  printf("/////////////token list//////////////\n");
   parse(token_list->next, code_tree);
 }
 
