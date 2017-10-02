@@ -49,18 +49,6 @@ pair* create1(void* car,enum type type, void* cdr)
 
 
 
-pair* cons(void *car,enum type type, pair* cdr)
-{
- 
-  pair* new_pair = create1(car,type,cdr);
-  car = new_pair;
-  return car;
-}
-
-
-
-
-
 int read_list (pair* list_so_far){
 
   return 0;
@@ -77,116 +65,7 @@ int isnumber (char *s){
     return *p == '\0';
   }
 }
-pair *read(char *program){
-  pair pair1;
-  pair pair2;
-  pair pair3;
 
-  char * program_1;
-  int i = 0;
-  char operator = '+', char_quit = 'q';
-  int b = 20,d;
-  int c = 30;
-  int count =0;
-  char* token, substr;
-  
-  pair* head = NULL;
-   
-  const char s[2] = " ";
-  const char s1[2] = "(";
-    
-   
-  /* get the first token */
-  token = strtok(program, s);
-
-  //printf("%s", token);
-  if(strcmp(token, "q\n") == 0){
-    //operator = 'q';
-    operator = 'q';
-    //head = cons(&operator, head);
-    //cons(&token ,head);
-    //return head;
-  }
-  /* walk through other tokens */
-  while( token != NULL ) 
-    {
-      //if(token[0] == '('){
-      //token = strtok(program, s1);
-      // printf("Token should not have parentheses %s\n", token);
-      //	printf("Strlen of token %d\n", strlen(token));
-      //	printf("Parsing token %c\n", token[strlen (token)- 2]);
-      //printf( " dat token %s\n", token );
-
-
-	
-      if(token[0] == '('){
-	operator = token[1];
-      }
-      else if(token[strlen(token)- 2] == ')'){
-	//printf("Right paren\n");
-	for(i =0; i < strlen(token); i++){
-	  // printf("Token at i %c\n", token[i]);
-	  if(token[i] == ')'){
-	    token[i] = '\0';
-	    // printf("I'm in here folks\n");
-	    break;
-	  }
-	  else{
-	    token[i] = token[i];
-	  }
-	    
-	}
-	//printf("The token after %s\n", token);
-	if(isnumber(token)){
-	  b = atoi(token);
-	  type_array[count] = "integer";
-	  count++;
-	}
-      }
-      else{
-	// printf( "The token at 0 %c\n", token[0]);
-	c = token[0] - '0';
-	//printf("that token as an int %d\n", c);
-
-      }
-
-      /*else if (isnumber(token)){
-      //printf("A digit is here\n");
-      // printf("the token %s\n", token);
-      c = atoi(token);
-      printf("this is the c %d\n", c);
-      }
-      else if (token[1] == ')'){
-     
-      d = token[0] - '0';
-      }
-
-      */
-    
-      token = strtok(NULL, s);  
-
-    }
-
-  //printf("value of operator %c\n", operator);
-  //printf("value of b(var 1) %d\n", b);
-  // printf("value of c(var 2) %d\n", c);
-  
-   
-  pair1.car = &b;
-  pair1.cdr = &pair2;
-  
-  //pair1.cdr = &c;
-  pair2.car = &b;
-  pair2.cdr = &pair3;
-  
- 
-  head = cons(&b,Number,head);
-  head = cons(&c,Number,head);
-  head = cons(&operator,Symbol, head);
-
-  return head;
-
-}
 
 
 int count (pair* cursor){
@@ -265,17 +144,17 @@ int main(char *argc, char **argv[]){
 
   //printf("THE NUMBER %d\n", expr->number);
 
-  expr2 = cons3(expr,NULL);
+  expr2 = cons(expr,NULL);
 
   expr = create_number (137);
 
-  expr2 = cons3(expr,expr2);
+  expr2 = cons(expr,expr2);
   
   //expr = create_variable("+");
 
   expr = create_primitiveop("+");
 
-  expr2 = cons3(expr,expr2);
+  expr2 = cons(expr,expr2);
   
  
   /*expr2= cdr1(expr2);

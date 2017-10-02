@@ -32,7 +32,7 @@ typedef struct object{
  * Return Value:
  * - test1, an object ???
  */
-object* cons3(object *car, object *cdr){
+object* cons(object *car, object *cdr){
   struct object *object1;
   object *test1 = malloc(sizeof(*object1));
 
