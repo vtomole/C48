@@ -1,3 +1,46 @@
+int self_evaluatingp (object *exp){
+  if(strcmp(exp->type, "number") == 0){  
+    return 1;
+  }
+  else if (strcmp(exp->type, "string") == 0){
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+int primitivep (object *exp){
+  if(strcmp(exp->type, "primop") == 0){  
+    return 1;
+  }
+  
+  else {
+    return 0;
+  }
+}
+
+object *apply_primitive_procedure(object *procedure , object* arguments){
+  
+  if(strcmp(procedure->variable, "+")== 0){
+    //printf("ITS A PLUS\n");
+    struct object *object1;
+    int first,second,answer;
+    object *test1 = malloc(sizeof(*object1));
+    first = car1(arguments)->number;
+    second = car1(cdr1(arguments))->number;
+    answer = first+second;
+    // printf("THE NUMBER %d\n", answer);
+    procedure = create_number(answer);
+  }
+  else{
+    printf("Procedure has not been implemented yet\n"); 
+  }
+
+  return procedure;
+
+}
+
 /**
  * Executes the operation returning the result
  * This function implements our defined functions among other operation native to c
@@ -10,33 +53,19 @@
  * apply('+', int[1,2])
  * expected return val: 3
  */ 
-char  *apply(char operator, int arguments[]){
-  
-  int i;
-  char* answer = (char*)malloc(8 * sizeof(char));
-  switch(operator){
-  case '+':
-    sprintf(answer, "%d", arguments[0] + arguments[1]);
-    return answer;
-    break;
-  case '-':
-    sprintf(answer, "%d", arguments[0] - arguments[1]);
-    return answer;
-    break;
-  case '*':
-    sprintf(answer, "%d", arguments[0] * arguments[1]);
-    return answer;
-    break;
-  case '/':
-    sprintf(answer, "%d", arguments[0] / arguments[1]);
-    return answer;
-    break;
-  default:
-    return "Your char is not in this variable\n";
-  }
 
-}//end of apply
+object  *apply(object *procedure , object* arguments){
 
+
+   if (primitivep(procedure)){
+     procedure = apply_primitive_procedure(procedure, arguments);
+    }
+   else{
+     printf("Unkown apply procedure\n");
+   }
+ 
+  return procedure;
+}
 /**
  * Evaluates the given arguements to create the code tree that apply will execute over
  * This function takes in an expression and and the environment hash table and creates the tree
@@ -48,73 +77,15 @@ char  *apply(char operator, int arguments[]){
  * 
  * expected return val: 
  */ 
-char *eval(eval_arguments exp_env){
+object *eval(object* exp, token_list* env ){
+  if (self_evaluatingp(exp)){
+   printf("SELFEVALUATING\n");
+    }
+   else{
+     exp = apply(car1(exp), cdr1(exp));
+   }
 
-  pair* head = exp_env.head;
-  hashtable_t *environment = exp_env.environment;
-  pair *cursor = head;
-  int num_nodes=0;
-  char operator;
-  char *answer;
-  int first,second,i;
-  //num_nodes = count (head);
-  //  
-  
-  i=0;
-  //if(strcmp(type_array[i], "integer") == 0){
-
-  //  printf("It's an integer\n");
-    
-  // }
-    
-     
-
-  if( *(char*)head->car == 'q'){
-    exit(0);
-  }
-  else{
-
-  
-    // printf("The number of nodes %d\n", num_nodes);
-  
-    operator = *(char*)head->car;
-    printf("In eval  should be +  %c\n", operator );
  
-    head =  (pair*)head->cdr;
-  
-
-    first = *(int*)head->car;
-    //printf("In eval  should be 20  %d\n", first );
- 
-
-    head =  (pair*)head->cdr;
-  
-
-    second = *(int*)head->car;
-    //printf("In eval  should be 20  %d\n", second );
- 
-  
-  
-    int arguments[2] = {first,second};
-    ht_set(environment, "key1", "hello world" ); 
-    printf( "%s\n", ht_get(environment, "key1" ) );
-
-    answer = apply(operator, arguments);
-  }
-  return answer;
-}//end of eval
-
-/**
- * Prints the code tree returned by eval
- * This function is primarily for testing our tree generation
- * Parameters:
- * - answer the head of the code tree to print
- * Return Value:
- * - none
- * Example call:
- * print(eval());
- * expected return val: null
- */ 
-void print(char* answer){
-  //TODO
+  return exp;
 }
+

@@ -1,28 +1,39 @@
-int assert (char *input, char* expected){
 
+#include "/home/bmathur/c48/src/lexer.c"
+
+int our_assert (char *input, char* expected){
+
+
+int test_num = 0;
+char* result = NULL;
+
+int are_equal (char *program, char *expected){
+  test_num ++ ;
+  char *input =  print_token_list_debug(list_lexer(program),result);
+  printf("%s\n",input);
   if(strcmp(input,expected) == 0){
-    return 0;
+    printf("test %d passed \n",test_num);
   }
   else{
-    return 1;
+    printf("test %d failed \n",test_num);
+  
   }
 }
 
+
 void lexer_tests (){
-  char* result = NULL;
+
+ 
+  are_equal("(set position (* 60 (+ initial rate)))", "[left_paren,(][symbol,set][symbol,position][left_paren,(][identifier,*][num,60][left_paren,(][identifier,+][symbol,initial][symbol,rate][right_paren,)][right_paren,)][right_paren,)]");
+  are_equal("(+ 137 349)", "[left_paren,(][identifier,+][num,137][num,349][right_paren,)]");
+  are_equal("(- 1000 334)", "[left_paren,(][identifier,-][num,1000][num,334][right_paren,)]");
+  are_equal("(* 5 99) ", "[left_paren,(][identifier,*][num,5][num,99][right_paren,)]");
+  are_equal("(/ 10 5)","[left_paren,(][identifier,/][num,10][num,5][right_paren,)]");
+  are_equal("(+ 2.7 10 ) ", "[left_paren,(][identifier,+][num,2.7][num,10][right_paren,)]");
   
-  int passed = 0;
-  int run = 0;
-  printf("The result %s\n",print_token_list(list_lexer("(set position (* 60 (+ initial rate)))"), result));
-
-  if(assert(print_token_list(list_lexer("(set position (* 60 (+ initial rate)))"),result), "(setposition(*60(+initialrate)))")== 0){
-    passed++;
-  }
-  run++;
-  if(assert(print_token_list(list_lexer("(+ (+ 2 3) 7)"),result), "(+(+23)7)")== 0){
-    passed++;
-  }
-  run++;
-
-   printf("%d lexer tests run. %d lexer tests passed\n", run,  passed);
+  
+}
+void main() 
+{
+  lexer_tests();
 }

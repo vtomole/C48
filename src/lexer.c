@@ -1,9 +1,14 @@
 //https://llvm.org/docs/tutorial/LangImpl01.html#language
-
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <limits.h>
 struct object{
+
   char* type;
   char* value;
-}object;
+}token_object;
 
 struct identifier{
   char* identifier_token;
@@ -11,7 +16,7 @@ struct identifier{
 }identifier;
 
 typedef struct token_list{
-  struct object val;
+  struct token_object val;
   struct token_list *next;
 }token_list;
 
@@ -52,6 +57,7 @@ token_list* reverse_tokenlist(token_list* head)
   return head;
 }
 
+
 /**
  * This function does ???
  * Parameters:
@@ -63,7 +69,8 @@ token_list* reverse_tokenlist(token_list* head)
  * 
  * expected return val: 
  */ 
-token_list* cons1(struct object val, struct token_list *cdr)
+token_list* cons1(struct token_object val, struct token_list *cdr)
+
 {
  
   //pair* pair = (pair*)malloc(sizeof(pair));
@@ -104,6 +111,8 @@ int count_token_list (token_list* cursor){
   }
   return c;
 }
+
+
 /**
  * This function returns the value of the first element in a list
  * Parameters:
@@ -117,6 +126,18 @@ int count_token_list (token_list* cursor){
 char* first (struct token_list *list){
   if(list){
     return list->val.value;
+  }
+  return 0;
+}
+char* find_value (struct token_list *list){
+  if(list){
+    return list->val.value;
+  }
+  return 0;
+}
+char* find_type (struct token_list *list){
+  if(list){
+    return list->val.type;
   }
   return 0;
 }
@@ -178,16 +199,14 @@ char *scat(char *s,char *t)
 char* print_token_list(struct token_list *list, char* result){
   if(result == NULL){
     result = first(list);
-    printf("I'm here twice\n");
     print_token_list(rest(list), result);
-    
    
   }
   else if(list && result !=NULL){
      
     result = scat(result, first(list));
-    printf("The result %s\n", result);
-    printf("%s\n", first(list));
+    //printf("The result %s\n", result);
+    // printf("%s\n", first(list));
     print_token_list(rest(list), result);
 
   }
@@ -196,6 +215,33 @@ char* print_token_list(struct token_list *list, char* result){
   }
 
 }
+
+char* print_token_list_debug(struct token_list *list, char* result){
+  if(result == NULL){
+    result = ("[");
+    result = scat(result,find_type(list));
+    result = scat(result,",");
+    result = scat(result, find_value(list));
+    result = scat(result,"]");
+    print_token_list_debug(rest(list), result);
+
+   
+  }
+else if(list && result !=NULL){
+    result = scat(result,"[");
+    result = scat(result, find_type(list));
+    result = scat(result,",");     
+    result = scat(result, find_value(list));
+    result = scat(result,"]");
+    print_token_list_debug(rest(list), result);
+  }
+  else{
+ return result;
+  }
+}
+
+
+
 /**
  * This function checks if a given character is whitespace
  * Parameters:
@@ -372,7 +418,7 @@ token_list* list_lexer (char *program){
   int i;
    
   struct  token_list *token_list = NULL;
-  struct object object1;
+  struct token_object object1;
   struct identifier *id;
   const char s[2] = " ";
   char *token;
@@ -477,7 +523,7 @@ token_list* list_lexer_tmp (char *program){
   int i;
    
   struct  token_list *token_list = NULL;
-  struct object object1;
+  struct token_object object1;
   struct identifier *id;
 
   object1.type = "identifier";
@@ -568,4 +614,5 @@ token_list* list_lexer_tmp (char *program){
   //print_token_list(reverse_token_list(token_list));
   
   return token_list;
-}//end of list_lexer_tmp();
+}
+
