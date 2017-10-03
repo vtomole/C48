@@ -3,7 +3,7 @@ char* result = NULL;
 
 int are_equal (char *program, char *expected){
   test_num ++ ;
-  char *input =  print_token_list_debug(list_lexer(program),result);
+  char *input =  print_token_list_debug(lexer(program),result);
   printf("%s\n",input);
   if(strcmp(input,expected) == 0){
     printf("test %d passed \n",test_num);
