@@ -8,8 +8,6 @@
 #include "parser.c"
 #include "vm.h"
 #include "vm.c"
-#include "../tests/lexer_tests.c"
-#include "../tests/tests.c"
 //#include "read_2.c"
 #include "eval-apply.c"
 #include "print.c"
