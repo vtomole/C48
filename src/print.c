@@ -3,7 +3,7 @@
  * Parameters:
  * -result, the object to print
  */
-char* print1(object* result){
+char* print(object* result){
   if(strcmp(result->type, "number") == 0){
     printf("%d\n", result->number);
   }else{

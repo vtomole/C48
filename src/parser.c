@@ -1,12 +1,5 @@
 //#include "parser.h"
 
-enum type{Symbol, List, Function, String, Number};
-
-typedef struct constructor_cell{
-  void* car; //first element
-  void* cdr; //rest of the list w/ first element 
-}constructor_cell;
-
 struct symbol{//typedef struct symbol???
   char *name;
   struct symbol *next;
@@ -132,27 +125,7 @@ typedef struct type_list{
 char* get_car(void* car){
   return *(char**)car;
 }
-  
-/**
- *This function creates cells for the code tree
- * Parameters:
- * - first_element, equivalent to car, the token at the head of the code tree
- * - list, equivalent to cdr, the token_list that car points to
- * Return Value:
- * -cell, a constructor_cell to be used in the code tree
- */
-constructor_cell* construct_cell(void* first_element, void* list){
-  constructor_cell* cell = malloc(sizeof(constructor_cell));
 
-  if(cell == NULL){
-    printf("Error creating a new node.\n");
-    exit(0);
-  }
-
-  cell->car = first_element;
-  cell->cdr = list;
-  return cell;
-}
 
 /**
  *This function prints out the token list
@@ -171,26 +144,22 @@ void print_token_list2(token_list* token_list){
 }
 
 /**
- *This function prints the code_tree
- * Parameters:
- * -code_tree, the code_tree to print
- */
-void print_code_tree(constructor_cell* code_tree){
-  print_token_list2(code_tree->cdr);
-}
-
-/**
  *Recursivly adds tokens to the code_tree
  * Parameters:
  * -token_list, the list of tokens to add to the code_tree
  * -code_tree, the code_tree being built
  */
-constructor_cell* parse(token_list* token_list, constructor_cell* code_tree){
+
+//Will return object list
+object* parse(token_list* token_list, object* code_tree){
   if(token_list == NULL){
     return code_tree;
   }
 
-  code_tree = construct_cell(&token_list, &code_tree);
+  //Check the properties of token
+  //Create the object.
+
+  code_tree = cons(code_tree, code_tree);
   print_token_list2(token_list);
   // printf("///////////////////////////\n");
   parse(token_list->next, code_tree);
