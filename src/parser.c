@@ -1,9 +1,9 @@
 //#include "parser.h"
 
-struct symbol{//typedef struct symbol???
-  char *name;
-  struct symbol *next;
-}symbol;
+//struct symbol{//typedef struct symbol???
+//  char *name;
+//  struct symbol *next;
+//}symbol;
 
 typedef struct object{
   char* type;
