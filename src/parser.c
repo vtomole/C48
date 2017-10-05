@@ -43,7 +43,7 @@ object* cons(object *car, object *cdr){
  * Return Value:
  * - ???
  */
-object* car1(object *cell){
+object* car(object *cell){
   assert (strcmp(cell->type, "cons") == 0);
   return cell->cons_cell.car;
 }
@@ -55,7 +55,7 @@ object* car1(object *cell){
  * Return Value:
  * - ???
  */
-object* cdr1(object *cell){
+object* cdr(object *cell){
   assert (strcmp(cell->type, "cons") == 0);
   return cell->cons_cell.cdr;
 }

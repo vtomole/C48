@@ -47,8 +47,8 @@ object *apply_primitive_procedure(object *procedure , object *arguments){
     struct object *object1;
     object *test1 = malloc(sizeof(*object1));
 
-    int  first = car1(arguments)->number;
-    int second = car1(cdr1(arguments))->number;
+    int  first = car(arguments)->number;
+    int second = car(cdr(arguments))->number;
     int answer = first+second;
    
     procedure = create_number(answer);
@@ -98,7 +98,7 @@ object *eval(object* exp, token_list* env ){
   if (self_evaluatingp(exp)){
     printf("SELFEVALUATING\n");
   } else{
-    exp = apply(car1(exp), cdr1(exp));
+    exp = apply(car(exp), cdr(exp));
   }
  
   return exp;
