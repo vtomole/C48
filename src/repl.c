@@ -4,8 +4,10 @@
 #include <ctype.h>
 #include <limits.h>
 #include <assert.h>
-#include "lexer.c"
+//#include "lexer.c"
+#include "lexer_tmp.c"
 #include "parser.c"
+
 #include "vm.h"
 #include "vm.c"
 //#include "read_2.c"
@@ -32,49 +34,26 @@ int main(char *argc, char **argv[]){
   // hashtable_t *env = ht_create( 65536 );
   char* result = NULL;
 
-  object1.type = "left_paren";
-  object1.value = "(";
-  token_list = prepend_token(object1, token_list);
+  token_list = lexer_tmp1("(+ 137 349)");
 
-  object1.type = "primitive";
-  object1.value = "+";
-  token_list = prepend_token(object1, token_list);
-
-  object1.type = "num";
-  object1.value = "137";
-  token_list = prepend_token(object1, token_list);
-
-  object1.type = "num";
-  object1.value = "349";
-  token_list = prepend_token(object1, token_list);
-
-  object1.type = "right_paren";
-  object1.value = ")";
-  token_list = prepend_token(object1, token_list);
-
-
+  // print_token_list(token_list);
   //token_list = reverse_token_list(token_list);
     
-  expr_list = parse(token_list, expr_list);
-
-  print(eval(expr_list,token_list));
+ 
+ 
 
   
-  // print(eval(parse(lexer("(+ 137 349)"))code_tree));
+ 
   
-  /* while (1){     
-     printf("repl>");
-     fgets (str, 20, stdin);
-     //printf("=>");
-     //micro_read(str);
-     printf("=>%s\n", eval(read(str)));
-     /*char str[20];
-     while (1){     
-     printf("repl>");
-     fgets (str, 20, stdin);
-     printf("=>%s\n", eval(read(str)));
-     }
-     }*/
-  return 0;
-}//end of main>
+  while (1){     
+    printf("repl>");
+    fgets (str, 20, stdin);
+    //printf("=>");
+    //micro_read(str);
+     print(eval(parse(lexer_tmp1(str), expr_list),token_list));
+    
+    }
+    
+    return 0;
+  }//end of main>
 

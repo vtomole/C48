@@ -45,7 +45,7 @@ char* token_type (char* token){
   }else if (isdigit(token[0])){
     return "num";
   }else{
-    return "identifier";
+    return "primitive";
   }
 }
 
