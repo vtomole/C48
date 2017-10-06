@@ -151,17 +151,28 @@ void print_token_list2(token_list* token_list){
  */
 
 //Will return object list
-object* parse(token_list* token_list, object* code_tree){
-  if(token_list == NULL){
-    return code_tree;
+object* parse(token_list* token_list, object* expr_list){
+  struct object *expr2;
+ while(token_list != NULL){
+    if(strcmp(token_list->val.type,"right_paren")==0){
+      //indicates the start of a new list
+      expr_list = NULL;
+    }else if(strcmp(token_list->val.type,"left_paren") == 0){
+      //end of a list
+    }else if(strcmp(token_list->val.type,"primitive")==0){
+      //constructing an operator onto the list
+      expr2 = create_primitiveop(token_list->val.value);
+      expr_list = cons(expr2, expr_list); 
+    }else if(strcmp(token_list->val.type,"num")==0){
+      //constructing a number onto the list
+      expr2 = create_number(token_list->val.value);
+      expr_list = cons(expr2, expr_list);
+    }else{
+      printf("invalid token");
+    }
+    token_list = token_list->next;
   }
+ return expr_list;
 
-  //Check the properties of token
-  //Create the object.
-
-  code_tree = cons(code_tree, code_tree);
-  print_token_list2(token_list);
-  // printf("///////////////////////////\n");
-  parse(token_list->next, code_tree);
 }
 
