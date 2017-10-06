@@ -32,7 +32,7 @@ int main(char *argc, char **argv[]){
   // hashtable_t *env = ht_create( 65536 );
   char* result = NULL;
 
-  /*object1.type = "left_paren";
+  object1.type = "left_paren";
   object1.value = "(";
   token_list = prepend_token(object1, token_list);
 
@@ -50,13 +50,13 @@ int main(char *argc, char **argv[]){
 
   object1.type = "right_paren";
   object1.value = ")";
-  token_list = prepend_token(object1, token_list);*/
+  token_list = prepend_token(object1, token_list);
 
 
   //token_list = reverse_token_list(token_list);
   //print_token_list(token_list);
   
-  /* while(token_list != NULL){
+  while(token_list != NULL){
     if(strcmp(token_list->val.type,"right_paren")==0){
       //indicates the start of a new list
       expr_list = NULL;
@@ -67,58 +67,17 @@ int main(char *argc, char **argv[]){
       expr2 = create_primitiveop(token_list->val.value);
       expr_list = cons(expr2, expr_list); 
     }else if(strcmp(token_list->val.type,"num")==0){
+      //constructing a number onto the list
       expr2 = create_number(token_list->val.value);
       expr_list = cons(expr2, expr_list);
     }else{
       printf("invalid token");
     }
     token_list = token_list->next;
-  }*/
-
-  //ptr3 = &token_list->val;
-  // printf("%s %s \n", ((struct object*)ptr3)->value, ((struct object*)ptr3)->type);
+  }
+  result_expr = eval(expr_list,token_list);
   
-  
-  object1.type = "identifier";
-  object1.value = "+";
-
-  expr = create_number ("349");
- 
-  expr2 = cons(expr,NULL);
-
-  expr = create_number ("137");
-
-  expr2 = cons(expr,expr2);
-  
-  expr = create_primitiveop("+");
-
-  expr2 = cons(expr,expr2);
-
-  result_expr = eval(expr2, token_list);
-
-  //print(result_expr);
-
-    //printf("RESULT_EXPR TYPE THE FIRST TIME %s \n", result_expr->type);
-
-  //printf("ENUM %d\n",expr.number);
-  //expr.symbol.name = "+";
-  //expr = cons3 (expr, result_expr);
-
-  //printf("SYMBOL %s\n", expr->symbol.name);
-  // token_list = prepend_token(object1, token_list);
-
-    
-  // printf("%s %s \n", ((struct object*)ptr3)->value, ((struct object*)ptr3)->type);
- 
-  
-  //printf("%s %s \n", token_list2->val.value, token_list2->val.type);
-
-  /* char* a = "hello";
-    ptr3 = &a;
-    a = *(char **)ptr3;
-    printf("SHOULD PRINT HELLO %s\n",a );*/
-
-  
+  print(result_expr); 
   
   // print(eval(parse(lexer("(+ 137 349)"))code_tree));
   
@@ -134,8 +93,6 @@ int main(char *argc, char **argv[]){
      fgets (str, 20, stdin);
      printf("=>%s\n", eval(read(str)));
      }
-
-
      }*/
   return 0;
 }//end of main>
