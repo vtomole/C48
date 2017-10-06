@@ -1,3 +1,4 @@
+
 /**
  *This function determines whether the given arguement is a number or string
  * Parameters:
@@ -41,7 +42,6 @@ int primitivep (object *exp){
  * - procedure, 
  */
 object *apply_primitive_procedure(object *procedure , object *arguments){
-  
   if(strcmp(procedure->variable, "+")== 0){
     //printf("ITS A PLUS\n");
     struct object *object1;
@@ -49,8 +49,9 @@ object *apply_primitive_procedure(object *procedure , object *arguments){
 
     int  first = car(arguments)->number;
     int second = car(cdr(arguments))->number;
-    int answer = first+second;
-   
+    int temp = first + second;
+    char* answer = malloc(sizeof(int));
+snprintf(answer,sizeof(int),"%d",temp);
     procedure = create_number(answer);
   }
   else{
@@ -73,7 +74,6 @@ object *apply_primitive_procedure(object *procedure , object *arguments){
  * expected return val: 3
  */ 
 object  *apply(object *procedure , object* arguments){
-
    if (primitivep(procedure)){
      procedure = apply_primitive_procedure(procedure, arguments);
     } else{

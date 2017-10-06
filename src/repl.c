@@ -21,8 +21,9 @@ int main(char *argc, char **argv[]){
   struct  token_list *token_list = NULL;
   struct  token_list *token_list2 = NULL;
   struct token_object object1;
+  struct object *expr_list;
   struct object *expr;
-   struct object *expr2;
+  struct object *expr2;
   struct object *result_expr = NULL;
   object* code_tree = NULL;
   char* operator = "third";
@@ -31,19 +32,48 @@ int main(char *argc, char **argv[]){
   // hashtable_t *env = ht_create( 65536 );
   char* result = NULL;
 
- 
+  /*object1.type = "left_paren";
+  object1.value = "(";
+  token_list = prepend_token(object1, token_list);
 
-    
-  //printf("IDENTIFIER %s\n",read_identifier("Hello how are you doing?", 6));
-  //print_token_list(list_lexer("(set position (* 60 (+ initial rate)))"));
-  // print_token_list(list_lexer("(+ (+ 2 3) 7)"), result);
-  //list_lexer("11 12 45 87 98 45 8476 2635");
-  //tests();
+  object1.type = "primitive";
+  object1.value = "+";
+  token_list = prepend_token(object1, token_list);
 
-  
+  object1.type = "num";
+  object1.value = "137";
+  token_list = prepend_token(object1, token_list);
+
+  object1.type = "num";
+  object1.value = "349";
+  token_list = prepend_token(object1, token_list);
+
+  object1.type = "right_paren";
+  object1.value = ")";
+  token_list = prepend_token(object1, token_list);*/
+
+
+  //token_list = reverse_token_list(token_list);
   //print_token_list(token_list);
-
   
+  /* while(token_list != NULL){
+    if(strcmp(token_list->val.type,"right_paren")==0){
+      //indicates the start of a new list
+      expr_list = NULL;
+    }else if(strcmp(token_list->val.type,"left_paren") == 0){
+      //end of a list
+    }else if(strcmp(token_list->val.type,"primitive")==0){
+      //constructing an operator onto the list
+      expr2 = create_primitiveop(token_list->val.value);
+      expr_list = cons(expr2, expr_list); 
+    }else if(strcmp(token_list->val.type,"num")==0){
+      expr2 = create_number(token_list->val.value);
+      expr_list = cons(expr2, expr_list);
+    }else{
+      printf("invalid token");
+    }
+    token_list = token_list->next;
+  }*/
 
   //ptr3 = &token_list->val;
   // printf("%s %s \n", ((struct object*)ptr3)->value, ((struct object*)ptr3)->type);
@@ -52,33 +82,21 @@ int main(char *argc, char **argv[]){
   object1.type = "identifier";
   object1.value = "+";
 
-  expr = create_number (349);
-
-  //printf("THE NUMBER %d\n", expr->number);
-
+  expr = create_number ("349");
+ 
   expr2 = cons(expr,NULL);
 
-  expr = create_number (137);
+  expr = create_number ("137");
 
   expr2 = cons(expr,expr2);
   
-  //expr = create_variable("+");
-
   expr = create_primitiveop("+");
 
   expr2 = cons(expr,expr2);
-  
- 
-  /*expr2= cdr1(expr2);
 
-  printf("EXPR2 TYPE SECOND TYPE SHOULD BE NUMBER %s \n", car1(expr2)->type);
+  result_expr = eval(expr2, token_list);
 
-   expr2= cdr1(expr2);
-   printf("EXPR2 TYPE SECOND TYPE SHOULD BE NUMBER %s \n", car1(expr2)->type);*/
-
-    result_expr = eval(expr2, token_list);
-
-    print(result_expr);
+  //print(result_expr);
 
     //printf("RESULT_EXPR TYPE THE FIRST TIME %s \n", result_expr->type);
 
@@ -87,7 +105,7 @@ int main(char *argc, char **argv[]){
   //expr = cons3 (expr, result_expr);
 
   //printf("SYMBOL %s\n", expr->symbol.name);
-  token_list = prepend_token(object1, token_list);
+  // token_list = prepend_token(object1, token_list);
 
     
   // printf("%s %s \n", ((struct object*)ptr3)->value, ((struct object*)ptr3)->type);
@@ -100,19 +118,9 @@ int main(char *argc, char **argv[]){
     a = *(char **)ptr3;
     printf("SHOULD PRINT HELLO %s\n",a );*/
 
-  object1.type = "num";
-  object1.value = "137";
-  token_list = prepend_token(object1, token_list);
-
-  object1.type = "num";
-  object1.value = "349";
-  token_list = prepend_token(object1, token_list);
-
-  object1.type = "right_paren";
-  object1.value = ")";
-  token_list = prepend_token(object1, token_list);
   
-  //print(eval(parse(lexer("(+ 137 349)"))code_tree));
+  
+  // print(eval(parse(lexer("(+ 137 349)"))code_tree));
   
   /* while (1){     
      printf("repl>");
@@ -130,4 +138,5 @@ int main(char *argc, char **argv[]){
 
      }*/
   return 0;
-}//end of main
+}//end of main>
+

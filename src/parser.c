@@ -67,12 +67,12 @@ object* cdr(object *cell){
  * Return Value:
  * - num an object with type number and value number
  */
-object* create_number(int number){
+object* create_number(char* number){
   struct object *object1;
   object *num = malloc(sizeof(*object1));
   num->type  ="number";
-  //num->value = number;
-  num->number = number;
+  int temp = atoi(number);
+  num->number = temp;
   return num;
 }
 

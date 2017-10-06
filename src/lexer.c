@@ -70,7 +70,7 @@ token_list* lexer (char *program){
     object1.value = "open_paren";
     token_list = prepend_token(object1, token_list);
   }
-  return  reverse_tokenlist(token_list);
+  return  reverse_token_list(token_list);
 }//end of list_lexer()
 
 /**
