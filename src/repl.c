@@ -75,9 +75,9 @@ int main(char *argc, char **argv[]){
     }
     token_list = token_list->next;
   }
-  result_expr = eval(expr_list,token_list);
-  
-  print(result_expr); 
+
+  print(eval(expr_list,token_list));
+
   
   // print(eval(parse(lexer("(+ 137 349)"))code_tree));
   
