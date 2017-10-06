@@ -51,7 +51,55 @@ object *apply_primitive_procedure(object *procedure , object *arguments){
     int second = car(cdr(arguments))->number;
     int temp = first + second;
     char* answer = malloc(sizeof(int));
-snprintf(answer,sizeof(int),"%d",temp);
+    snprintf(answer,sizeof(int),"%d",temp);
+    procedure = create_number(answer);
+  }
+  else if (strcmp(procedure->variable, "-")== 0){
+    //printf("ITS A PLUS\n");
+    struct object *object1;
+    object *test1 = malloc(sizeof(*object1));
+
+    int  first = car(arguments)->number;
+    int second = car(cdr(arguments))->number;
+    int temp = first - second;
+    char* answer = malloc(sizeof(int));
+    snprintf(answer,sizeof(int),"%d",temp);
+    procedure = create_number(answer);
+  }
+  else if (strcmp(procedure->variable, "*")== 0){
+    //printf("ITS A PLUS\n");
+    struct object *object1;
+    object *test1 = malloc(sizeof(*object1));
+
+    int  first = car(arguments)->number;
+    int second = car(cdr(arguments))->number;
+    int temp = first * second;
+    char* answer = malloc(sizeof(int));
+    snprintf(answer,sizeof(int),"%d",temp);
+    procedure = create_number(answer);
+  }
+  else if (strcmp(procedure->variable, "/")== 0){
+    //printf("ITS A PLUS\n");
+    struct object *object1;
+    object *test1 = malloc(sizeof(*object1));
+
+    int  first = car(arguments)->number;
+    int second = car(cdr(arguments))->number;
+    int temp = first / second;
+    char* answer = malloc(sizeof(int));
+    snprintf(answer,sizeof(int),"%d",temp);
+    procedure = create_number(answer);
+  }
+  else if (strcmp(procedure->variable, "%")== 0){
+    //printf("ITS A PLUS\n");
+    struct object *object1;
+    object *test1 = malloc(sizeof(*object1));
+
+    int  first = car(arguments)->number;
+    int second = car(cdr(arguments))->number;
+    int temp = first % second;
+    char* answer = malloc(sizeof(int));
+    snprintf(answer,sizeof(int),"%d",temp);
     procedure = create_number(answer);
   }
   else{
