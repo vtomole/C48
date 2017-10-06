@@ -45,7 +45,7 @@ char* token_type (char* token){
   }else if (isdigit(token[0])){
     return "num";
   }else{
-    return "identifier";
+    return "primitive";
   }
 }
 
@@ -56,7 +56,7 @@ char* token_type (char* token){
  * Return Value:
  * - head the start of the reversed token list
  */ 
-token_list* reverse_tokenlist(token_list *head){
+token_list* reverse_token_list(token_list *head){
   token_list *prev    = NULL;
   token_list *current = head;
   token_list *next;
@@ -124,7 +124,7 @@ int count_token_list (token_list* cursor){
  */ 
 char* first (struct token_list *list){
   if(list){
-    return list->val.value;
+    return list->val.type;
   }
   return 0;
 }
@@ -170,7 +170,7 @@ char* find_type (struct token_list *list){
  * expected return val: 
  */ 
 token_list* rest( struct token_list *list){
-  return list ->  next;
+  return list -> next;
 }
 
 /**
@@ -184,17 +184,10 @@ token_list* rest( struct token_list *list){
  * 
  * expected return val: 
  */ 
-char* print_token_list(struct token_list *list, char *result){
-  if(result == NULL){
-    result = first(list);
-    print_token_list(rest(list), result);
-  }else if(list && result !=NULL){ 
-    result = scat(result, first(list));
-    //printf("The result %s\n", result);
-    // printf("%s\n", first(list));
-    print_token_list(rest(list), result);
-  }else{
-    return result;
+void print_token_list(struct token_list *list){
+  if(list){
+    printf("%s\n", first(list));
+    print_token_list(rest(list));
   }
 }
 
