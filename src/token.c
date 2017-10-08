@@ -122,6 +122,23 @@ int count_token_list (token_list* cursor){
  * 
  * expected return val: 
  */ 
+char* first_value (struct token_list *list){
+  if(list){
+    return list->val.value;
+  }
+  return 0;
+}
+
+/**
+ * This function returns the value of the first element in a list
+ * Parameters:
+ * - list the list you want the head of 1
+ * Return Value:
+ * - the value of the first element in the list
+ * Example call:
+ * 
+ * expected return val: 
+ */ 
 char* first (struct token_list *list){
   if(list){
     return list->val.type;
@@ -188,6 +205,24 @@ void print_token_list(struct token_list *list){
   if(list){
     printf("%s\n", first(list));
     print_token_list(rest(list));
+  }
+}
+
+/**
+ * This function recursivly prints the token list
+ * Parameters:
+ * - list the token to print
+ * - result the tokenlist to print from
+ * Return Value:
+ * - result returns the list of tokens after printing them
+ * Example call:
+ * 
+ * expected return val: 
+ */ 
+void print_token_list_value(struct token_list *list){
+  if(list){
+    printf("%s\n", first_value(list));
+    print_token_list_value(rest(list));
   }
 }
 
