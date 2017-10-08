@@ -22,7 +22,7 @@ token_list* lexer_tmp1 (char *program){
   struct  token_list *token_list = NULL;
   struct token_object object1;
   struct identifier *id;
-  const char s[2] = " ";
+  const char s[3] = " \t\n";
   char *token;
   int num_right; 
 
@@ -103,6 +103,112 @@ token_list* lexer_tmp1 (char *program){
 
    
 
+
+  return  token_list;
+}//end of list_lexer()
+
+
+token_list* lexer_tmp (char *program){   
+ static int last_character = ' ';
+ int i,j=0, j_temp =0;
+   
+  struct  token_list *token_list = NULL;
+  struct token_object object1;
+  struct identifier *id;
+  const char s[3] = " \t\n";
+  char *token = NULL;
+  int num_right; 
+
+  for(i = 0; i < strlen(program); i++){
+
+    // printf("Program at i 2 %c \n", program[i]);
+    if(program[i] == ' '){
+      //printf("THERE IS A SPACE HERE\n");
+      }
+    else if(program[i] == '('){
+      //printf("IM IN LEFT PAREN\n");
+      object1.type = "left_paren";
+      object1.value = "(";
+      token_list = prepend_token(object1, token_list);
+
+
+    }
+    else if(program[i] == ')'){
+      //printf("im here\n");
+      object1.type = "right_paren";
+      object1.value = ")";
+      token_list = prepend_token(object1, token_list);
+
+
+    }
+    else if(program[i] == '*' || program[i] == '+' || program [i] == '/' || program[i] == '%' || program[i] == '-'){
+      object1.type = "primitive";      
+      object1.value = append(object1.value, program[i]);
+      token_list = prepend_token(object1, token_list);
+     
+
+
+    }
+    else if(isdigit(program[i])){      
+      while (isdigit (program[i]))
+	 {
+	 
+	    
+	    
+	   token = append(token, program[i]);  
+	  
+	  
+	  i++;
+	}
+     
+      //printf("Token %s\n",token);
+      	object1.type = "num";
+	object1.value = token;
+	token_list = prepend_token(object1, token_list);
+	token = NULL;
+
+	if(program[i] == ')'){
+	  object1.type = "right_paren";
+	  object1.value = ")";
+	  token_list = prepend_token(object1, token_list);
+	}
+	  
+
+
+    }
+  
+    else if (isalpha(program[i]) ){
+      
+       j++;
+       
+       while (isalnum (program[i]))
+	 {
+	  //printf("Program at i 2 %c \n", program[i]);
+	    
+	    
+	   token = append(token, program[i]);  
+	  
+	  
+	  i++;
+	}
+       
+       //printf("Token %s\n",token);
+      	object1.type = token_type(token);
+	object1.value = token;
+	token_list = prepend_token(object1, token_list);
+	token = NULL;
+
+    }
+    else{
+      printf("Program at i %c\n", program[i]);
+      printf("Unknown lexical syntax\n");
+    }
+    object1.value = NULL;
+     
+  }
+  
+  //print_token_list_value(reverse_token_list(token_list));
+ 
 
   return  token_list;
 }//end of list_lexer()

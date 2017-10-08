@@ -71,19 +71,24 @@ int iswhitespace (char c){
  * - a string with the given char at the end of the original string
  * Example call:
  * append("hello", '!');
- * expected return val: hello! 
+ * expected return val: hello!
+https://stackoverflow.com/questions/10279718/append-char-to-string-in-c 
  */ 
-char* append(char* s, char c){
+char* append(char* str, char c){
   
-    int len = strlen(s);
-  
-    printf("Char s %s\n", s);
-    printf("Length %c\n", s[1]); 
-    s[len-1] = c;
-    printf("In append\n");//used for testing?
-    s[len+1] = '\0';
-  
-    return s;
+  if(str == NULL){
+    str = "n";
+    }
+ 
+    size_t len = strlen(str);
+    char *str2 = malloc(len + 1 + 1 ); /* one for extra char, one for trailing zero */
+    strcpy(str2, str);
+    str2[len] = c;
+    str2[len + 1] = '\0';
+    if(str2[0] == 'n'){      
+      str2 = chopN(str2, 1);
+      }
+    return str2;
   }
 
 /**
