@@ -4,3 +4,7 @@
 *.#read.c
 *.#print.c
 *repl
+*.exe
+*.obj
+*.o
+

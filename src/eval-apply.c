@@ -1,3 +1,6 @@
+#include "object.c"
+#include "token.c"
+
 /**
  *This function determines whether the given arguement is a number or string
  * Parameters:
@@ -6,14 +9,8 @@
  * - 1 if the given object is a number or a string
  * - 0 otherwise
  */
-int self_evaluatingp (object *exp){
-  if(strcmp(exp->type, "number") == 0){  
-    return 1;
-  }else if(strcmp(exp->type, "string") == 0){
-    return 1;
-  }else{
-    return 0;
-  }
+int self_evaluatingp (object *expr){
+  return (expr->type == NUM || expr->type == VAR);
 }
 
 /**
@@ -25,11 +22,7 @@ int self_evaluatingp (object *exp){
  * - 0 otherwise
  */
 int primitivep (object *exp){
-  if(strcmp(exp->type, "primop") == 0){  
-    return 1;
-  }else{
-    return 0;
-  }
+  return exp->type == OP;
 }
 
 /**
@@ -41,22 +34,34 @@ int primitivep (object *exp){
  * - procedure, 
  */
 object *apply_primitive_procedure(object *procedure , object *arguments){
-  
-  if(strcmp(procedure->variable, "+")== 0){
-    //printf("ITS A PLUS\n");
-    struct object *object1;
-    object *test1 = malloc(sizeof(*object1));
+  int first, second, answer = 0;
+  first = car1(arguments)->number;
+  second = car1(arguments)->number;
 
-    int  first = car1(arguments)->number;
-    int second = car1(cdr1(arguments))->number;
-    int answer = first+second;
-   
+  if(strcmp(procedure->variable, "+") == 0){
+    answer = first + second;
+    procedure = create_number(answer);
+  }
+  else if(strcmp(procedure->variable, "-") == 0){
+    answer = first - second;
+    procedure = create_number(answer);
+  }
+  else if(strcmp(procedure->variable, "*") == 0){
+    answer = first * second;
+    procedure = create_number(answer);
+  }
+  else if(strcmp(procedure->variable, "/") == 0){
+    answer = first / second;
+    procedure = create_number(answer);
+  }
+  else if(strcmp(procedure->variable, "%") == 0){
+    answer = first % second;
     procedure = create_number(answer);
   }
   else{
     printf("Procedure has not been implemented yet\n"); 
   }
-
+  
   return procedure;
 }
 

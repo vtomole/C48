@@ -5,7 +5,7 @@
 #include <limits.h>
 #include <assert.h>
 #include "lexer.c"
-#include "parser.c"
+// #include "parser.c"
 #include "vm.h"
 #include "vm.c"
 //#include "read_2.c"
