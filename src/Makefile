@@ -1,5 +1,5 @@
 all:
-	 clang repl.c -o repl
+	 gcc -Werror repl.c -o repl
 
 
 clean:
