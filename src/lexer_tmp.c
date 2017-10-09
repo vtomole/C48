@@ -200,8 +200,8 @@ token_list* lexer_tmp (char *program){
 
     }
     else{
-      printf("Program at i %c\n", program[i]);
-      printf("Unknown lexical syntax\n");
+      //printf("Program at i %c\n", program[i]);
+      //printf("Unknown lexical syntax\n");
     }
     object1.value = NULL;
      

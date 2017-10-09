@@ -43,14 +43,15 @@ int main(char *argc, char **argv[]){
  
   //print_token_list(lexer_tmp1("(+ 137 349)"));
 
-  //print_token_list(lexer_tmp("(+ 137 349)"));
+  // print_token_list_value(lexer_tmp1("(+ 876 485)"));
+  //print_token_list_value(lexer_tmp1("(+ 137 349)"));
 
-  print(eval(parse(lexer_tmp1( "(+ 137 349)"), expr_list),token_list));
+  print(eval(parse(lexer_tmp( "(+ 876 485)"), expr_list),token_list));
   //lexer_tmp("(set position (* 60 (+ initial rate)))");
   //lexer_tmp("(+ 137 349)");
  
   
-  /* while (1){     
+  /*while (1){     
     printf("repl>");
     fgets (str, 20, stdin);
     //printf("=>");

@@ -50,8 +50,8 @@ object *apply_primitive_procedure(object *procedure , object *arguments){
     int  first = car(arguments)->number;
     int second = car(cdr(arguments))->number;
     int temp = first + second;
-    char* answer = malloc(sizeof(int));
-    snprintf(answer,sizeof(int),"%d",temp);
+    char* answer = malloc(sizeof(temp));
+    sprintf(answer,"%d",temp);
     procedure = create_number(answer);
   }
   else if (strcmp(procedure->variable, "-")== 0){
