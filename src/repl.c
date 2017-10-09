@@ -18,7 +18,7 @@
 
 int main(int argc, char **argv){
 
-  char str[20];
+  char str[10000];
   struct pair *list = NULL;
   struct  token_list *token_list = NULL;
   struct  token_list *token_list2 = NULL;
@@ -56,7 +56,7 @@ int main(int argc, char **argv){
   
   while (1){     
     printf("repl>");
-    fgets (str, 20, stdin);
+    fgets (str, 10000, stdin);
     //printf("=>");
     //micro_read(str);
      print(eval(parse(lexer_tmp(str), expr_list),token_list));
