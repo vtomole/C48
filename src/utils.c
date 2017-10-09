@@ -119,7 +119,7 @@ int count_chars(char* string, char ch)//is string here replaceable by program?
   return count;
 }
 
-int isnumber (char *s){
+int our_isnumber (char *s){
   if(s == NULL || *s == '\0' || isspace(*s)){
     return 0;
   }

@@ -128,22 +128,6 @@ char* get_car(void* car){
 
 
 /**
- *This function prints out the token list
- * Parameters:
- * -token_list, the token_list to print
- */
-void print_token_list2(token_list* token_list){
-  void* ptr;
-
-  while(&token_list->val !=NULL){
-    ptr = &token_list->val;
-    printf("%s %s \n", ((struct token_object*)ptr)->value, ((struct token_object*)ptr)->type);
-    ptr = &token_list->next;
-    token_list = *(struct token_list**)ptr;
-  }
-}
-
-/**
  *Recursivly adds tokens to the code_tree
  * Parameters:
  * -token_list, the list of tokens to add to the code_tree

@@ -16,7 +16,7 @@
 #include "compiler.c"
 
 
-int main(char *argc, char **argv[]){
+int main(int argc, char **argv){
 
   char str[20];
   struct pair *list = NULL;
@@ -47,7 +47,7 @@ int main(char *argc, char **argv[]){
   // print_token_list(lexer_tmp("(+ 1 2)"));
 
 
-  // print_token_list(lexer_tmp("(    + 1 2)"));
+  // print_token_list_value(lexer_tmp("(    + 1 2)"));
 
   //print(eval(parse(lexer_tmp( "(    + 1 2)"), expr_list),token_list));
   //lexer_tmp("(set position (* 60 (+ initial rate)))");
