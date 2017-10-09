@@ -16,7 +16,7 @@
  */
 //TODO: check for Booleans, Characters, Strings
 token_list* lexer_tmp1 (char *program){   
- static int last_character = ' ';
+  static int last_character = ' ';
   int i;
    
   struct  token_list *token_list = NULL;
@@ -109,8 +109,8 @@ token_list* lexer_tmp1 (char *program){
 
 
 token_list* lexer_tmp (char *program){   
- static int last_character = ' ';
- int i,j=0, j_temp =0;
+  static int last_character = ' ';
+  int i,j=0, j_temp =0;
    
   struct  token_list *token_list = NULL;
   struct token_object object1;
@@ -124,7 +124,7 @@ token_list* lexer_tmp (char *program){
     // printf("Program at i 2 %c \n", program[i]);
     if(program[i] == ' '){
       //printf("THERE IS A SPACE HERE\n");
-      }
+    }
     else if(program[i] == '('){
       //printf("IM IN LEFT PAREN\n");
       object1.type = "left_paren";
@@ -151,52 +151,41 @@ token_list* lexer_tmp (char *program){
     }
     else if(isdigit(program[i])){      
       while (isdigit (program[i]))
-	 {
-	 
+	{
 	    
-	    
-	   token = append(token, program[i]);  
-	  
+	  token = append(token, program[i]);
 	  
 	  i++;
 	}
      
       //printf("Token %s\n",token);
-      	object1.type = "num";
-	object1.value = token;
-	token_list = prepend_token(object1, token_list);
-	token = NULL;
-
-	if(program[i] == ')'){
-	  object1.type = "right_paren";
-	  object1.value = ")";
-	  token_list = prepend_token(object1, token_list);
-	}
-	  
-
-
+      object1.type = "num";
+      object1.value = token;
+      token_list = prepend_token(object1, token_list);
+      token = NULL;
+      i = i -1;
     }
   
     else if (isalpha(program[i]) ){
       
-       j++;
+      j++;
        
-       while (isalnum (program[i]))
-	 {
+      while (isalnum (program[i]))
+	{
 	  //printf("Program at i 2 %c \n", program[i]);
 	    
 	    
-	   token = append(token, program[i]);  
+	  token = append(token, program[i]);  
 	  
 	  
 	  i++;
 	}
        
-       //printf("Token %s\n",token);
-      	object1.type = token_type(token);
-	object1.value = token;
-	token_list = prepend_token(object1, token_list);
-	token = NULL;
+      //printf("Token %s\n",token);
+      object1.type = token_type(token);
+      object1.value = token;
+      token_list = prepend_token(object1, token_list);
+      token = NULL;
 
     }
     else{
