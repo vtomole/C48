@@ -121,9 +121,9 @@ token_list* lexer_tmp (char *program){
 
   for(i = 0; i < strlen(program); i++){
 
-    // printf("Program at i 2 %c \n", program[i]);
+    //printf("Program at i 2 %c \n", program[i]);
     if(program[i] == ' '){
-      //printf("THERE IS A SPACE HERE\n");
+      // printf("THERE IS A SPACE HERE\n");
     }
     else if(program[i] == '('){
       //printf("IM IN LEFT PAREN\n");
@@ -154,16 +154,17 @@ token_list* lexer_tmp (char *program){
 	{
 	    
 	  token = append(token, program[i]);
-	  
+	 
 	  i++;
 	}
+      i = i-1;
      
       //printf("Token %s\n",token);
       object1.type = "num";
       object1.value = token;
       token_list = prepend_token(object1, token_list);
       token = NULL;
-      i = i -1;
+      
     }
   
     else if (isalpha(program[i]) ){
