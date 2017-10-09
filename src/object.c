@@ -20,6 +20,8 @@ object *create_object(char *value, int type){
   object *obj = malloc(sizeof(obj));
   obj->value = value;
   obj->type = type;
+  obj->next = NULL;
+  obj->first = NULL;
   return obj;
 }
 
@@ -34,8 +36,6 @@ object *cons(object *obj, object *list){
   assert(list->type == LIST);
   obj->next = list->first;
   list->first = obj;
-  printf("obj->next: %s\n", obj->next->value);
-  printf("list->first: %s\n", list->first->value);
   return list;
 }
 
@@ -49,25 +49,46 @@ object *cdr(object *list){
   return list->first->next;
 }
 
-char *get_list(object *list, int count){
+
+char *get_cdr(object *);
+
+char *get_car(object *car_list){
+  char *c;
+  if(car_list->type == LIST){
+    return get_cdr(car_list);
+  }
+  else{
+    c = car_list->value;
+  }
+  return c;
+}
+
+char *get_cdr(object *cdr_list){
   char *a, *b, *c;
-  if(list == NULL){
-    printf("%d\n", count);
+  if(cdr_list == NULL){
     return "";
   }
-  else if(list->type == LIST){
-    printf("%d\n", count++);
-    a = get_list(car(list), count);
-    b = get_list(cdr(list), count);
-    c = (char*)malloc(sizeof(char)*100);
-    sprintf(c, "( %s %s)", a, b);
+  else if(cdr_list->type == LIST){
+    a = get_car(car(cdr_list));
+    b = get_cdr(cdr(cdr_list));
+    c = (char*)malloc(sizeof(char) * 100);
+    printf("list has next->: %d", cdr_list->next == NULL);
+    if(cdr_list->first->type != LIST){
+      printf(" (%s)", cdr_list->first->value);
+    }
+    printf("\n");
+    sprintf(c, "( %s %s) %s", a, b);//, get_cdr(cdr_list->next));
     return c;
   }
   else{
-    c = (char*)malloc(sizeof(char)*100);
-    sprintf(c,"%s %s", list->value, get_list(list->next, count++));
+    c = (char*)malloc(sizeof(char) * 100);
+    sprintf(c,"%s %s", cdr_list->value, get_cdr(cdr_list->next));
     return c;
   }
+}
+
+char *get_list(object *list){
+  return get_cdr(list);
 }
 
 
