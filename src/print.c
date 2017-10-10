@@ -1,3 +1,7 @@
+//Worked on object.c and object2.c
+//Working on printing expressions and traversing the list
+//Should work like the parser function but reverse
+
 /**
  *This function prints the given object
  * Parameters:

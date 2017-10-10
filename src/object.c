@@ -83,16 +83,10 @@ char *get_list(object *obj){
     object *a = car(obj);
     object *b = cdr(obj);
     
-    char *x = get_list(a);
-    printf("b is null: %d\n", b == NULL);
-    printf("b has type NUM: %d\n", b->type == NUM);
-    printf("b has type OP: %d\n", b->type == OP);
-    printf("b has type LIST: %d\n", b->type == LIST);
-    printf("b has type VAR: %d\n", b->type == VAR);
+    //char *x = get_list(a);    
+    //char *y = get_list(b);
     
-    char *y = get_list(b);
-    
-    sprintf(c, "%s %s", x, y);
+    sprintf(c, "%s %s", a->value, b->value);
     if(a->type == OP){
       sprintf(c, "( %s)", c);
     }
@@ -104,3 +98,4 @@ char *get_list(object *obj){
   }
   
 }
+
