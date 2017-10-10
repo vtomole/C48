@@ -142,6 +142,10 @@ token_list* lexer_tmp (char *program){
 
     }
     else if(program[i] == '*' || program[i] == '+' || program [i] == '/' || program[i] == '%' || program[i] == '-'){
+      if(program[i+1] != ' '){
+	printf("You need a space between the oprator and your arguments\n");
+	exit(0);
+      }
       object1.type = "primitive";      
       object1.value = append(object1.value, program[i]);
       token_list = prepend_token(object1, token_list);
