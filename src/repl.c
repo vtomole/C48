@@ -26,8 +26,14 @@ int main(int argc, char **argv){
   struct object *expr_list;
   struct object *expr;
   struct object *expr2;
+  struct object *a;
+  struct object *h;
+  struct object *number;
+  struct object *list2;
   struct object *result_expr = NULL;
   object* code_tree = NULL;
+  object* environment = NULL;
+  object* environment2 = NULL;
   char* operator = "third";
   char* string = "\"A string\"";
   int b = 20, c = 30;
@@ -35,6 +41,17 @@ int main(int argc, char **argv){
   char* result = NULL;
 
   token_list = lexer_tmp1("(+ 137 349)");
+
+  h = create_variable("h");
+  a = create_variable("a");
+  number = create_number("2");
+
+  environment = cons(number, environment);
+  environment = cons(a, environment);
+  environment = cons (environment, environment2);
+
+  list2 = (car (car(environment)));
+
 
   // print_token_list(token_list);
   //token_list = reverse_token_list(token_list);
@@ -49,6 +66,8 @@ int main(int argc, char **argv){
 
   // print_token_list_value(lexer_tmp("(    + 1 2)"));
 
+  //print(eval(a, environment));
+
   //print(eval(parse(lexer_tmp("\"Hello\""), expr_list),token_list));
   //lexer_tmp("(set position (* 60 (+ initial rate)))");
   // lexer_tmp("\"Hello\"");
@@ -59,9 +78,9 @@ int main(int argc, char **argv){
     fgets (str, 10000, stdin);
     //printf("=>");
     //micro_read(str);
-    print(eval(parse(lexer_tmp(str), expr_list),token_list));
+    print(eval(parse(lexer_tmp(str), expr_list),environment));
     
-  }
+    }
     
   return 0;
 }//end of main>

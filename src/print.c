@@ -8,7 +8,7 @@ char* print(object* result){
     printf("%d\n", result->number);
   }
   else if(strcmp(result->type, "variable") == 0){
-    printf("%d\n", result->number);
+    printf("%s\n", result->variable);
   }
   else if(strcmp(result->type, "string") == 0){
     printf("%s\n", result-> string);

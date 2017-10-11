@@ -8,6 +8,7 @@
  * - 0 otherwise
  */
 int self_evaluatingp (object *exp){
+
   if(strcmp(exp->type, "number") == 0){  
     return 1;
   }else if(strcmp(exp->type, "string") == 0){
@@ -27,6 +28,14 @@ int self_evaluatingp (object *exp){
  */
 int primitivep (object *exp){
   if(strcmp(exp->type, "primop") == 0){  
+    return 1;
+  }else{
+    return 0;
+  }
+}
+
+int variablep (object *exp){
+  if(strcmp(exp->type, "variable") == 0){  
     return 1;
   }else{
     return 0;
@@ -131,6 +140,23 @@ object  *apply(object *procedure , object* arguments){
   return procedure;
 }
 
+object* lookup_variable_value(object* exp, object* env){
+
+  if(env == NULL){
+    return exp;
+  }
+  else{
+    if (strcmp(car(car(env))->variable, exp->variable) == 0){
+    return (car (cdr (car (env))));
+    }
+    else{
+      lookup_variable_value(exp, cdr(env));
+  }
+
+ 
+  }
+}
+
 /**
  * Evaluates the given arguements to create the code tree that apply will execute over
  * This function takes in an expression and and the environment hash table and creates the tree
@@ -142,12 +168,18 @@ object  *apply(object *procedure , object* arguments){
  * 
  * expected return val: 
  */ 
-object *eval(object* exp, token_list* env ){
+object *eval(object* exp, object* env ){
   if (self_evaluatingp(exp)){
     return exp;
-  } else{
+  }
+  else if (variablep(exp)){
+    exp = lookup_variable_value(exp, env);
+  }
+
+  else{
     exp = apply(car(exp), cdr(exp));
   }
+
  
   return exp;
 }

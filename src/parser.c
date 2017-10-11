@@ -166,12 +166,25 @@ object* parse(token_list* token_list, object* expr_list){
     }else if(strcmp(token_list->val.type,"num")==0){
       //constructing a number onto the list
       expr2 = create_number(token_list->val.value);
+
+       if(count_token_list(token_list) == 1){
+	 return expr2;
+       }
+       else{
       expr_list = cons(expr2, expr_list);
+       }
     }
     else if(strcmp(token_list->val.type,"string")==0){
       //constructing a string onto the list
       expr2 = create_string(token_list->val.value);
-      return expr2;
+       if(count_token_list(token_list) == 1){
+	 return expr2;
+       }
+       else{
+	 expr_list = cons(expr2, expr_list);
+       }
+	 
+      
     }
     
     else{
@@ -180,6 +193,7 @@ object* parse(token_list* token_list, object* expr_list){
     }
     token_list = token_list->next;
   }
+  
  return expr_list;
 
 }
