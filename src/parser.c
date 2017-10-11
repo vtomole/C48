@@ -77,6 +77,21 @@ object* create_number(char* number){
 }
 
 /**
+ *This function creates an object representing a number
+ * Parameters:
+ * - number, the value of the object to create
+ * Return Value:
+ * - num an object with type number and value number
+ */
+object* create_string(char* string){
+  struct object *object1;
+  object *str = malloc(sizeof(*object1));
+  str->type  ="string";
+  str->string = string;
+  return str;
+}
+
+/**
  *This function creates an object representing a variable
  * Parameters:
  * - variable the value of the object to create
@@ -137,6 +152,7 @@ char* get_car(void* car){
 //Will return object list
 object* parse(token_list* token_list, object* expr_list){
   struct object *expr2;
+
  while(token_list != NULL){
     if(strcmp(token_list->val.type,"right_paren")==0){
       //indicates the start of a new list
@@ -151,8 +167,16 @@ object* parse(token_list* token_list, object* expr_list){
       //constructing a number onto the list
       expr2 = create_number(token_list->val.value);
       expr_list = cons(expr2, expr_list);
-    }else{
-      printf("invalid token");
+    }
+    else if(strcmp(token_list->val.type,"string")==0){
+      //constructing a string onto the list
+      expr2 = create_string(token_list->val.value);
+      return expr2;
+    }
+    
+    else{
+      printf("invalid token\n");
+      exit(0);
     }
     token_list = token_list->next;
   }

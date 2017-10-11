@@ -116,14 +116,43 @@ token_list* lexer_tmp (char *program){
   struct token_object object1;
   struct identifier *id;
   const char s[3] = " \t\n";
-  char *token = NULL;
-  int num_right; 
+  char *token = NULL, str;
+  int num_right,string_length = strlen(program);
+  
 
-  for(i = 0; i < strlen(program); i++){
+  for(i = 0; i < string_length; i++){
 
     //printf("Program at i 2 %c \n", program[i]);
     if(program[i] == ' '){
       // printf("THERE IS A SPACE HERE\n");
+    }
+    else if (program[i] == '"'){
+      //printf("There is a double quote here\n");
+      i++;
+
+      
+      while (program[i]!='"')
+	{
+	  // printf("Program at i %c\n", program[i]);
+	  token = append(token, program[i]);
+	  //printf("Token %s\n", token);
+	  
+	 
+	  i++;
+	}
+    
+     
+     
+      //printf("Token 2 %s\n",token);
+      object1.type = "string";
+      object1.value = token;
+      token_list = prepend_token(object1, token_list);
+      token = NULL;
+     
+      /*else{
+	printf("Your string didn't close with a double quote\n");
+	exit(0);
+	}*/
     }
     else if(program[i] == '('){
       //printf("IM IN LEFT PAREN\n");
@@ -201,7 +230,7 @@ token_list* lexer_tmp (char *program){
      
   }
   
-  //print_token_list_value(reverse_token_list(token_list));
+  // print_token_list_value(reverse_token_list(token_list));
  
 
   return  token_list;

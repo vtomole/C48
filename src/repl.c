@@ -49,9 +49,9 @@ int main(int argc, char **argv){
 
   // print_token_list_value(lexer_tmp("(    + 1 2)"));
 
-  //print(eval(parse(lexer_tmp( "(    + 1 2)"), expr_list),token_list));
+  //print(eval(parse(lexer_tmp("\"Hello\""), expr_list),token_list));
   //lexer_tmp("(set position (* 60 (+ initial rate)))");
-  //lexer_tmp("(+ 137 349)");
+  // lexer_tmp("\"Hello\"");
  
   
   while (1){     
@@ -59,10 +59,10 @@ int main(int argc, char **argv){
     fgets (str, 10000, stdin);
     //printf("=>");
     //micro_read(str);
-     print(eval(parse(lexer_tmp(str), expr_list),token_list));
+    print(eval(parse(lexer_tmp(str), expr_list),token_list));
     
-     }
+  }
     
-    return 0;
-  }//end of main>
+  return 0;
+}//end of main>
 

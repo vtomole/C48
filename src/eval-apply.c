@@ -144,7 +144,7 @@ object  *apply(object *procedure , object* arguments){
  */ 
 object *eval(object* exp, token_list* env ){
   if (self_evaluatingp(exp)){
-    printf("SELFEVALUATING\n");
+    return exp;
   } else{
     exp = apply(car(exp), cdr(exp));
   }
