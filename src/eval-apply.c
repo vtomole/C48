@@ -13,7 +13,12 @@ int self_evaluatingp (object *exp){
     return 1;
   }else if(strcmp(exp->type, "string") == 0){
     return 1;
-  }else{
+  }
+  
+ else if(strcmp(exp->type, "boolean") == 0){
+    return 1;
+  }
+  else{
     return 0;
   }
 }

@@ -162,6 +162,23 @@ token_list* lexer_tmp (char *program){
 
 
     }
+    else if (program[i] == '#' && (program[i+1] == 't' || program[i+1] == 'f')){
+
+      if(program[i+1] == 't'){
+	 object1.type = "boolean";
+	 object1.value = "t";
+	 token_list = prepend_token(object1, token_list);
+
+      }
+      else{
+	object1.type = "boolean";
+	object1.value = "f";
+	token_list = prepend_token(object1, token_list);
+
+	
+      }
+	i++;
+      }
     else if(program[i] == ')'){
       //printf("im here\n");
       object1.type = "right_paren";

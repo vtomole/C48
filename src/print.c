@@ -16,6 +16,15 @@ char* print(object* result){
   else if(strcmp(result->type, "list") == 0){
     printf("%d\n", result->number);
   }
+  else if(strcmp(result->type, "boolean") == 0){
+    if(result->boolean == true){
+      
+    printf("#t\n");
+    }
+    else{
+      printf("#f\n");
+    }
+  }
   else{
     printf("Oops, can't print that yet\n");
   }

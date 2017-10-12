@@ -5,6 +5,8 @@
 //  struct symbol *next;
 //}symbol;
 
+enum boolean {true, false};
+
 typedef struct object{
   char* type;
   struct cons_cell{
@@ -15,6 +17,7 @@ typedef struct object{
   char* variable;
   char *string;
   int number;
+  enum boolean boolean;
 }object;
 
 /**
@@ -107,6 +110,15 @@ object* create_variable(char* variable){
   return var;
 }
 
+object* create_boolean(char* variable){
+  struct object *object1;
+  object *var = malloc(sizeof(*object1));
+  var->type = "boolean";
+  //var->value = variable;
+  var->variable = variable;
+  return var;
+}
+
 /**
  *This function creates an object representing a primitive operation
  * Parameters:
@@ -153,7 +165,7 @@ char* get_car(void* car){
 object* parse(token_list* token_list, object* expr_list){
   struct object *expr2;
 
- while(token_list != NULL){
+   while(token_list != NULL){
     if(strcmp(token_list->val.type,"right_paren")==0){
       //indicates the start of a new list
       expr_list = NULL;
@@ -177,6 +189,19 @@ object* parse(token_list* token_list, object* expr_list){
     else if(strcmp(token_list->val.type,"string")==0){
       //constructing a string onto the list
       expr2 = create_string(token_list->val.value);
+       if(count_token_list(token_list) == 1){
+	 return expr2;
+       }
+       else{
+	 expr_list = cons(expr2, expr_list);
+       }
+	 
+      
+    }
+
+    else if(strcmp(token_list->val.type,"boolean")==0){
+      //constructing a string onto the list
+      expr2 = create_boolean(token_list->val.value);
        if(count_token_list(token_list) == 1){
 	 return expr2;
        }
