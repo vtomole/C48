@@ -12,9 +12,11 @@
 typedef struct object{
   int type;
   char *value;
+  struct cons_cell{
+    struct object *car;
+    struct object *cdr;
+  }cons_cell;
   
-  struct object *car;
-  struct object *cdr;
 }object;
 
 
@@ -43,8 +45,8 @@ object* create_object(char* value, int type){
 object* cons(object *car, object *cdr){
   object *obj = malloc(sizeof(obj));
   obj->type = LIST;
-  obj->car = car;
-  obj->cdr = cdr;
+  obj->cons_cell.car = car;
+  obj->cons_cell.cdr = cdr;
 
   return obj;
 }
@@ -56,8 +58,8 @@ object* cons(object *car, object *cdr){
  * Return Value:
  * - ???
  */
-object* car(object *cell){
-  return cell->car;
+object *car(object *cell){
+  return cell->cons_cell.car;
 }
 
 /**
@@ -67,15 +69,24 @@ object* car(object *cell){
  * Return Value:
  * - ???
  */
-object* cdr(object *cell){
-  return cell->cdr;
+object *cdr(object *cell){
+  return cell->cons_cell.cdr;
+}
+
+int count_object(object *obj){
+  int c = 0;
+  printf("Starting count\n");
+  while(obj != NULL){
+    c++;
+    printf("count: %d\n", c);
+    obj = obj->cons_cell.cdr;
+  }
+  printf("Finished count\n");
+  return c;
 }
 
 char *get_list(object *obj){
   char *str;
-  
-  //printf("%d car(obj): %s\n", (car(obj))->type, (car(obj))->value);
-  //printf("%d car(cdr(obj)): %s\n", (car(cdr(obj)))->type, (car(cdr(obj)))->value);
   
   if(obj->type == LIST){
     str = malloc(sizeof(char) * 100);
@@ -83,9 +94,9 @@ char *get_list(object *obj){
     
     if(a->type == OP){
       object *b = car(cdr(obj));
-      object *c = car(cdr(cdr(obj)));
-      printf("got b and c\n");
-      sprintf(str, "( %s %s %s)", a->value, get_list(b), get_list(c));
+      //object *c = car(cdr(cdr(obj)));
+      //printf("got b and c\n");
+      sprintf(str, "( %s)", a->value);//, get_list(b), get_list(c));
       return str;
     }
     else{

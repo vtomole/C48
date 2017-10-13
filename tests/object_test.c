@@ -5,16 +5,21 @@ int main(){
   object *add = create_object("+", OP);
   object *num1 = create_object("1", NUM);
   object *num2 = create_object("2", NUM);
-  object *list = create_object(NULL, EMPTY);
+  object *list = NULL;
   //printf("Created objects\n");
  
-  object *cons1 = cons(num1, num2);
-  object *cons2 = cons(add, cons1);
-  //printf("Cons objects\n");
-
+  object *cons1 = cons(num2, list);
+  object *cons2 = cons(num1, cons1);
+  object *cons3 = cons(add, cons2);
   
-  char *res = get_list(cons2);
-  printf("%s\n", res);
+  //printf("Cons objects\n");
+ 
+  int count = count_object(cons3);
+  printf("count is %d\n", count);
+ 
+ 
+  //char *res = get_list(cons3);
+  //printf("%s\n", res);
 
   return 0;
 }
