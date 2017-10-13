@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#define EMPTY -1
 #define NUM 0
 #define VAR 1
 #define OP 2
@@ -12,10 +13,8 @@ typedef struct object{
   int type;
   char *value;
   
-  struct cons_cell{
-    struct object *car;
-    struct object *cdr;
-  }cons_cell;
+  struct object *car;
+  struct object *cdr;
 }object;
 
 
@@ -44,8 +43,8 @@ object* create_object(char* value, int type){
 object* cons(object *car, object *cdr){
   object *obj = malloc(sizeof(obj));
   obj->type = LIST;
-  obj->cons_cell.car = car;
-  obj->cons_cell.cdr = cdr;
+  obj->car = car;
+  obj->cdr = cdr;
 
   return obj;
 }
@@ -58,8 +57,7 @@ object* cons(object *car, object *cdr){
  * - ???
  */
 object* car(object *cell){
-  assert (cell->type == LIST);
-  return cell->cons_cell.car;
+  return cell->car;
 }
 
 /**
@@ -70,32 +68,38 @@ object* car(object *cell){
  * - ???
  */
 object* cdr(object *cell){
-  assert (cell->type == LIST);
-  return cell->cons_cell.cdr;
+  return cell->cdr;
 }
 
 char *get_list(object *obj){
-  char *c;
+  char *str;
+  
+  //printf("%d car(obj): %s\n", (car(obj))->type, (car(obj))->value);
+  //printf("%d car(cdr(obj)): %s\n", (car(cdr(obj)))->type, (car(cdr(obj)))->value);
   
   if(obj->type == LIST){
-    c = malloc(sizeof(char) * 100);
-    
+    str = malloc(sizeof(char) * 100);
     object *a = car(obj);
-    object *b = cdr(obj);
     
-    //char *x = get_list(a);    
-    //char *y = get_list(b);
-    
-    sprintf(c, "%s %s", a->value, b->value);
     if(a->type == OP){
-      sprintf(c, "( %s)", c);
+      object *b = car(cdr(obj));
+      object *c = car(cdr(cdr(obj)));
+      printf("got b and c\n");
+      sprintf(str, "( %s %s %s)", a->value, get_list(b), get_list(c));
+      return str;
     }
-    return c;
+    else{
+      printf("empty list? -> %d\n", obj->type == EMPTY);
+      return "";
+    }
   }
   else{
-    c = obj->value;
-    return c;
+    printf("Not a list: %s\n", obj->value);
+    return obj->value;;
   }
   
+  return "";
 }
+
+
 
