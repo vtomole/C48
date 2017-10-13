@@ -54,9 +54,9 @@ int main(int argc, char **argv){
   list2 = (car (car(environment)));
 
 
-  object *add = create_primitiveop("+");
-  object *num1 = create_number("1");
-  object *num2 = create_number("2");
+  object *add = create_object("+", "string");
+  object *num1 = create_object("1", "string");
+  object *num2 = create_object("2", "string");
   //printf("Created objects\n");
  
   cons1 = cons(num2, cons1);

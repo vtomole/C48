@@ -20,6 +20,13 @@ typedef struct object{
   enum boolean boolean;
 }object;
 
+object *create_object(char *value, char *type){
+  object *obj = malloc(sizeof(obj));
+  obj->type = type;
+  obj->variable = value;
+return obj;
+}
+
 /**
  *This function constructs ????
  * Parameters:
