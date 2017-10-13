@@ -8,13 +8,14 @@ int main(){
   object *list = NULL;
   //printf("Created objects\n");
  
-  object *cons1 = cons(num2, list);
-  object *cons2 = cons(num1, cons1);
-  object *cons3 = cons(add, cons2);
+  list = cons(num2, list);
+  list = cons(num1, list);
+  list = cons(add, list);
+  
   
   //printf("Cons objects\n");
  
-  int count = count_object(cons3);
+  int count = count_object(list);
   printf("count is %d\n", count);
  
  

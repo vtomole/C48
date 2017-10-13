@@ -29,6 +29,10 @@ typedef struct object{
  */
 object* create_object(char* value, int type){
   object *obj = malloc(sizeof(obj));
+  if(obj == NULL){
+    printf("Obj is NULL\n");
+  }
+  printf("Size of obj %d\n", sizeof(*obj));
   obj->value = value;
   obj->type = type;
   return obj;
@@ -76,11 +80,12 @@ object *cdr(object *cell){
 int count_object(object *obj){
   int c = 0;
   printf("Starting count\n");
-  while(obj != NULL){
+  while(obj->cons_cell.cdr != NULL){
     c++;
     printf("count: %d\n", c);
     obj = obj->cons_cell.cdr;
   }
+  c++;
   printf("Finished count\n");
   return c;
 }
