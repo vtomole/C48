@@ -34,6 +34,7 @@ int main(int argc, char **argv){
   object* code_tree = NULL;
   object* environment = NULL;
   object* environment2 = NULL;
+  object *cons1 = NULL;
   char* operator = "third";
   char* string = "\"A string\"";
   int b = 20, c = 30;
@@ -51,6 +52,21 @@ int main(int argc, char **argv){
   environment = cons (environment, environment2);
 
   list2 = (car (car(environment)));
+
+
+  object *add = create_primitiveop("+");
+  object *num1 = create_number("1");
+  object *num2 = create_number("2");
+  //printf("Created objects\n");
+ 
+  cons1 = cons(num2, cons1);
+  cons1 = cons(num1, cons1);
+  cons1 = cons(add, cons1);
+  
+
+  //print(cons1);
+
+    printf("Number of objects %d\n",count_objects(cons1));
 
 
   // print_token_list(token_list);
@@ -73,15 +89,14 @@ int main(int argc, char **argv){
   // lexer_tmp("\"Hello\"");
  
   
-  while (1){     
+  /* while (1){     
     printf("repl>");
     fgets (str, 10000, stdin);
     //printf("=>");
     //micro_read(str);
     print(eval(parse(lexer_tmp(str), expr_list),environment));
     
-    }
-    
+    }*/
   return 0;
 }//end of main>
 

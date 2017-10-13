@@ -47,6 +47,23 @@ int variablep (object *exp){
   }
 }
 
+
+
+int quotep (object *exp){
+  
+}
+
+int tagged_listp (object *exp, char* tag){
+  if(strcmp (car(exp) ->variable, tag) == 0){
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+  
+
 /**
  *This function executes our primitive operations i.e. +, -, *, /
  * Parameters:

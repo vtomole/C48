@@ -154,6 +154,16 @@ char* get_car(void* car){
 }
 
 
+int count_objects(object* cursor){
+  int c = 0;
+  while(cursor != NULL){
+    c++;
+    cursor = cursor->cons_cell.cdr;
+  }
+  return c;
+}
+
+
 /**
  *Recursivly adds tokens to the code_tree
  * Parameters:
@@ -165,6 +175,8 @@ char* get_car(void* car){
 object* parse(token_list* token_list, object* expr_list){
   struct object *expr2;
 
+  print_token_list_value(token_list);
+
    while(token_list != NULL){
     if(strcmp(token_list->val.type,"right_paren")==0){
       //indicates the start of a new list
@@ -175,7 +187,13 @@ object* parse(token_list* token_list, object* expr_list){
       //constructing an operator onto the list
       expr2 = create_primitiveop(token_list->val.value);
       expr_list = cons(expr2, expr_list); 
-    }else if(strcmp(token_list->val.type,"num")==0){
+    }
+    else if(strcmp(token_list->val.type,"variable")==0){
+      //constructing an operator onto the list
+      expr2 = create_primitiveop(token_list->val.value);
+      expr_list = cons(expr2, expr_list); 
+    }
+    else if(strcmp(token_list->val.type,"num")==0){
       //constructing a number onto the list
       expr2 = create_number(token_list->val.value);
 
