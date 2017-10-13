@@ -172,6 +172,52 @@ int count_objects(object* cursor){
  */
 
 //Will return object list
+/*
+ * this method recursivly goes through parse to create an unknown number of lists
+ * by doing this each call to parse_rec should be a nested statement
+ * each statement returns a list containing all the statements before a right or left paren
+ * no seg_faults however the code isn't doing anything visible with the temp_list it creates and maintains.
+**/
+object* parse_rec(token_list* token_list, object* list_sofar){
+  struct object *expr3;
+  struct object *temp_list;
+
+   while(token_list != NULL){
+    if(strcmp(token_list->val.type,"right_paren")==0){
+      //indicates the start of a new list
+      expr3 = parse_rec(token_list->next, temp_list);
+      temp_list = cons(expr3, temp_list);
+    }else if(strcmp(token_list->val.type,"left_paren") == 0){
+      //end of a list
+      return temp_list;
+    }else if(strcmp(token_list->val.type,"primitive")==0){
+      //constructing an operator onto the list
+      expr3 = create_primitiveop(token_list->val.value);
+      temp_list = cons(expr3, temp_list); 
+    }else if(strcmp(token_list->val.type,"num")==0){
+      //constructing a number onto the list
+      expr3 = create_number(token_list->val.value);
+      temp_list = cons(expr3, temp_list);
+    }else if(strcmp(token_list->val.type,"string")==0){
+      //constructing a string onto the list
+      expr3 = create_string(token_list->val.value);
+      temp_list = cons(expr3, temp_list);     
+    }else if(strcmp(token_list->val.type,"boolean")==0){
+      //constructing a boolean onto the list
+      expr3 = create_boolean(token_list->val.value);
+      temp_list = cons(expr3, temp_list);      
+    }else{
+      printf("invalid token\n");
+      exit(0);
+    }
+    token_list = token_list->next;
+  }
+   //throw an error no closed parenthesis
+   printf("invalid syntax");
+   exit(0);
+
+}
+
 object* parse(token_list* token_list, object* expr_list){
   struct object *expr2;
 
@@ -180,7 +226,8 @@ object* parse(token_list* token_list, object* expr_list){
    while(token_list != NULL){
     if(strcmp(token_list->val.type,"right_paren")==0){
       //indicates the start of a new list
-      expr_list = NULL;
+      expr2 = parse_rec(token_list->next,expr_list);
+      expr_list = cons(expr2, expr_list);
     }else if(strcmp(token_list->val.type,"left_paren") == 0){
       //end of a list
     }else if(strcmp(token_list->val.type,"primitive")==0){
@@ -196,48 +243,32 @@ object* parse(token_list* token_list, object* expr_list){
     else if(strcmp(token_list->val.type,"num")==0){
       //constructing a number onto the list
       expr2 = create_number(token_list->val.value);
-
-       if(count_token_list(token_list) == 1){
-	 return expr2;
-       }
-       else{
-      expr_list = cons(expr2, expr_list);
-       }
-    }
-    else if(strcmp(token_list->val.type,"string")==0){
+      if(count_token_list(token_list) == 1){
+	return expr2;
+      }else{
+	expr_list = cons(expr2, expr_list);
+      }
+    }else if(strcmp(token_list->val.type,"string")==0){
       //constructing a string onto the list
       expr2 = create_string(token_list->val.value);
-       if(count_token_list(token_list) == 1){
-	 return expr2;
-       }
-       else{
-	 expr_list = cons(expr2, expr_list);
-       }
-	 
-      
-    }
-
-    else if(strcmp(token_list->val.type,"boolean")==0){
+      if(count_token_list(token_list) == 1){
+	return expr2;
+      }else{
+	expr_list = cons(expr2, expr_list);
+      }	 
+    }else if(strcmp(token_list->val.type,"boolean")==0){
       //constructing a string onto the list
       expr2 = create_boolean(token_list->val.value);
-       if(count_token_list(token_list) == 1){
-	 return expr2;
-       }
-       else{
-	 expr_list = cons(expr2, expr_list);
-       }
-	 
-      
-    }
-    
-    else{
+      if(count_token_list(token_list) == 1){
+	return expr2;
+      }else{
+	expr_list = cons(expr2, expr_list);
+      }	 
+    }else{
       printf("invalid token\n");
       exit(0);
     }
     token_list = token_list->next;
-  }
-  
- return expr_list;
-
+   }
+   return expr_list;
 }
-
