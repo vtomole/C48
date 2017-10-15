@@ -1,26 +1,30 @@
-#include "../src/object.c"
+#include "../src/print.c"
 
 int main(){
+  int count;
+  char *str;
   
   object *add = create_object("+", OP);
   object *num1 = create_object("1", NUM);
   object *num2 = create_object("2", NUM);
-  object *list = NULL;
-  //printf("Created objects\n");
- 
-  list = cons(num2, list);
-  list = cons(num1, list);
-  list = cons(add, list);
-  
-  
-  //printf("Cons objects\n");
- 
-  int count = count_object(list);
-  printf("count is %d\n", count);
- 
- 
-  //char *res = get_list(cons3);
-  //printf("%s\n", res);
+
+  object *sub = create_object("-",  OP);
+  object *num3 = create_object("7", NUM);
+  object *list1 = NULL;
+  object *list2 = NULL;
+
+  list1 = cons(num2, NULL);
+  list1 = cons(num1, list1);
+  list1 = cons(add, list1);
+
+  list2 = cons(num3, NULL);
+  list2 = cons(list1, list2);
+  list2 = cons(sub, list2);
+
+
+  print_expr(list2);
+  printf("\n");
+
 
   return 0;
 }

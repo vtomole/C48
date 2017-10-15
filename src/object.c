@@ -28,13 +28,14 @@ typedef struct object{
  * - An object with type enum and char value
  */
 object* create_object(char* value, int type){
-  object *obj = malloc(sizeof(obj));
+  object *obj = (object*)malloc(sizeof(object));
   if(obj == NULL){
     printf("Obj is NULL\n");
   }
-  printf("Size of obj %d\n", sizeof(*obj));
   obj->value = value;
   obj->type = type;
+  // obj->cons_cell.car = NULL;
+  // obj->cons_cell.cdr = NULL;
   return obj;
 }
 
@@ -47,11 +48,14 @@ object* create_object(char* value, int type){
  * - test1, an object ???
  */
 object* cons(object *car, object *cdr){
-  object *obj = malloc(sizeof(obj));
+  object *obj = (object*)malloc(sizeof(object));
+  if(obj == NULL){
+    printf("is NULL\n");
+    return NULL;
+  }
   obj->type = LIST;
   obj->cons_cell.car = car;
   obj->cons_cell.cdr = cdr;
-
   return obj;
 }
 
@@ -76,45 +80,15 @@ object *car(object *cell){
 object *cdr(object *cell){
   return cell->cons_cell.cdr;
 }
-
-int count_object(object *obj){
-  int c = 0;
-  printf("Starting count\n");
-  while(obj->cons_cell.cdr != NULL){
-    c++;
-    printf("count: %d\n", c);
-    obj = obj->cons_cell.cdr;
-  }
-  c++;
-  printf("Finished count\n");
-  return c;
-}
-
-char *get_list(object *obj){
-  char *str;
   
-  if(obj->type == LIST){
-    str = malloc(sizeof(char) * 100);
-    object *a = car(obj);
-    
-    if(a->type == OP){
-      object *b = car(cdr(obj));
-      //object *c = car(cdr(cdr(obj)));
-      //printf("got b and c\n");
-      sprintf(str, "( %s)", a->value);//, get_list(b), get_list(c));
-      return str;
-    }
-    else{
-      printf("empty list? -> %d\n", obj->type == EMPTY);
-      return "";
-    }
+void count_list(object *obj, char *name){
+  int count = 0;
+  object *temp = obj;
+  while(temp != NULL){
+    count++;
+    temp = temp->cons_cell.cdr;
   }
-  else{
-    printf("Not a list: %s\n", obj->value);
-    return obj->value;;
-  }
-  
-  return "";
+  printf("%s is size of %d\n", name, count);
 }
 
 

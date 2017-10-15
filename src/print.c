@@ -1,16 +1,27 @@
 //Worked on object.c and object2.c
 //Working on printing expressions and traversing the list
 //Should work like the parser function but reverse
+#include "object.c"
 
-/**
- *This function prints the given object
- * Parameters:
- * -result, the object to print
- */
-char* print(object* result){
-  if(strcmp(result->type, "number") == 0){
-    printf("%d\n", result->number);
-  }else{
-    printf("Oops, can't print that yet\n");
+void print_expr(object *);
+
+void print_arith(object *list){
+  printf("( %s ", car(list)->value);
+  print_expr(car(cdr(list)));
+  print_expr(cdr(cdr(list)));
+  printf(") ");
+}
+
+void print_expr(object *obj){
+   if(obj->type == LIST){
+    if(car(obj)->type == OP){
+      print_arith(obj);
+    }
+    else{
+      printf("%s ", car(obj)->value);
+    }
+  }
+  else if(obj->type != EMPTY){
+    printf("%s ", obj->value);
   }
 }
