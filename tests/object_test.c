@@ -1,7 +1,6 @@
 #include "../src/print.c"
 
-int main(){
-  /**
+void test_one(){
   object *add = create_object("+", OP);
   object *num1 = create_object("1", NUM);
   object *num2 = create_object("2", NUM);
@@ -19,63 +18,73 @@ int main(){
   list2 = cons(list1, list2);
   list2 = cons(sub, list2);
 
-
   print_expr(list2);
   printf("\n");
-  **/
+}
 
-
-  object *add = create_object("+", OP);
-  object *var1 = create_object("x", VAR);
-  object *num1 = create_object("-1", NUM);
-  object *add_list = NULL;
-  add_list = cons(num1, add_list);
-  add_list = cons(var1, add_list);
-  add_list = cons(add, add_list);
+void test_two(){
+  object *a, *b, *c;
+  a = create_object("+", OP);
+  b = create_object("x", VAR);
+  c = create_object("-1", NUM);
+  object *add_list = cons(a, cons(b, cons(c, NULL)));
   
-  object *sub = create_object("*", OP);
-  object *var2 = create_object("x", VAR);
-  object *num2 = create_object("10", NUM);
-  object *mult_list = NULL;
-  mult_list = cons(num2, mult_list);
-  mult_list = cons(var2, mult_list);
-  mult_list = cons(sub, mult_list);
+  a = create_object("*", OP);
+  b = create_object("x", VAR);
+  c = create_object("10", NUM);
+  object *mult_list = cons(a, cons(b, cons(c, NULL)));
 
-  object *lt = create_object("<", BCOND);
-  object *var3 = create_object("x", VAR);
-  object *num3 = create_object("10", NUM);
-  object *lt_list = NULL;
-  lt_list = cons(num3, lt_list);
-  lt_list = cons(var3, lt_list);
-  lt_list = cons(lt, lt_list);
+  a = create_object("<", BCOND);
+  b = create_object("x", VAR);
+  c = create_object("10", NUM);
+  object *lt_list = cons(a, cons(b, cons(c, NULL)));
 
-  object *gt = create_object(">", BCOND);
-  object *var4 = create_object("x", VAR);
-  object *num4 = create_object("0", NUM);
-  object *gt_list = NULL;
-  gt_list = cons(num4, gt_list);
-  gt_list = cons(var4, gt_list);
-  gt_list = cons(gt, gt_list);
+  a = create_object(">", BCOND);
+  b = create_object("x", VAR);
+  c = create_object("0", NUM);
+  object *gt_list = cons(a, cons(b, cons(c, NULL)));
 
-  object *and = create_object("and", CCOND);
-  object *and_list = NULL;
-  and_list = cons(lt_list, and_list);
-  and_list = cons(gt_list, and_list);
-  and_list = cons(and, and_list);
+  a = create_object("and", CCOND);
+  object *and_list = cons(a, cons(gt_list, cons(lt_list, NULL)));
 
-  object *if_list = NULL;
-  if_list = cons(add_list, if_list);
-  if_list = cons(mult_list, if_list);
-  if_list = cons(and_list, if_list);
+  object *if_list = cons(and_list, cons(mult_list, cons(add_list, NULL)));
+
+  print_expr(add_list);
+  printf("\n\n");
+
+  print_expr(mult_list);
+  printf("\n\n");
+
+  print_expr(if_list);
+  printf("\n");
+}
+
+void test_three(){
+  object *a, *b, *c;
+  a = create_object("+", OP);
+  b = create_object("2", NUM);
+  c = create_object("x", VAR);
+  object *add_list = cons(a, cons(b, cons(c, NULL)));
 
   print_expr(add_list);
   printf("\n");
 
-  print_expr(mult_list);
-  printf("\n");
+  a = create_object("x", VAR);
+  b = create_object("10", NUM);
+  object *varassign = cons(a, cons(b, NULL));
 
-  print_expr(if_list);
+  a = create_object("var", VAREXPR);
+  object *varexpr = cons(a, cons(varassign, cons(add_list, NULL)));
+
+  print_expr(varexpr);
   printf("\n");
+}
+
+int main(){
+
+  // test_one();
+  // test_two();
+  test_three();
 
   return 0;
 }

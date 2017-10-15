@@ -50,6 +50,21 @@ void print_if(object *list){
   printf(") ");
 }
 
+void print_varassign(object *list){
+  printf("( ");
+  printf("%s ", car(list)->value);
+  print_expr(car(cdr(list)));
+  printf(") ");
+}
+
+void print_varexpr(object *list){
+  printf("( ");
+  printf("%s ", car(list)->value);
+  print_varassign(car(cdr(list)));
+  print_expr(car(cdr(cdr(list))));
+  printf(") ");
+}
+
 void print_expr(object *obj){
    if(obj->type == LIST){
     if(car(obj)->type == OP){
@@ -65,6 +80,9 @@ void print_expr(object *obj){
     else if(car(obj)->type == LIST && car(car(obj))->type == BCOND){
       print_bcond(obj);
     }
+    else if(car(obj)->type == VAREXPR){
+      print_varexpr(obj);
+    }
     else{
       printf("%s ", car(obj)->value);
     }
@@ -73,8 +91,3 @@ void print_expr(object *obj){
     printf("%s ", obj->value);
   }
 }
-
-( ( and ( > x 0 ) ( < x 10 ) )
- ( * x 10 )
- ( + x -1 ) 
-)

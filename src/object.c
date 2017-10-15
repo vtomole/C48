@@ -11,6 +11,8 @@
 #define CCOND 4
 #define NOT 5
 #define BCOND 6
+#define VAREXPR 7
+#define VARASGN 8
 
 typedef struct object{
   int type;
