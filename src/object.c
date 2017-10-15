@@ -8,6 +8,9 @@
 #define VAR 1
 #define OP 2
 #define LIST 3
+#define CCOND 4
+#define NOT 5
+#define BCOND 6
 
 typedef struct object{
   int type;
