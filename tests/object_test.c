@@ -1,73 +1,55 @@
 #include "../src/print.c"
 
-void test_one(){
-  object *add = create_object("+", OP);
-  object *num1 = create_object("1", NUM);
-  object *num2 = create_object("2", NUM);
+object *arithexpr_test(){
+  object *a, *b, *c;
+  a = create_object("+", OP);
+  b = create_object("1", NUM);
+  c = create_object("2", NUM);
+  object *add = cons(a, cons(b, cons(c, NULL)));
 
-  object *sub = create_object("-",  OP);
-  object *num3 = create_object("7", NUM);
-  object *list1 = NULL;
-  object *list2 = NULL;
+  a = create_object("-",  OP);
+  b = create_object("7", NUM);
+  object *sub = cons(a, cons(add, cons(b, NULL)));
 
-  list1 = cons(num2, NULL);
-  list1 = cons(num1, list1);
-  list1 = cons(add, list1);
-
-  list2 = cons(num3, NULL);
-  list2 = cons(list1, list2);
-  list2 = cons(sub, list2);
-
-  print_expr(list2);
-  printf("\n");
+  return sub;
 }
 
-void test_two(){
+object *ifexpr_test(){
   object *a, *b, *c;
   a = create_object("+", OP);
   b = create_object("x", VAR);
   c = create_object("-1", NUM);
-  object *add_list = cons(a, cons(b, cons(c, NULL)));
+  object *add = cons(a, cons(b, cons(c, NULL)));
   
   a = create_object("*", OP);
   b = create_object("x", VAR);
   c = create_object("10", NUM);
-  object *mult_list = cons(a, cons(b, cons(c, NULL)));
+  object *mult = cons(a, cons(b, cons(c, NULL)));
 
   a = create_object("<", BCOND);
   b = create_object("x", VAR);
   c = create_object("10", NUM);
-  object *lt_list = cons(a, cons(b, cons(c, NULL)));
+  object *lt = cons(a, cons(b, cons(c, NULL)));
 
   a = create_object(">", BCOND);
   b = create_object("x", VAR);
   c = create_object("0", NUM);
-  object *gt_list = cons(a, cons(b, cons(c, NULL)));
+  object *gt = cons(a, cons(b, cons(c, NULL)));
 
   a = create_object("and", CCOND);
-  object *and_list = cons(a, cons(gt_list, cons(lt_list, NULL)));
+  object *and = cons(a, cons(gt, cons(lt, NULL)));
 
-  object *if_list = cons(and_list, cons(mult_list, cons(add_list, NULL)));
+  object *if_list = cons(and, cons(mult, cons(add, NULL)));
 
-  print_expr(add_list);
-  printf("\n\n");
-
-  print_expr(mult_list);
-  printf("\n\n");
-
-  print_expr(if_list);
-  printf("\n");
+  return if_list;
 }
 
-void test_three(){
+object *varexpr_test(){
   object *a, *b, *c;
   a = create_object("+", OP);
   b = create_object("2", NUM);
   c = create_object("x", VAR);
   object *add_list = cons(a, cons(b, cons(c, NULL)));
-
-  print_expr(add_list);
-  printf("\n");
 
   a = create_object("x", VAR);
   b = create_object("10", NUM);
@@ -76,15 +58,61 @@ void test_three(){
   a = create_object("var", VAREXPR);
   object *varexpr = cons(a, cons(varassign, cons(add_list, NULL)));
 
-  print_expr(varexpr);
-  printf("\n");
+  return varexpr;
 }
+
+object *funcexpr_test(){
+  object *a, *b, *c;
+  a = create_object("x", VAR);
+  b = create_object("y", VAR);
+  c = create_object("z", VAR);
+  object *params = cons(a, cons(b, cons(c, NULL)));
+
+  a = create_object("/", OP);
+  b = create_object("2", NUM);
+  c = create_object("x", VAR);
+  object *expr1 = cons(a, cons(b, cons(c, NULL)));
+
+  a = create_object("*", OP);
+  b = create_object("z", VAR);
+  c = create_object("y", VAR);
+  object *expr2 = cons(a, cons(b, cons(c, NULL)));
+
+  b = create_object("func_name", FUNC);
+  b = cons(b, cons(params, NULL));
+  b = cons(b, cons(expr1, NULL));
+
+  a = create_object("func", FUNCEXPR);
+  object *func = cons(a, cons(b, cons(expr2, NULL)));
+  return func;
+}
+
 
 int main(){
 
-  // test_one();
-  // test_two();
-  test_three();
+  ////should return ( - ( + 1 2) 7 )
+  object *arithexpr = arithexpr_test();
+  print_expr(arithexpr);
+  printf("\n");
+  free(arithexpr);
+
+  ////should return ( (and ( > x 0 ) ( < x 10 ) ) ( * x 10 ) ( + x -1 ) )
+  object *ifexpr = ifexpr_test();
+  print_expr(ifexpr);
+  printf("\n");
+  free(ifexpr);
+
+  ////should return ( var ( x 10 ) ( + 2 x ) )
+  object *varexpr = varexpr_test();
+  print_expr(varexpr);
+  printf("\n");
+  free(varexpr);
+  
+  ////should return ( func ( ( func_name ( x y z ) ) ( / 2 x ) ) ( * z y ) )
+  object *funcexpr = funcexpr_test();
+  print_expr(funcexpr);
+  printf("\n");
+  free(funcexpr);
 
   return 0;
 }

@@ -26,27 +26,24 @@ void print_ccond(object *list){
     print_bcond(list);
   }
   else if(car(list)->type == NOT){
-    printf("( %s ", car(list)->value);
-    print_ccond(car(cdr(list)));
+    printf("( %s ", car(list)->value);  // not
+    print_ccond(car(cdr(list)));  //First expression
     printf(") ");
   }
   else if(car(list)->type == CCOND){
     printf("( ");
     printf("%s ", car(list)->value); // and | or | xor
-    print_ccond(car(cdr(list)));
-    print_ccond(car(cdr(cdr(list))));
+    print_ccond(car(cdr(list)));  //First expression
+    print_ccond(car(cdr(cdr(list)))); //Second expression
     printf(") ");
   }
 }
 
 void print_if(object *list){
   printf("( ");
-  //printf("IF ");
-  print_ccond(car(list));
-  //printf("\nTHEN\n  ");
-  print_expr(car(cdr(list)));
-  //printf("\nELSE\n  ");
-  print_expr(car(cdr(cdr(list))));
+  print_ccond(car(list)); //Condition
+  print_expr(car(cdr(list))); // Then statement
+  print_expr(car(cdr(cdr(list)))); //else statment
   printf(") ");
 }
 
@@ -61,6 +58,28 @@ void print_varexpr(object *list){
   printf("( ");
   printf("%s ", car(list)->value);
   print_varassign(car(cdr(list)));
+  print_expr(car(cdr(cdr(list))));
+  printf(") ");
+}
+
+void print_funcassign(object *list){
+  printf("( ( ");
+  printf("%s ", car(car(list))->value);
+  printf("( ");
+  object *obj = car(cdr(car(list)));
+  while(obj != NULL){
+    printf("%s ", car(obj)->value);
+    obj = cdr(obj);
+  }
+  printf(") ) ");
+  print_expr(car(cdr(list)));
+  printf(") ");
+}
+
+void print_funcexpr(object *list){
+  printf("( ");
+  printf("%s ", car(list)->value);
+  print_funcassign(car(cdr(list)));
   print_expr(car(cdr(cdr(list))));
   printf(") ");
 }
@@ -83,6 +102,9 @@ void print_expr(object *obj){
     else if(car(obj)->type == VAREXPR){
       print_varexpr(obj);
     }
+    else if(car(obj)->type == FUNCEXPR){
+      print_funcexpr(obj);
+    }
     else{
       printf("%s ", car(obj)->value);
     }
@@ -91,3 +113,5 @@ void print_expr(object *obj){
     printf("%s ", obj->value);
   }
 }
+
+
