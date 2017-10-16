@@ -1,9 +1,4 @@
-//Worked on object.c and object2.c
-//Working on printing expressions and traversing the list
-//Should work like the parser function but reverse
-#include "object.c"
-
-void print_expr(object *);
+#include "print.h"
 
 void print_arith(object *list){
   printf("( ");
@@ -84,6 +79,18 @@ void print_funcexpr(object *list){
   printf(") ");
 }
 
+void print_funcapply(object *list){
+  printf("( ");
+  printf("%s ", car(list)->value);
+  printf("( %s ( ", car(cdr(list))->value);
+  object *temp = car(cdr(cdr(list)));
+  while(temp != NULL){
+    print_expr(car(temp));
+    temp = cdr(temp);
+  }
+  printf(") ) ) ");
+}
+
 void print_expr(object *obj){
    if(obj->type == LIST){
     if(car(obj)->type == OP){
@@ -104,6 +111,9 @@ void print_expr(object *obj){
     }
     else if(car(obj)->type == FUNCEXPR){
       print_funcexpr(obj);
+    }
+    else if(car(obj)->type == FUNCAPPLY){
+      print_funcapply(obj);
     }
     else{
       printf("%s ", car(obj)->value);

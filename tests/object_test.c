@@ -87,6 +87,22 @@ object *funcexpr_test(){
   return func;
 }
 
+object *funcapply_test(){
+  object *a, *b, *c;
+  a = create_object("+", OP);
+  b = create_object("x", VAR);
+  c = create_object("2", NUM);
+  object *expr1 = cons(a, cons(b, cons(c, NULL)));
+  
+  a = create_object("10", NUM);
+  object *args = cons(expr1, cons(a, NULL));
+
+  a = create_object("apply", FUNCAPPLY);
+  b = create_object("func_name", FUNC);
+  object *funcapply = cons(a, cons(b, cons(args, NULL)));
+
+  return funcapply;
+}
 
 int main(){
 
@@ -113,6 +129,12 @@ int main(){
   print_expr(funcexpr);
   printf("\n");
   free(funcexpr);
+
+  ////should return (apply ( func_name ( ( + x 2 ) 10 ) ) )
+  object *funcapply = funcapply_test();
+  print_expr(funcapply);
+  printf("\n");
+  free(funcapply);
 
   return 0;
 }
