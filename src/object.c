@@ -7,7 +7,6 @@ typedef struct object{
     struct object *car;
     struct object *cdr;
   }cons_cell;
-  
 }object;
 
 
@@ -25,8 +24,6 @@ object* create_object(char* value, int type){
   }
   obj->value = value;
   obj->type = type;
-  // obj->cons_cell.car = NULL;
-  // obj->cons_cell.cdr = NULL;
   return obj;
 }
 
