@@ -193,7 +193,7 @@ object* parse_rec(token_list* token_list, object* list_sofar){
     if(strcmp(token_list->val.type,"right_paren")==0){
       //indicates the start of a new list
       expr3 = parse_rec(token_list->next, temp_list);
-      temp_list = cons(expr3, temp_list);
+      //temp_list = cons(expr3, temp_list);
     }else if(strcmp(token_list->val.type,"left_paren") == 0){
       //end of a list
       return temp_list;

@@ -62,7 +62,14 @@ int tagged_listp (object *exp, char* tag){
   }
 }
 
-  
+void print_object_data(object *arg){
+  //first number
+  printf(">>1st num: %d\n", arg->cons_cell.car->number);
+  //second number
+  printf(">>2nd num: %d\n", arg->cons_cell.cdr->cons_cell.car->number);
+  printf(">>2nd var: %s\n", arg->cons_cell.cdr->cons_cell.car->variable);
+  printf(">>2nd str: %s\n", arg->cons_cell.cdr->cons_cell.car->string);
+}
 
 /**
  *This function executes our primitive operations i.e. +, -, *, /
@@ -74,12 +81,14 @@ int tagged_listp (object *exp, char* tag){
  */
 object *apply_primitive_procedure(object *procedure , object *arguments){
   if(strcmp(procedure->variable, "+")== 0){
-    //printf("ITS A PLUS\n");
+    printf("ITS A PLUS\n");
     struct object *object1;
     object *test1 = malloc(sizeof(*object1));
-
-    int  first = car(arguments)->number;
-    int second = car(cdr(arguments))->number;
+    
+    printf(">>>%d", arguments->cons_cell.car->number);
+    print_object_data(arguments);
+    int  first = read_arg(arguments->cons_cell.car);
+    int second = read_arg(arguments->cons_cell.cdr->cons_cell.car);
     int temp = first + second;
     char* answer = malloc(sizeof(temp));
     sprintf(answer,"%d",temp);
@@ -138,6 +147,14 @@ object *apply_primitive_procedure(object *procedure , object *arguments){
   }
 
   return procedure;
+}
+
+int read_arg(object *arg){
+  if(arg->variable == NULL){
+    return arg->number;
+  }else{
+    return apply_primitive_procedure(arg, arg)->number;
+  }
 }
 
 /**
