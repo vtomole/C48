@@ -6,31 +6,22 @@
 #define DEL " /s/n/r/t"
 #define SIZE 100
 
-char *construct_expr(stack *num, char *op){
-  char *a = (char*)pop(num);
-  char *b = (char*)pop(num);
-  char str[SIZE];
+char *prefix(char *str){
+  char *token, *prefix = malloc(sizeof(char) * SIZE);
+  stack *op_stack = create_stack();
 
-  sprintf(str, "( %s %s %s )", op, b, a);
-  printf("constuct_expr: str = %s\n", str);
-  return str;
-}
+  while(token = strtok(str, DEL)){
+    if(isnumber(token)){
+      strcat(prefix, token);
+      strcat(prefix, " ");
+    }
+    else{
+      push(op, (void*)token);
+    }
+  }
 
-char *translate(char *str){
-  char *a = "+";
-  char *b = "4";
-  char *c = "5";
 
-  stack *op = create_stack();
-  stack *num = create_stack();
+  printf("postfix: con_num = %s\n", prefix);
 
-  push(num, (void*)b);
-  push(op, (void*)a);
-  push(num, (void*)c);
-
-  char *op_pop = (char*)pop(op);
-  char *con_num = construct_expr(num, op_pop);
-  printf("translate: con_num = %s\n", con_num);
-
-  return con_num;
+  return prefix;
 }

@@ -36,17 +36,17 @@ void stack_test(){
   }
 }
 
-void translate_test(){
+void prefix_test(){
   char *str = "4 + 5";
-  char *res = translate(str);
-  printf("%s\n", res);
+  char *res = prefix(str);
+  printf("prefix_test: %s\n", res);
 }
 
 
 int main(){
   
   // stack_test();
-  translate_test();
+  prefix_test();
 
   return 0;
 }
