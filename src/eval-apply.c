@@ -69,6 +69,7 @@ void print_object_data(object *arg){
   printf(">>2nd num: %d\n", arg->cons_cell.cdr->cons_cell.car->number);
   printf(">>2nd var: %s\n", arg->cons_cell.cdr->cons_cell.car->variable);
   printf(">>2nd str: %s\n", arg->cons_cell.cdr->cons_cell.car->string);
+  //printf(">>3rd var: %d\n", arg->cons_cell.cdr->cons_cell.car->cons_cell.cdr->cons_cell.car->number);
 }
 
 /**
@@ -85,10 +86,9 @@ object *apply_primitive_procedure(object *procedure , object *arguments){
     struct object *object1;
     object *test1 = malloc(sizeof(*object1));
     
-    printf(">>>%d", arguments->cons_cell.car->number);
     print_object_data(arguments);
-    int  first = read_arg(arguments->cons_cell.car);
-    int second = read_arg(arguments->cons_cell.cdr->cons_cell.car);
+    int  first = read_arg(car(arguments));
+    int second = read_arg(car(cdr(arguments)));
     int temp = first + second;
     char* answer = malloc(sizeof(temp));
     sprintf(answer,"%d",temp);
@@ -153,7 +153,10 @@ int read_arg(object *arg){
   if(arg->variable == NULL){
     return arg->number;
   }else{
-    return apply_primitive_procedure(arg, arg)->number;
+    printf(">>>yyy\n");
+    printf(">>>%s\n", arg->variable);
+    printf(">>>%s\n", arg->cons_cell.cdr->variable);
+    return apply_primitive_procedure(arg, arg->cons_cell.cdr->cons_cell.car)->number;
   }
 }
 
