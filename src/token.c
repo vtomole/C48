@@ -66,7 +66,7 @@ char* token_type (char* token){
   }else if (isdigit(token[0])){
     return "num";
   }else{
-    return "identifier";
+    return "primitive";
   }
 }
 
@@ -77,7 +77,7 @@ char* token_type (char* token){
  * Return Value:
  * - head the start of the reversed token list
  */ 
-token_list* reverse_tokenlist(token_list *head){
+token_list* reverse_token_list(token_list *head){
   token_list *prev    = NULL;
   token_list *current = head;
   token_list *next;
@@ -143,9 +143,26 @@ int count_token_list (token_list* cursor){
  * 
  * expected return val: 
  */ 
-char* first (struct token_list *list){
+char* first_value (struct token_list *list){
   if(list){
     return list->val.value;
+  }
+  return 0;
+}
+
+/**
+ * This function returns the value of the first element in a list
+ * Parameters:
+ * - list the list you want the head of 1
+ * Return Value:
+ * - the value of the first element in the list
+ * Example call:
+ * 
+ * expected return val: 
+ */ 
+char* first (struct token_list *list){
+  if(list){
+    return list->val.type;
   }
   return 0;
 }
@@ -191,7 +208,7 @@ char* find_type (struct token_list *list){
  * expected return val: 
  */ 
 token_list* rest( struct token_list *list){
-  return list ->  next;
+  return list -> next;
 }
 
 /**
@@ -205,17 +222,28 @@ token_list* rest( struct token_list *list){
  * 
  * expected return val: 
  */ 
-char* print_token_list(struct token_list *list, char *result){
-  if(result == NULL){
-    result = first(list);
-    print_token_list(rest(list), result);
-  }else if(list && result !=NULL){ 
-    result = scat(result, first(list));
-    //printf("The result %s\n", result);
-    // printf("%s\n", first(list));
-    print_token_list(rest(list), result);
-  }else{
-    return result;
+void print_token_list(struct token_list *list){
+  if(list){
+    printf("%s\n", first(list));
+    print_token_list(rest(list));
+  }
+}
+
+/**
+ * This function recursivly prints the token list
+ * Parameters:
+ * - list the token to print
+ * - result the tokenlist to print from
+ * Return Value:
+ * - result returns the list of tokens after printing them
+ * Example call:
+ * 
+ * expected return val: 
+ */ 
+void print_token_list_value(struct token_list *list){
+  if(list){
+    printf("%s\n", first_value(list));
+    print_token_list_value(rest(list));
   }
 }
 

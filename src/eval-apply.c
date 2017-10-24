@@ -1,5 +1,7 @@
+
 #include "object.c"
 #include "token.c"
+
 
 /**
  *This function determines whether the given arguement is a number or string
@@ -9,10 +11,11 @@
  * - 1 if the given object is a number or a string
  * - 0 otherwise
  */
+
 int self_evaluatingp (object *expr){
   return (expr->type == NUM || expr->type == VAR);
-}
 
+}
 /**
  *This function determines whether a given expression is primitive
  * Parameters:
@@ -25,6 +28,31 @@ int primitivep (object *exp){
   return exp->type == OP;
 }
 
+int variablep (object *exp){
+  if(strcmp(exp->type, "variable") == 0){  
+    return 1;
+  }else{
+    return 0;
+  }
+}
+
+
+
+int quotep (object *exp){
+  
+}
+
+int tagged_listp (object *exp, char* tag){
+  if(strcmp (car(exp) ->variable, tag) == 0){
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+  
+
 /**
  *This function executes our primitive operations i.e. +, -, *, /
  * Parameters:
@@ -34,28 +62,65 @@ int primitivep (object *exp){
  * - procedure, 
  */
 object *apply_primitive_procedure(object *procedure , object *arguments){
-  int first, second, answer = 0;
-  first = car1(arguments)->number;
-  second = car1(arguments)->number;
 
-  if(strcmp(procedure->variable, "+") == 0){
-    answer = first + second;
+  if(strcmp(procedure->variable, "+")== 0){
+    //printf("ITS A PLUS\n");
+    struct object *object1;
+    object *test1 = malloc(sizeof(*object1));
+
+    int  first = car(arguments)->number;
+    int second = car(cdr(arguments))->number;
+    int temp = first + second;
+    char* answer = malloc(sizeof(temp));
+    sprintf(answer,"%d",temp);
     procedure = create_number(answer);
   }
-  else if(strcmp(procedure->variable, "-") == 0){
-    answer = first - second;
+  else if (strcmp(procedure->variable, "-")== 0){
+    //printf("ITS A PLUS\n");
+    struct object *object1;
+    object *test1 = malloc(sizeof(*object1));
+
+    int  first = car(arguments)->number;
+    int second = car(cdr(arguments))->number;
+    int temp = first - second;
+    char* answer = malloc(sizeof(int));
+    snprintf(answer,sizeof(int),"%d",temp);
     procedure = create_number(answer);
   }
-  else if(strcmp(procedure->variable, "*") == 0){
-    answer = first * second;
+  else if (strcmp(procedure->variable, "*")== 0){
+    //printf("ITS A PLUS\n");
+    struct object *object1;
+    object *test1 = malloc(sizeof(*object1));
+
+    int  first = car(arguments)->number;
+    int second = car(cdr(arguments))->number;
+    int temp = first * second;
+    char* answer = malloc(sizeof(int));
+    snprintf(answer,sizeof(int),"%d",temp);
     procedure = create_number(answer);
   }
-  else if(strcmp(procedure->variable, "/") == 0){
-    answer = first / second;
+  else if (strcmp(procedure->variable, "/")== 0){
+    //printf("ITS A PLUS\n");
+    struct object *object1;
+    object *test1 = malloc(sizeof(*object1));
+
+    int  first = car(arguments)->number;
+    int second = car(cdr(arguments))->number;
+    int temp = first / second;
+    char* answer = malloc(sizeof(int));
+    snprintf(answer,sizeof(int),"%d",temp);
     procedure = create_number(answer);
   }
-  else if(strcmp(procedure->variable, "%") == 0){
-    answer = first % second;
+  else if (strcmp(procedure->variable, "%")== 0){
+    //printf("ITS A PLUS\n");
+    struct object *object1;
+    object *test1 = malloc(sizeof(*object1));
+
+    int  first = car(arguments)->number;
+    int second = car(cdr(arguments))->number;
+    int temp = first % second;
+    char* answer = malloc(sizeof(int));
+    snprintf(answer,sizeof(int),"%d",temp);
     procedure = create_number(answer);
   }
   else{
@@ -78,7 +143,6 @@ object *apply_primitive_procedure(object *procedure , object *arguments){
  * expected return val: 3
  */ 
 object  *apply(object *procedure , object* arguments){
-
    if (primitivep(procedure)){
      procedure = apply_primitive_procedure(procedure, arguments);
     } else{
@@ -86,6 +150,23 @@ object  *apply(object *procedure , object* arguments){
    }
  
   return procedure;
+}
+
+object* lookup_variable_value(object* exp, object* env){
+
+  if(env == NULL){
+    return exp;
+  }
+  else{
+    if (strcmp(car(car(env))->variable, exp->variable) == 0){
+    return (car (cdr (car (env))));
+    }
+    else{
+      lookup_variable_value(exp, cdr(env));
+  }
+
+ 
+  }
 }
 
 /**
@@ -99,12 +180,18 @@ object  *apply(object *procedure , object* arguments){
  * 
  * expected return val: 
  */ 
-object *eval(object* exp, token_list* env ){
+object *eval(object* exp, object* env ){
   if (self_evaluatingp(exp)){
-    printf("SELFEVALUATING\n");
-  } else{
-    exp = apply(car1(exp), cdr1(exp));
+    return exp;
   }
+  else if (variablep(exp)){
+    exp = lookup_variable_value(exp, env);
+  }
+
+  else{
+    exp = apply(car(exp), cdr(exp));
+  }
+
  
   return exp;
 }
