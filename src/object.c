@@ -1,14 +1,20 @@
 #include "object.h"
 
+enum boolean {true, false};
+
 typedef struct object{
   int type;
-  char *value;
+  char* value;
   struct cons_cell{
     struct object *car;
     struct object *cdr;
   }cons_cell;
+ 
+  char* variable;
+  char* string;
+  int number;
+  enum boolean boolean;
 }object;
-
 
 /**
  *This function creates an object 
@@ -18,7 +24,7 @@ typedef struct object{
  * - An object with type enum and char value
  */
 object* create_object(char* value, int type){
-  object *obj = (object*)malloc(sizeof(object));
+  object* obj = (object*)malloc(sizeof(object));
   if(obj == NULL){
     printf("Obj is NULL\n");
   }

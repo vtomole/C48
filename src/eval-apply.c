@@ -29,7 +29,7 @@ int primitivep (object *exp){
 }
 
 int variablep (object *exp){
-  if(strcmp(exp->type, "variable") == 0){  
+  if(exp->type == VAR){  
     return 1;
   }else{
     return 0;
@@ -42,14 +42,14 @@ int quotep (object *exp){
   
 }
 
-int tagged_listp (object *exp, char* tag){
+/*int tagged_listp (object *exp, char* tag){
   if(strcmp (car(exp) ->variable, tag) == 0){
     return 1;
   }
   else {
     return 0;
   }
-}
+  }*/
 
 /**
  *This function executes our primitive operations i.e. +, -, *, /
@@ -85,7 +85,7 @@ object *apply_primitive_procedure(object *procedure , object *arguments){
     snprintf(answer,sizeof(int),"%d",temp);
     procedure = create_number(answer);
   }
-  else if (strcmp(procedure->variable, "*")== 0){
+  else if (strcmp(procedure->variable, "*")==0){
     //printf("ITS A PLUS\n");
     struct object *object1;
     object *test1 = malloc(sizeof(*object1));

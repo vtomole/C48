@@ -6,7 +6,7 @@
 #define EMPTY -1
 #define NUM 0
 #define VAR 1
-#define OP 2
+#define PRIMITIVE 2
 #define LIST 3
 #define CCOND 4
 #define NOT 5
