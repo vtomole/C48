@@ -4,10 +4,12 @@
 #include <ctype.h>
 #include <limits.h>
 #include <assert.h>
+
 //#include "lexer.c"
 #include "lexer_tmp.c"
 #include "parser.c"
 
+>>>>>>> origin/testing
 #include "vm.h"
 #include "vm.c"
 //#include "read_2.c"

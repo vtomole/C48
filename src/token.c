@@ -1,4 +1,11 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include "utils.c"
+
+// #define SYM 0
+// #define NUM 1
+// #define IDEN 2
 
 //enum Token{
 //  tok_eof = -1,
@@ -13,7 +20,7 @@
  * - type, a character representing whether the token is an identifier, operator, or an arguement
  * - value, the original string value of the token. i.e. 5, (, +, etc.
  */
-struct token_object{
+typedef struct token_object{
   char* type;
   char* value;
 }token_object;
@@ -28,6 +35,20 @@ typedef struct token_list{
   struct token_object val;
   struct token_list *next;
 }token_list;
+
+token_object* create_token_object(char *type, char *value){
+  token_object *tok_obj = malloc(sizeof(tok_obj));
+  tok_obj->type = type;
+  tok_obj->value = value;
+  return tok_obj;
+}
+
+token_list* create_token_list(token_object tok_obj){
+  token_list *tok_list = malloc(sizeof(tok_list));
+  tok_list->val = tok_obj;
+  tok_list->next = NULL;
+  return tok_list;
+}
 
 /**
  * This function determines the type used in the creation of a token

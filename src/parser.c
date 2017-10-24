@@ -1,9 +1,8 @@
-//#include "parser.h"
 
-//struct symbol{//typedef struct symbol???
-//  char *name;
-//  struct symbol *next;
-//}symbol;
+#include "object.c"
+#include "token.c"
+
+
 
 enum boolean {true, false};
 
@@ -166,6 +165,7 @@ int count_objects(object* cursor){
   while(cursor != NULL){
     c++;
     cursor = cursor->cons_cell.cdr;
+
   }
   return c;
 }
@@ -177,7 +177,6 @@ int count_objects(object* cursor){
  * -token_list, the list of tokens to add to the code_tree
  * -code_tree, the code_tree being built
  */
-
 //Will return object list
 /*
  * this method recursivly goes through parse to create an unknown number of lists
@@ -222,7 +221,6 @@ object* parse_rec(token_list* token_list, object* list_sofar){
    //throw an error no closed parenthesis
    printf("invalid syntax");
    exit(0);
-
 }
 
 object* parse(token_list* token_list, object* expr_list){

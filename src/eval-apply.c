@@ -1,4 +1,8 @@
 
+#include "object.c"
+#include "token.c"
+
+
 /**
  *This function determines whether the given arguement is a number or string
  * Parameters:
@@ -7,22 +11,11 @@
  * - 1 if the given object is a number or a string
  * - 0 otherwise
  */
-int self_evaluatingp (object *exp){
 
-  if(strcmp(exp->type, "number") == 0){  
-    return 1;
-  }else if(strcmp(exp->type, "string") == 0){
-    return 1;
-  }
-  
- else if(strcmp(exp->type, "boolean") == 0){
-    return 1;
-  }
-  else{
-    return 0;
-  }
+int self_evaluatingp (object *expr){
+  return (expr->type == NUM || expr->type == VAR);
+
 }
-
 /**
  *This function determines whether a given expression is primitive
  * Parameters:
@@ -32,11 +25,7 @@ int self_evaluatingp (object *exp){
  * - 0 otherwise
  */
 int primitivep (object *exp){
-  if(strcmp(exp->type, "primop") == 0){  
-    return 1;
-  }else{
-    return 0;
-  }
+  return exp->type == OP;
 }
 
 int variablep (object *exp){
@@ -73,6 +62,7 @@ int tagged_listp (object *exp, char* tag){
  * - procedure, 
  */
 object *apply_primitive_procedure(object *procedure , object *arguments){
+
   if(strcmp(procedure->variable, "+")== 0){
     //printf("ITS A PLUS\n");
     struct object *object1;
@@ -136,7 +126,7 @@ object *apply_primitive_procedure(object *procedure , object *arguments){
   else{
     printf("Procedure has not been implemented yet\n"); 
   }
-
+  
   return procedure;
 }
 
