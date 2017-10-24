@@ -62,16 +62,6 @@ int tagged_listp (object *exp, char* tag){
   }
 }
 
-void print_object_data(object *arg){
-  //first number
-  printf(">>1st num: %d\n", arg->cons_cell.car->number);
-  //second number
-  printf(">>2nd num: %d\n", arg->cons_cell.cdr->cons_cell.car->number);
-  printf(">>2nd var: %s\n", arg->cons_cell.cdr->cons_cell.car->variable);
-  printf(">>2nd str: %s\n", arg->cons_cell.cdr->cons_cell.car->string);
-  //printf(">>3rd var: %d\n", arg->cons_cell.cdr->cons_cell.car->cons_cell.cdr->cons_cell.car->number);
-}
-
 /**
  *This function executes our primitive operations i.e. +, -, *, /
  * Parameters:
@@ -82,13 +72,12 @@ void print_object_data(object *arg){
  */
 object *apply_primitive_procedure(object *procedure , object *arguments){
   if(strcmp(procedure->variable, "+")== 0){
-    printf("ITS A PLUS\n");
+    //printf("ITS A PLUS\n");
     struct object *object1;
     object *test1 = malloc(sizeof(*object1));
     
-    print_object_data(arguments);
-    int  first = read_arg(car(arguments));
-    int second = read_arg(car(cdr(arguments)));
+    int  first = read_arg(arguments);
+    int second = read_arg(cdr(arguments));
     int temp = first + second;
     char* answer = malloc(sizeof(temp));
     sprintf(answer,"%d",temp);
@@ -99,8 +88,8 @@ object *apply_primitive_procedure(object *procedure , object *arguments){
     struct object *object1;
     object *test1 = malloc(sizeof(*object1));
 
-    int  first = car(arguments)->number;
-    int second = car(cdr(arguments))->number;
+    int  first = read_arg(arguments);
+    int second = read_arg(cdr(arguments));
     int temp = first - second;
     char* answer = malloc(sizeof(int));
     snprintf(answer,sizeof(int),"%d",temp);
@@ -111,8 +100,8 @@ object *apply_primitive_procedure(object *procedure , object *arguments){
     struct object *object1;
     object *test1 = malloc(sizeof(*object1));
 
-    int  first = car(arguments)->number;
-    int second = car(cdr(arguments))->number;
+    int  first = read_arg(arguments);
+    int second = read_arg(cdr(arguments));
     int temp = first * second;
     char* answer = malloc(sizeof(int));
     snprintf(answer,sizeof(int),"%d",temp);
@@ -123,8 +112,8 @@ object *apply_primitive_procedure(object *procedure , object *arguments){
     struct object *object1;
     object *test1 = malloc(sizeof(*object1));
 
-    int  first = car(arguments)->number;
-    int second = car(cdr(arguments))->number;
+    int  first = read_arg(arguments);
+    int second = read_arg(cdr(arguments));
     int temp = first / second;
     char* answer = malloc(sizeof(int));
     snprintf(answer,sizeof(int),"%d",temp);
@@ -135,8 +124,8 @@ object *apply_primitive_procedure(object *procedure , object *arguments){
     struct object *object1;
     object *test1 = malloc(sizeof(*object1));
 
-    int  first = car(arguments)->number;
-    int second = car(cdr(arguments))->number;
+    int  first = read_arg(arguments);
+    int second = read_arg(cdr(arguments));
     int temp = first % second;
     char* answer = malloc(sizeof(int));
     snprintf(answer,sizeof(int),"%d",temp);
@@ -149,14 +138,14 @@ object *apply_primitive_procedure(object *procedure , object *arguments){
   return procedure;
 }
 
+//Function is used to recursively call arithmatic operators
 int read_arg(object *arg){
-  if(arg->variable == NULL){
-    return arg->number;
+  //is a number
+  if(arg->cons_cell.car->variable == NULL){
+    return arg->cons_cell.car->number;
   }else{
-    printf(">>>yyy\n");
-    printf(">>>%s\n", arg->variable);
-    printf(">>>%s\n", arg->cons_cell.cdr->variable);
-    return apply_primitive_procedure(arg, arg->cons_cell.cdr->cons_cell.car)->number;
+    //is an operator
+    return apply_primitive_procedure(arg->cons_cell.car, arg->cons_cell.cdr)->number;
   }
 }
 
