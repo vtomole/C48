@@ -1,8 +1,4 @@
 
-#include "object.c"
-#include "token.c"
-
-
 /**
  *This function determines whether the given arguement is a number or string
  * Parameters:
@@ -11,11 +7,22 @@
  * - 1 if the given object is a number or a string
  * - 0 otherwise
  */
+int self_evaluatingp (object *exp){
 
-int self_evaluatingp (object *expr){
-  return (expr->type == NUM || expr->type == VAR);
-
+  if(strcmp(exp->type, "number") == 0){  
+    return 1;
+  }else if(strcmp(exp->type, "string") == 0){
+    return 1;
+  }
+  
+ else if(strcmp(exp->type, "boolean") == 0){
+    return 1;
+  }
+  else{
+    return 0;
+  }
 }
+
 /**
  *This function determines whether a given expression is primitive
  * Parameters:
@@ -25,11 +32,15 @@ int self_evaluatingp (object *expr){
  * - 0 otherwise
  */
 int primitivep (object *exp){
-  return exp->type == OP;
+  if(strcmp(exp->type, "primop") == 0){  
+    return 1;
+  }else{
+    return 0;
+  }
 }
 
 int variablep (object *exp){
-  if(exp->type == VAR){  
+  if(strcmp(exp->type, "variable") == 0){  
     return 1;
   }else{
     return 0;
@@ -42,14 +53,16 @@ int quotep (object *exp){
   
 }
 
-/*int tagged_listp (object *exp, char* tag){
+int tagged_listp (object *exp, char* tag){
   if(strcmp (car(exp) ->variable, tag) == 0){
     return 1;
   }
   else {
     return 0;
   }
-  }*/
+}
+
+  
 
 /**
  *This function executes our primitive operations i.e. +, -, *, /
@@ -60,14 +73,13 @@ int quotep (object *exp){
  * - procedure, 
  */
 object *apply_primitive_procedure(object *procedure , object *arguments){
-
   if(strcmp(procedure->variable, "+")== 0){
     //printf("ITS A PLUS\n");
     struct object *object1;
     object *test1 = malloc(sizeof(*object1));
-    
-    int  first = read_arg(arguments);
-    int second = read_arg(cdr(arguments));
+
+    int  first = car(arguments)->number;
+    int second = car(cdr(arguments))->number;
     int temp = first + second;
     char* answer = malloc(sizeof(temp));
     sprintf(answer,"%d",temp);
@@ -78,20 +90,20 @@ object *apply_primitive_procedure(object *procedure , object *arguments){
     struct object *object1;
     object *test1 = malloc(sizeof(*object1));
 
-    int  first = read_arg(arguments);
-    int second = read_arg(cdr(arguments));
+    int  first = car(arguments)->number;
+    int second = car(cdr(arguments))->number;
     int temp = first - second;
     char* answer = malloc(sizeof(int));
     snprintf(answer,sizeof(int),"%d",temp);
     procedure = create_number(answer);
   }
-  else if (strcmp(procedure->variable, "*")==0){
+  else if (strcmp(procedure->variable, "*")== 0){
     //printf("ITS A PLUS\n");
     struct object *object1;
     object *test1 = malloc(sizeof(*object1));
 
-    int  first = read_arg(arguments);
-    int second = read_arg(cdr(arguments));
+    int  first = car(arguments)->number;
+    int second = car(cdr(arguments))->number;
     int temp = first * second;
     char* answer = malloc(sizeof(int));
     snprintf(answer,sizeof(int),"%d",temp);
@@ -102,8 +114,8 @@ object *apply_primitive_procedure(object *procedure , object *arguments){
     struct object *object1;
     object *test1 = malloc(sizeof(*object1));
 
-    int  first = read_arg(arguments);
-    int second = read_arg(cdr(arguments));
+    int  first = car(arguments)->number;
+    int second = car(cdr(arguments))->number;
     int temp = first / second;
     char* answer = malloc(sizeof(int));
     snprintf(answer,sizeof(int),"%d",temp);
@@ -114,8 +126,8 @@ object *apply_primitive_procedure(object *procedure , object *arguments){
     struct object *object1;
     object *test1 = malloc(sizeof(*object1));
 
-    int  first = read_arg(arguments);
-    int second = read_arg(cdr(arguments));
+    int  first = car(arguments)->number;
+    int second = car(cdr(arguments))->number;
     int temp = first % second;
     char* answer = malloc(sizeof(int));
     snprintf(answer,sizeof(int),"%d",temp);
@@ -124,19 +136,8 @@ object *apply_primitive_procedure(object *procedure , object *arguments){
   else{
     printf("Procedure has not been implemented yet\n"); 
   }
-  
-  return procedure;
-}
 
-//Function is used to recursively call arithmatic operators
-int read_arg(object *arg){
-  //is a number
-  if(arg->cons_cell.car->variable == NULL){
-    return arg->cons_cell.car->number;
-  }else{
-    //is an operator
-    return apply_primitive_procedure(arg->cons_cell.car, arg->cons_cell.cdr)->number;
-  }
+  return procedure;
 }
 
 /**

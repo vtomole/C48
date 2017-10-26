@@ -4,10 +4,6 @@
 #include <ctype.h>
 #include <limits.h>
 
-int equals(char *str1, char *str2){
-  return strcmp(str1, str2) == 0;
-}
-
 /**
  * This function advance the pointer to a new location effectivly removing N character from the string
  * Parameters:

@@ -4,7 +4,6 @@
 #include <ctype.h>
 #include <limits.h>
 #include <assert.h>
-
 //#include "lexer.c"
 #include "lexer_tmp.c"
 #include "parser.c"
@@ -42,7 +41,7 @@ int main(int argc, char **argv){
   // hashtable_t *env = ht_create( 65536 );
   char* result = NULL;
 
-  token_list = lexer_tmp1("(+ 56 (+ 137 349))");
+  token_list = lexer_tmp1("(+ 137 349)");
 
   h = create_variable("h");
   a = create_variable("a");
@@ -90,14 +89,14 @@ int main(int argc, char **argv){
   // lexer_tmp("\"Hello\"");
  
   
-  while (1){     
+  /* while (1){     
     printf("repl>");
     fgets (str, 10000, stdin);
     //printf("=>");
     //micro_read(str);
     print(eval(parse(lexer_tmp(str), expr_list),environment));
     
-    }
+    }*/
   return 0;
 }//end of main>
 

@@ -6,5 +6,3 @@
 *.#print.c
 *repl
 *#parser.c
-*.obj
-*.exe
