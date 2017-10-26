@@ -89,14 +89,14 @@ int main(int argc, char **argv){
   // lexer_tmp("\"Hello\"");
  
   
-  /* while (1){     
+   while (1){     
     printf("repl>");
     fgets (str, 10000, stdin);
     //printf("=>");
     //micro_read(str);
     print(eval(parse(lexer_tmp(str), expr_list),environment));
     
-    }*/
+    }
   return 0;
 }//end of main>
 
