@@ -20,6 +20,13 @@ typedef struct object{
   enum boolean boolean;
 }object;
 
+object *create_object(char *value, char *type){
+  object *obj = malloc(sizeof(obj));
+  obj->type = type;
+  obj->variable = value;
+return obj;
+}
+
 /**
  *This function constructs ????
  * Parameters:
@@ -154,6 +161,16 @@ char* get_car(void* car){
 }
 
 
+int count_objects(object* cursor){
+  int c = 0;
+  while(cursor != NULL){
+    c++;
+    cursor = cursor->cons_cell.cdr;
+  }
+  return c;
+}
+
+
 /**
  *Recursivly adds tokens to the code_tree
  * Parameters:
@@ -176,7 +193,7 @@ object* parse_rec(token_list* token_list, object* list_sofar){
     if(strcmp(token_list->val.type,"right_paren")==0){
       //indicates the start of a new list
       expr3 = parse_rec(token_list->next, temp_list);
-      temp_list = cons(expr3, temp_list);
+      //temp_list = cons(expr3, temp_list);
     }else if(strcmp(token_list->val.type,"left_paren") == 0){
       //end of a list
       return temp_list;
@@ -211,6 +228,8 @@ object* parse_rec(token_list* token_list, object* list_sofar){
 object* parse(token_list* token_list, object* expr_list){
   struct object *expr2;
 
+  print_token_list_value(token_list);
+
    while(token_list != NULL){
     if(strcmp(token_list->val.type,"right_paren")==0){
       //indicates the start of a new list
@@ -222,7 +241,13 @@ object* parse(token_list* token_list, object* expr_list){
       //constructing an operator onto the list
       expr2 = create_primitiveop(token_list->val.value);
       expr_list = cons(expr2, expr_list); 
-    }else if(strcmp(token_list->val.type,"num")==0){
+    }
+    else if(strcmp(token_list->val.type,"variable")==0){
+      //constructing an operator onto the list
+      expr2 = create_primitiveop(token_list->val.value);
+      expr_list = cons(expr2, expr_list); 
+    }
+    else if(strcmp(token_list->val.type,"num")==0){
       //constructing a number onto the list
       expr2 = create_number(token_list->val.value);
       if(count_token_list(token_list) == 1){

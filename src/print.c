@@ -13,8 +13,10 @@ char* print(object* result){
   else if(strcmp(result->type, "string") == 0){
     printf("%s\n", result-> string);
   }
-  else if(strcmp(result->type, "list") == 0){
-    printf("%d\n", result->number);
+  else if(strcmp(result->type, "cons") == 0){
+
+    printf("(%s %d %d)\n", car(result)->variable,  car(cdr (result)) ->number, car (cdr (cdr (result))) ->number);;
+   
   }
   else if(strcmp(result->type, "boolean") == 0){
     if(result->boolean == true){

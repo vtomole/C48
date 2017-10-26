@@ -34,13 +34,14 @@ int main(int argc, char **argv){
   object* code_tree = NULL;
   object* environment = NULL;
   object* environment2 = NULL;
+  object *cons1 = NULL;
   char* operator = "third";
   char* string = "\"A string\"";
   int b = 20, c = 30;
   // hashtable_t *env = ht_create( 65536 );
   char* result = NULL;
 
-  token_list = lexer_tmp1("(+ 137 349)");
+  token_list = lexer_tmp1("(+ 56 (+ 137 349))");
 
   h = create_variable("h");
   a = create_variable("a");
@@ -51,6 +52,21 @@ int main(int argc, char **argv){
   environment = cons (environment, environment2);
 
   list2 = (car (car(environment)));
+
+
+  object *add = create_object("+", "string");
+  object *num1 = create_object("1", "string");
+  object *num2 = create_object("2", "string");
+  //printf("Created objects\n");
+ 
+  cons1 = cons(num2, cons1);
+  cons1 = cons(num1, cons1);
+  cons1 = cons(add, cons1);
+  
+
+  //print(cons1);
+
+    printf("Number of objects %d\n",count_objects(cons1));
 
 
   // print_token_list(token_list);
@@ -81,7 +97,6 @@ int main(int argc, char **argv){
     print(eval(parse(lexer_tmp(str), expr_list),environment));
     
     }
-    
   return 0;
 }//end of main>
 
