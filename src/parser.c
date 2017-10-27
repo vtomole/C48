@@ -228,7 +228,7 @@ object* parse_rec(token_list* token_list, object* list_sofar){
 object* parse(token_list* token_list, object* expr_list){
   struct object *expr2;
 
-  ///print_token_list_value(token_list);
+  //print_token_list(token_list);
 
    while(token_list != NULL){
     if(strcmp(token_list->val.type,"right_paren")==0){

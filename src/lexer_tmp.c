@@ -1,6 +1,6 @@
 //https://llvm.org/docs/tutorial/LangImpl01.html#language
 //#include "token.c"
-#include "identifier.c"
+//#include "identifier.c"
 
 
 /**
@@ -247,7 +247,7 @@ token_list* lexer_tmp (char *program){
      
   }
   
-  // print_token_list_value(reverse_token_list(token_list));
+  //print_token_list_value(reverse_token_list(token_list));
  
 
   return  token_list;
@@ -312,9 +312,9 @@ token_list* list_lexer_tmp (char *program){
     }
   }
 
-  printf("The number %d\n", count_token_list(token_list));
+  //printf("The number %d\n", count_token_list(token_list));
   //print_token_list(reverse_token_list(token_list));
-  
+  //print_token_list(token_list_lexer);
   return token_list;
 }//end of list_lexer_tmp
 

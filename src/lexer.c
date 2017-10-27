@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <limits.h>
-#include "./identifier.c"
-#include "./utils.c"
+#include "identifier.c"
+//#include "utils.c"
 
 char* number ="" , *symbol ="" ;
 
@@ -178,7 +178,7 @@ token_list* lexer_1(char* program2)
 	{
 	  printf("Invalid number of parenthesis\n");
 	}
-    
+    // print_token_list(token_list_lexer);
     return token_list_lexer;
     
 }
