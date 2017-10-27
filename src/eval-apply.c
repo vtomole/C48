@@ -1,69 +1,4 @@
-
-/**
- *This function determines whether the given arguement is a number or string
- * Parameters:
- * - exp, this is an object containing an arguement value 
- * Return Value:
- * - 1 if the given object is a number or a string
- * - 0 otherwise
- */
-int self_evaluatingp (object *exp){
-
-  if(strcmp(exp->type, "number") == 0){  
-    return 1;
-  }else if(strcmp(exp->type, "string") == 0){
-    return 1;
-  }
-  
- else if(strcmp(exp->type, "boolean") == 0){
-    return 1;
-  }
-  else{
-    return 0;
-  }
-}
-
-/**
- *This function determines whether a given expression is primitive
- * Parameters:
- * - exp, this is an object containing an expression
- * Return Value:
- * - 1 if the given object is a primitive expression
- * - 0 otherwise
- */
-int primitivep (object *exp){
-  if(strcmp(exp->type, "primop") == 0){  
-    return 1;
-  }else{
-    return 0;
-  }
-}
-
-int variablep (object *exp){
-  if(strcmp(exp->type, "variable") == 0){  
-    return 1;
-  }else{
-    return 0;
-  }
-}
-
-
-
-int quotep (object *exp){
-  
-}
-
-int tagged_listp (object *exp, char* tag){
-  if(strcmp (car(exp) ->variable, tag) == 0){
-    return 1;
-  }
-  else {
-    return 0;
-  }
-}
-
-  
-
+#include "eval-apply.h"
 /**
  *This function executes our primitive operations i.e. +, -, *, /
  * Parameters:
@@ -151,6 +86,76 @@ int read_arg(object *arg){
     return apply_primitive_procedure(arg->cons_cell.car, arg->cons_cell.cdr)->number;
   }
 }
+
+
+/**
+ *This function determines whether the given arguement is a number or string
+ * Parameters:
+ * - exp, this is an object containing an arguement value 
+ * Return Value:
+ * - 1 if the given object is a number or a string
+ * - 0 otherwise
+ */
+int self_evaluatingp (object *exp){
+
+  if(strcmp(exp->type, "number") == 0){  
+    return 1;
+  }else if(strcmp(exp->type, "string") == 0){
+    return 1;
+  }
+  
+ else if(strcmp(exp->type, "boolean") == 0){
+    return 1;
+  }
+  else{
+    return 0;
+  }
+}
+
+/**
+ *This function determines whether a given expression is primitive
+ * Parameters:
+ * - exp, this is an object containing an expression
+ * Return Value:
+ * - 1 if the given object is a primitive expression
+ * - 0 otherwise
+ */
+int primitivep (object *exp){
+  if(strcmp(exp->type, "primop") == 0){  
+    return 1;
+  }else{
+    return 0;
+  }
+}
+
+int variablep (object *exp){
+  if(strcmp(exp->type, "variable") == 0){  
+    return 1;
+  }else{
+    return 0;
+  }
+}
+
+
+
+int quotep (object *exp){
+  
+}
+
+int tagged_listp (object *exp, char* tag){
+  if(strcmp (car(exp) ->variable, tag) == 0){
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+  
+
+
+
+
 
 /**
  * Executes the operation returning the result
