@@ -66,7 +66,7 @@ int main(int argc, char **argv){
 
   //print(cons1);
 
-    printf("Number of objects %d\n",count_objects(cons1));
+  // printf("Number of objects %d\n",count_objects(cons1));
 
 
   // print_token_list(token_list);
