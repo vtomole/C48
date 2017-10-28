@@ -42,6 +42,13 @@ void *pop(stack *s){
   return NULL;
 }
 
+void *check_first(stack *s){
+  if(s->size){
+    return (s->first)->value;
+  }
+  return NULL;
+}
+
 void print_stack(stack *s, char *name){
   item *temp = s->first;
   printf("%s(%d): ", name, s->size);

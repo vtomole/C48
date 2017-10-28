@@ -37,8 +37,9 @@ void stack_test(){
 }
 
 void prefix_test(){
-  char *str = "4 + 5";
-  char *res = prefix(str);
+  char *str = "( 7 - 4  + 5 )";
+  char *res = postfix(str);
+  // char *res = (char*)malloc(sizeof(char) * 200);
   printf("prefix_test: %s\n", res);
 }
 
