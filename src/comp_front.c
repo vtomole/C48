@@ -3,7 +3,7 @@
 #include "stack.c"
 #include "utils.c"
 
-#define DEL " /s/n/r/t"
+#define DEL " \n\r\t"
 #define SIZE 100
 
 char *operators[] = {"+", "-", "*", "/", "%", "^", "(", ")", '\0'};
@@ -92,9 +92,9 @@ char *prefix(char *infix) {
         }
       }
     }
-    // print_stack(op_stack, "OP");
-    // print_stack(num_stack, "NUM");
-    // printf("-------------------------\n");
+    //  print_stack(op_stack, "OP");
+    //  print_stack(num_stack, "NUM");
+    //  printf("-------------------------\n");
   }
   while(token = strtok(NULL, DEL));
 

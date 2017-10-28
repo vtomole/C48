@@ -66,7 +66,7 @@ void queue_test(){
 
 void postfix_test(){
   char *str = "( 7 - 4  + 5 )";
-  char *res = postfix(str);
+  char *res = postfix(str); 
   printf("postfix_test: %s\n", res);
 }
 
@@ -82,10 +82,11 @@ int main(){
   
   // stack_test();
   // queue_test();
-  prefix_test("( 7 + 4 - 5 )");     // should be ( - ( + 7 4 ) 5 )
-  prefix_test("( 7 + ( 4 - 5 ) )"); // should be ( + 7 ( - 4 5 ) )
-  prefix_test("( 7 * 4 - 5 )");     // should be ( - ( * 7 4 ) 5 )
-  prefix_test("( 7 + 4 * 5 )");     // should be ( + 7 ( * 4 5 ) )
+  // prefix_test("( 7 + 4 - 5 )");     // should be ( - ( + 7 4 ) 5 )
+  // prefix_test("( 7 + ( 4 - 5 ) )"); // should be ( + 7 ( - 4 5 ) )
+  // prefix_test("( 7 * 4 - 5 )");     // should be ( - ( * 7 4 ) 5 )
+  // prefix_test("( 7 + 4 * 5 )");     // should be ( + 7 ( * 4 5 ) )
+  prefix_test("( 7 / 4 * 5 )");     // should be ( * ( / 7 4 ) 5 )
 
   return 0;
 }
