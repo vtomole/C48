@@ -36,18 +36,56 @@ void stack_test(){
   }
 }
 
-void prefix_test(){
+void queue_test(){
+  queue *q = create_queue();
+  
+  enqueue(q, (void*)"hello");
+  enqueue(q, (void*)"world");
+  enqueue(q, (void*)"is");
+  enqueue(q, (void*)"working");
+
+  void *rtrn = dequeue(q);
+  while(rtrn != NULL){
+    printf("%s\n", (char*)rtrn);
+    rtrn = dequeue(q);
+  }
+
+  enqueue(q, (void*)1);
+  enqueue(q, (void*)2);
+  enqueue(q, (void*)3);
+  enqueue(q, (void*)4);
+  enqueue(q, (void*)5);
+
+  rtrn = dequeue(q);
+  while(rtrn != NULL){
+    printf("%d\n", (int)rtrn);
+    rtrn = dequeue(q);
+  }
+
+}
+
+void postfix_test(){
   char *str = "( 7 - 4  + 5 )";
   char *res = postfix(str);
-  // char *res = (char*)malloc(sizeof(char) * 200);
+  printf("postfix_test: %s\n", res);
+}
+
+void prefix_test(char *expr){
+  char *res;
+  res = prefix(expr);
   printf("prefix_test: %s\n", res);
+  
 }
 
 
 int main(){
   
   // stack_test();
-  prefix_test();
+  // queue_test();
+  prefix_test("( 7 + 4 - 5 )");     // should be ( - ( + 7 4 ) 5 )
+  prefix_test("( 7 + ( 4 - 5 ) )"); // should be ( + 7 ( - 4 5 ) )
+  prefix_test("( 7 * 4 - 5 )");     // should be ( - ( * 7 4 ) 5 )
+  prefix_test("( 7 + 4 * 5 )");     // should be ( + 7 ( * 4 5 ) )
 
   return 0;
 }
