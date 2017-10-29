@@ -1,30 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-#include "stack.c"
-#include "utils.c"
-
-#define DEL " \n\r\t"
-#define SIZE 100
-
-char *operators[] = {"+", "-", "*", "/", "%", "^", "(", ")", '\0'};
-
-int precedence(char *op) {
-  if(isequal(op, "+") || isequal(op, "-")){
-    return 2;
-  }
-  else if(isequal(op, "*") || isequal(op, "/")){
-    return 3;
-  }
-  else if(isequal(op, "^")){
-    return 4;
-  }
-  else if(isequal(op, "(") || isequal(op, ")")){
-    return 1;
-  }
-  else{
-    return 0;
-  }
-}
+#include "comp_front.h"
 
 int is_operator(char *s){
   int i;
@@ -36,26 +10,72 @@ int is_operator(char *s){
   return 0;
 }
 
+int is_bcond(char *s){
+  int i;
+  for(i = 0; bcond[i] != NULL; i++){
+    if(isequal(s, bcond[i])){
+      return 1;
+    }
+  }
+  return 0;
+}
+
+int is_ccond(char *s){
+  int i;
+  for(i = 0; ccond[i] != NULL; i++){
+    if(isequal(s, ccond[i])){
+      return 1;
+    }
+  }
+  return 0;
+}
+
 char *construct_expr(stack *op_stack, stack *num_stack){
   char *op = (char*)pop(op_stack);
   char *num2 = (char*)pop(num_stack);
   char *num1 = (char*)pop(num_stack);
   char *expr = malloc(sizeof(char)*100);
-  sprintf(expr, "( %s %s %s )", op, num1, num2); 
+  sprintf(expr, "( %s %s %s )", op, num1, num2);
+  // sprintf(expr, "%s %s %s", op, num1, num2); 
   free(num1);
   free(num2);
   return expr;
 }
 
+int precedence(char *op) {
+  if(isequal(op, "(") || isequal(op, ")")){
+    return 1;
+  }
+  else if(is_ccond(op)){
+    return 2;
+  }
+  else if(is_bcond(op)){
+    return 3;
+  }
+  else if(isequal(op, "+") || isequal(op, "-")){
+    return 4;
+  }
+  else if(isequal(op, "*") || isequal(op, "/")){
+    return 5;
+  }
+  else if(isequal(op, "^")){
+    return 6;
+  }
+  else{
+    return 0;
+  }
+}
+
+
 char *prefix(char *infix) {
-  char *token, *temp;//, *p = malloc(sizeof(char) * 100);
+  char *token, *temp;
   stack *op_stack = create_stack();
   stack *num_stack = create_stack();
 
   token = strtok(infix, DEL);
   do{
     // printf("char : %s\n", token); 
-    if(!is_operator(token)){
+    if(!is_operator(token) && !is_ccond(token) && !is_bcond(token)){
       // printf("number : %s\n", token);
       char *n = malloc(sizeof(char)*5);
       strcpy(n, token);
@@ -110,7 +130,7 @@ char *prefix(char *infix) {
   char *expr = (char*)pop(num_stack);
   return expr;
 } 
-//converts infix expression to postfix
+
 char *postfix(char *infix) {
   char *token, *p = malloc(sizeof(char) * 100);
   stack *op_stack = create_stack();

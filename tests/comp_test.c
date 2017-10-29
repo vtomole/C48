@@ -82,11 +82,14 @@ int main(){
   
   // stack_test();
   // queue_test();
-  // prefix_test("( 7 + 4 - 5 )");     // should be ( - ( + 7 4 ) 5 )
-  // prefix_test("( 7 + ( 4 - 5 ) )"); // should be ( + 7 ( - 4 5 ) )
-  // prefix_test("( 7 * 4 - 5 )");     // should be ( - ( * 7 4 ) 5 )
-  // prefix_test("( 7 + 4 * 5 )");     // should be ( + 7 ( * 4 5 ) )
-  prefix_test("( 7 / 4 * 5 )");     // should be ( * ( / 7 4 ) 5 )
+
+  prefix_test("( 7 + 4 - 5 )");     // should be ( - ( + 7 4 ) 5 )
+  prefix_test("( 7 + ( 4 - 5 ) )"); // should be ( + 7 ( - 4 5 ) )
+  prefix_test("( 7 * 4 - 5 )");     // should be ( - ( * 7 4 ) 5 )
+  prefix_test("( 7 + 4 * 5 )");     // should be ( + 7 ( * 4 5 ) )
+  prefix_test("7 / 4 * 5");         // should be ( * ( / 7 4 ) 5 )
+  prefix_test(" x + 5 < x - 3");    // should be ( < ( + x 5) ( - x 3 ) )
+  prefix_test(" x + 3 < 10 && x - 2 > 0"); // should be ( && ( < ( + x 3 ) 10 ) ( > ( - x 2 ) 0 ) )
 
   return 0;
 }
