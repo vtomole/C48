@@ -161,9 +161,9 @@ char *prefix(char *infix) {
         }
       }
     }
-    // print_stack(op_stack, "OP");
-    // print_stack(num_stack, "NUM");
-    // printf("-------------------------\n");
+    print_stack(op_stack, "OP");
+    print_stack(num_stack, "NUM");
+    printf("-------------------------\n");
   }
   while(token = strtok(NULL, DEL));
 

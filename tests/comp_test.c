@@ -36,34 +36,6 @@ void stack_test(){
   }
 }
 
-void queue_test(){
-  queue *q = create_queue();
-  
-  enqueue(q, (void*)"hello");
-  enqueue(q, (void*)"world");
-  enqueue(q, (void*)"is");
-  enqueue(q, (void*)"working");
-
-  void *rtrn = dequeue(q);
-  while(rtrn != NULL){
-    printf("%s\n", (char*)rtrn);
-    rtrn = dequeue(q);
-  }
-
-  enqueue(q, (void*)1);
-  enqueue(q, (void*)2);
-  enqueue(q, (void*)3);
-  enqueue(q, (void*)4);
-  enqueue(q, (void*)5);
-
-  rtrn = dequeue(q);
-  while(rtrn != NULL){
-    printf("%d\n", (int)rtrn);
-    rtrn = dequeue(q);
-  }
-
-}
-
 void postfix_test(){
   char *str = "( 7 - 4  + 5 )";
   char *res = postfix(str); 
@@ -90,7 +62,7 @@ int main(){
   // prefix_test(" x + 5 < x - 3");    // should be ( < ( + x 5) ( - x 3 ) )
   // prefix_test(" x + 3 < 10 && x - 2 > 0"); // should be ( && ( < ( + x 3 ) 10 ) ( > ( - x 2 ) 0 ) )
   // prefix_test("( 7 + ( ( 4 - 5 ) * 3 ) )"); // should be ( + 7 ( - 4 5 ) )
-  // prefix_test("if ( x > 10 ) x - 10 else if ( x > 5 ) x - 5 else if ( x == 0 ) x * 100 else NULL"); 
+  prefix_test("if ( x > 10 ) x - 10 else if ( x > 5 ) x - 5 else if ( x == 0 ) x * 100 else NULL"); 
   prefix_test("set x ( 3 + 4 ) x - 5");  // should be ( ( set x ( + 3 4 ) ) ( - x 5 ) ) 
 
   return 0;
