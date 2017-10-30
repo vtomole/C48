@@ -30,6 +30,16 @@ int is_ccond(char *s){
   return 0;
 }
 
+int is_ifelse(char *s){
+  int i;
+  for(i = 0; ifelse[i] != NULL; i++){
+    if(isequal(s, ifelse[i])){
+      return 1;
+    }
+  }
+  return 0;
+}
+
 char *construct_expr(stack *op_stack, stack *num_stack){
   char *op = (char*)pop(op_stack);
   char *num2 = (char*)pop(num_stack);
@@ -42,24 +52,47 @@ char *construct_expr(stack *op_stack, stack *num_stack){
   return expr;
 }
 
+char *construct_ifelse(stack *op_stack, stack *num_stack){
+  char *op = (char*)pop(op_stack);
+  while(!isequal(op, "if")){
+    op = (char*)pop(op_stack);
+  }
+  char *num3 = (char*)pop(num_stack);
+  char *num2 = (char*)pop(num_stack);
+  char *num1 = (char*)pop(num_stack);
+  char *expr = malloc(sizeof(char)*100);
+  sprintf(expr, "( %s %s %s )", num1, num2, num3);
+  // sprintf(expr, "%s %s %s", op, num1, num2); 
+  free(num1);
+  free(num2);
+  free(num3);
+  return expr;
+}
+
 int precedence(char *op) {
   if(isequal(op, "(") || isequal(op, ")")){
     return 1;
   }
-  else if(is_ccond(op)){
+  else if(isequal(op, "else")){
     return 2;
   }
-  else if(is_bcond(op)){
+  else if(isequal(op, "if")){
     return 3;
   }
-  else if(isequal(op, "+") || isequal(op, "-")){
+  else if(is_ccond(op)){
     return 4;
   }
-  else if(isequal(op, "*") || isequal(op, "/")){
+  else if(is_bcond(op)){
     return 5;
   }
-  else if(isequal(op, "^")){
+  else if(isequal(op, "+") || isequal(op, "-")){
     return 6;
+  }
+  else if(isequal(op, "*") || isequal(op, "/")){
+    return 7;
+  }
+  else if(isequal(op, "^")){
+    return 8;
   }
   else{
     return 0;
@@ -75,7 +108,7 @@ char *prefix(char *infix) {
   token = strtok(infix, DEL);
   do{
     // printf("char : %s\n", token); 
-    if(!is_operator(token) && !is_ccond(token) && !is_bcond(token)){
+    if( !(is_operator(token) || is_ccond(token) || is_bcond(token) || is_ifelse(token)) ){
       // printf("number : %s\n", token);
       char *n = malloc(sizeof(char)*5);
       strcpy(n, token);
@@ -83,7 +116,7 @@ char *prefix(char *infix) {
     }
     else{
       // printf("symbol : %s\n", token);
-      if(isequal(token, "(")){
+      if(isequal(token, "(")){ 
         push(op_stack, (void*)token);
       }
       else{
@@ -120,7 +153,12 @@ char *prefix(char *infix) {
 
   while(op_stack->size > 0) {
     temp = (char*)pop(op_stack);
-    if(!isequal(temp, "(")){
+    if(is_ifelse(temp)){
+      push(op_stack, (void*)temp);
+      char *expr = construct_ifelse(op_stack, num_stack);
+      push(num_stack, (void*)expr);
+    } 
+    else if(!isequal(temp, "(") ){
       push(op_stack, (void*)temp);
       char *expr = construct_expr(op_stack, num_stack);
       push(num_stack, (void*)expr);
@@ -187,7 +225,7 @@ char *postfix(char *infix) {
     } 
     else if(isequal(temp, ")")){
       // strcat(p, "( ");
-    } 
+    }
     else{
       strcat(p, temp);
       strcat(p, " ");
