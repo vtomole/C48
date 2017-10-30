@@ -69,36 +69,52 @@ char *construct_ifelse(stack *op_stack, stack *num_stack){
   return expr;
 }
 
+char *construct_varset(stack *op_stack, stack *num_stack){
+  char *op = (char*)pop(op_stack);
+  char *num2 = (char*)pop(num_stack);
+  char *num1 = (char*)pop(num_stack);
+  char *var = (char*)pop(num_stack);
+  char *expr = malloc(sizeof(char)*100);
+  sprintf(expr, "( ( %s %s %s ) %s )", op, var, num1, num2);
+  // sprintf(expr, "%s %s %s", op, num1, num2); 
+  free(var);
+  free(num1);
+  free(num2);
+  return expr;
+}
+
 int precedence(char *op) {
   if(isequal(op, "(") || isequal(op, ")")){
     return 1;
   }
-  else if(isequal(op, "else")){
-    return 2;
-  }
-  else if(isequal(op, "if")){
-    return 3;
-  }
-  else if(is_ccond(op)){
+  else if(isequal(op, "if") || isequal(op, "else") || isequal(op, "set")){
     return 4;
   }
-  else if(is_bcond(op)){
+  else if(is_ccond(op)){
     return 5;
   }
-  else if(isequal(op, "+") || isequal(op, "-")){
+  else if(is_bcond(op)){
     return 6;
   }
-  else if(isequal(op, "*") || isequal(op, "/")){
+  else if(isequal(op, "+") || isequal(op, "-")){
     return 7;
   }
-  else if(isequal(op, "^")){
+  else if(isequal(op, "*") || isequal(op, "/")){
     return 8;
+  }
+  else if(isequal(op, "^")){
+    return 9;
   }
   else{
     return 0;
   }
 }
 
+int is_keyword(char *op){
+  int keyword = is_operator(op) || is_ccond(op) || is_bcond(op);
+  keyword |= is_ifelse(op) || isequal(op, "set");
+  return keyword;
+}
 
 char *prefix(char *infix) {
   char *token, *temp;
@@ -108,7 +124,7 @@ char *prefix(char *infix) {
   token = strtok(infix, DEL);
   do{
     // printf("char : %s\n", token); 
-    if( !(is_operator(token) || is_ccond(token) || is_bcond(token) || is_ifelse(token)) ){
+    if(!is_keyword(token)){
       // printf("number : %s\n", token);
       char *n = malloc(sizeof(char)*5);
       strcpy(n, token);
@@ -145,27 +161,36 @@ char *prefix(char *infix) {
         }
       }
     }
-    //  print_stack(op_stack, "OP");
-    //  print_stack(num_stack, "NUM");
-    //  printf("-------------------------\n");
+    // print_stack(op_stack, "OP");
+    // print_stack(num_stack, "NUM");
+    // printf("-------------------------\n");
   }
   while(token = strtok(NULL, DEL));
 
+  char *expr;
   while(op_stack->size > 0) {
+    // print_stack(op_stack, "OP");
+    // print_stack(num_stack, "NUM");
+    // printf("-------------------------\n");
     temp = (char*)pop(op_stack);
     if(is_ifelse(temp)){
       push(op_stack, (void*)temp);
-      char *expr = construct_ifelse(op_stack, num_stack);
+      expr = construct_ifelse(op_stack, num_stack);
       push(num_stack, (void*)expr);
-    } 
+    }
+    else if(isequal(temp, "set")){
+      push(op_stack, (void*)temp);
+      expr = construct_varset(op_stack, num_stack);
+      push(num_stack, (void*)expr);
+    }
     else if(!isequal(temp, "(") ){
       push(op_stack, (void*)temp);
-      char *expr = construct_expr(op_stack, num_stack);
+      expr = construct_expr(op_stack, num_stack);
       push(num_stack, (void*)expr);
     } 
     
   }
-  char *expr = (char*)pop(num_stack);
+  expr = (char*)pop(num_stack);
   return expr;
 } 
 
@@ -233,3 +258,4 @@ char *postfix(char *infix) {
  } 
   return p;
 } 
+

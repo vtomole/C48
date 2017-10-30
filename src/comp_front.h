@@ -27,9 +27,15 @@ int is_ccond(char *s);
 
 int is_ifelse(char *s);
 
-char *construct_expr(stack *op_stack, stack *num_stack);
+char *construct_expr(stack *o, stack *n);
+
+char *construct_ifelse(stack *o, stack *n);
+
+char *construct_varset(stack *o, stack *n);
 
 int precedence(char *op);
+
+int is_keyword(char *op);
 
 char *prefix(char *infix);
 
