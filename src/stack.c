@@ -1,8 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "stack.h"
 
-
-////////  Item / Stack / Queue  ////////
 typedef struct item{
   void *value;
   struct item *next;
@@ -13,12 +10,6 @@ typedef struct stack{
   int size;
 }stack;
 
-typedef struct queue{
-  item *first;
-  int size;
-}queue;
-
-////////  Create  ////////
 stack *create_stack(){
   stack *temp = (stack*)malloc(sizeof(stack));
   temp->first = NULL;
@@ -26,15 +17,6 @@ stack *create_stack(){
   return temp;
 }
 
-queue *create_queue(){
-  queue *temp = (queue*)malloc(sizeof(queue));
-  temp->first = NULL;
-  temp->size = 0;
-  return temp;
-}
-
-
-////////  Add / Remove  ////////
 void push(stack *s, void *value){
   if(value != NULL){
     item *temp = (item*)malloc(sizeof(item));
@@ -42,25 +24,6 @@ void push(stack *s, void *value){
     temp->next = s->first;
     s->first = temp;
     s->size++;
-  }
-}
-
-void enqueue(queue *q, void *value){
-  if(value != NULL){
-    item *temp = (item*)malloc(sizeof(item));
-    temp->value = value;
-    temp->next = NULL;
-    if(q->first == NULL){
-      q->first = temp;
-    }
-    else{
-      item *last = q->first;
-      while(last->next != NULL){
-        last = last->next;
-      }
-      last->next = temp;
-    }
-    q->size++;
   }
 }
 
@@ -73,16 +36,6 @@ void *pop(stack *s){
     void *val = temp->value;
     free(temp);
     return val;
-  }
-  return NULL;
-}
-
-void *dequeue(queue *q){
-  if(q->size > 0){
-    q->size--;
-    item *temp = q->first;
-    q->first = temp->next;
-    return temp->value;
   }
   return NULL;
 }
