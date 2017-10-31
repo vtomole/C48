@@ -36,17 +36,34 @@ void stack_test(){
   }
 }
 
-void prefix_test(){
-  char *str = "4 + 5";
-  char *res = prefix(str);
+void postfix_test(){
+  char *str = "( 7 - 4  + 5 )";
+  char *res = postfix(str); 
+  printf("postfix_test: %s\n", res);
+}
+
+void prefix_test(char *expr){
+  char *res;
+  res = prefix(expr);
   printf("prefix_test: %s\n", res);
+  
 }
 
 
 int main(){
   
-  // stack_test();
-  prefix_test();
+   stack_test();
+   queue_test();
+
+   prefix_test("( 7 + 4 - 5 )");     // should be ( - ( + 7 4 ) 5 )
+  // prefix_test("( 7 * 4 - 5 )");     // should be ( - ( * 7 4 ) 5 )
+  // prefix_test("( 7 + 4 * 5 )");     // should be ( + 7 ( * 4 5 ) )
+  // prefix_test("7 / 4 * 5");         // should be ( * ( / 7 4 ) 5 )
+  // prefix_test(" x + 5 < x - 3");    // should be ( < ( + x 5) ( - x 3 ) )
+  // prefix_test(" x + 3 < 10 && x - 2 > 0"); // should be ( && ( < ( + x 3 ) 10 ) ( > ( - x 2 ) 0 ) )
+  // prefix_test("( 7 + ( ( 4 - 5 ) * 3 ) )"); // should be ( + 7 ( - 4 5 ) )
+  //prefix_test("if ( x > 10 ) x - 10 else if ( x > 5 ) x - 5 else if ( x == 0 ) x * 100 else NULL"); 
+  //prefix_test("set x ( 3 + 4 ) x - 5");  // should be ( ( set x ( + 3 4 ) ) ( - x 5 ) ) 
 
   return 0;
 }
