@@ -65,5 +65,14 @@ int main(){
   //prefix_test("if ( x > 10 ) x - 10 else if ( x > 5 ) x - 5 else if ( x == 0 ) x * 100 else NULL"); 
   //prefix_test("set x ( 3 + 4 ) x - 5");  // should be ( ( set x ( + 3 4 ) ) ( - x 5 ) ) 
 
-  return 0;
+  // prefix_test("fun add(x, y) {
+
+
+   //x + y
+
+
+   //}"); //=> (define (add x y) (+ x y)) 
+
+   // prefix_test("print(add(42, 13))"); //=> (print (add (42 13)))
+   return 0;
 }
