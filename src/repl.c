@@ -4,8 +4,8 @@
 #include <ctype.h>
 #include <limits.h>
 #include <assert.h>
-//#include "lexer.c"
-#include "lexer_tmp.c"
+#include "lexer.c"
+//#include "lexer_tmp.c"
 #include "parser.c"
 
 #include "vm.h"
@@ -41,7 +41,7 @@ int main(int argc, char **argv){
   // hashtable_t *env = ht_create( 65536 );
   char* result = NULL;
 
-  token_list = lexer_tmp1("(+ 137 349)");
+  /* token_list = lexer_tmp1("(+ 137 349)");
 
   h = create_variable("h");
   a = create_variable("a");
@@ -86,7 +86,7 @@ int main(int argc, char **argv){
 
   //print(eval(parse(lexer_tmp("\"Hello\""), expr_list),token_list));
   //lexer_tmp("(set position (* 60 (+ initial rate)))");
-  // lexer_tmp("\"Hello\"");
+  // lexer_tmp("\"Hello\"");*/
  
   
    while (1){     
@@ -94,7 +94,7 @@ int main(int argc, char **argv){
     fgets (str, 10000, stdin);
     //printf("=>");
     //micro_read(str);
-    print(eval(parse(lexer_tmp(str), expr_list),environment));
+    print(eval(parse(lexer_1(str), expr_list),environment));
     
     }
   return 0;

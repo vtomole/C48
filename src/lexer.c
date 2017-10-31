@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <limits.h>
-#include "./identifier.c"
-#include "./utils.c"
+#include "identifier.c"
+//#include "utils.c"
 
 char* number ="" , *symbol ="" ;
 

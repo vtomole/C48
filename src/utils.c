@@ -129,3 +129,38 @@ int our_isnumber (char *s){
     return *p == '\0';
   }
 }
+
+char *trimwhitespace(char *str)
+{
+  char *end;
+
+  // Trim leading space
+  while(isspace((unsigned char)*str)) str++;
+
+  if(*str == 0)  // All spaces?
+    return str;
+
+  // Trim trailing space
+  end = str + strlen(str) - 1;
+  while(end > str && isspace((unsigned char)*end)) end--;
+
+  // Write new null terminator
+  *(end+1) = 0;
+
+  return str;
+}
+
+
+int isparanthesis(char c)
+{
+	if(c == '(' || c==')')
+	{return 1;}
+	return 0;
+}
+
+int isoperator(char c)
+{
+	if(c == '+' || c=='-'|| c=='*'|| c=='%'|| c=='/')
+	{return 1;}
+	return 0;
+}
