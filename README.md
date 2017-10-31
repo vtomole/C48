@@ -10,17 +10,14 @@ Quick start:
 3. ./c48
 
 <pre><code class="lisp">
-repl>(+ 1 1)
+repl>1 + 1
 =>2
-repl>(+ 8 4)
+repl>8 + 4
 =>12
-repl>(- 7 2)
+repl>7 - 2
 =>5
-repl>(/ 6 2)
+repl>6 / 2
 =>3
-repl>(* 6 7)
+repl>6 * 7
 =>42
-repl>q  ;;Enter q to quit the REPL
-vtomole@vtomole:~/c48/src$ 
-
 </pre></code>
