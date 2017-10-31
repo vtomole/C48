@@ -7,9 +7,10 @@
 #include "lexer.c"
 #include "lexer_tmp.c"
 #include "parser.c"
+#include "comp_front.c"
 
-#include "vm.h"
-#include "vm.c"
+//#include "vm.h"
+//#include "vm.c"
 //#include "read_2.c"
 #include "eval-apply.c"
 #include "print.c"
@@ -89,12 +90,18 @@ int main(int argc, char **argv){
   // lexer_tmp("\"Hello\"");*/
  
   
-   while (1){     
+
+  //string = prefix("( 1 + 2 - 1 )");     // should be ( - ( + 7 4 ) 5 )
+
+  //printf("Prefix %s\n", string);
+  //string = "( + ( + 7 4 ) 5 )";
+  //print(eval(parse(lexer_tmp(string), expr_list),environment));
+  while (1){     
     printf("repl>");
     fgets (str, 10000, stdin);
     //printf("=>");
     //micro_read(str);
-    print(eval(parse(lexer_1(str), expr_list),environment));
+    print(eval(parse(lexer_tmp(prefix(str)), expr_list),environment));
     
     }
   return 0;

@@ -120,8 +120,10 @@ char *prefix(char *infix) {
   char *token, *temp;
   stack *op_stack = create_stack();
   stack *num_stack = create_stack();
-
+  infix = strdup(infix);
+  
   token = strtok(infix, DEL);
+  //printf("char : %s\n", token); 
   do{
     // printf("char : %s\n", token); 
     if(!is_keyword(token)){
@@ -161,9 +163,9 @@ char *prefix(char *infix) {
         }
       }
     }
-    print_stack(op_stack, "OP");
-    print_stack(num_stack, "NUM");
-    printf("-------------------------\n");
+    //print_stack(op_stack, "OP");
+    //print_stack(num_stack, "NUM");
+    //printf("-------------------------\n");
   }
   while(token = strtok(NULL, DEL));
 

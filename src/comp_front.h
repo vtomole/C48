@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "stack.c"
-#include "utils.c"
+//#include "utils.c"
 
 #define DEL " \n\r\t"
 #define SIZE 100
