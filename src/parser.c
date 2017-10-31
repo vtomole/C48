@@ -220,7 +220,7 @@ object* parse_rec(token_list* token_list, object* list_sofar){
     token_list = token_list->next;
   }
    //throw an error no closed parenthesis
-   printf("invalid syntax");
+   printf("invalid syntax\n");
    exit(0);
 
 }

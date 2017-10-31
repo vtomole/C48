@@ -99,9 +99,10 @@ int main(int argc, char **argv){
   while (1){     
     printf("repl>");
     fgets (str, 10000, stdin);
-    //printf("=>");
+    printf("=>");
     //micro_read(str);
     print(eval(parse(lexer_tmp(prefix(str)), expr_list),environment));
+    //print(eval(parse(lexer_tmp(str), expr_list),environment));
     
     }
   return 0;
