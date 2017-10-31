@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "stack.h"
 
 typedef struct item{
   void *value;
@@ -25,7 +24,6 @@ void push(stack *s, void *value){
     temp->next = s->first;
     s->first = temp;
     s->size++;
-    // printf("Pushing: %s\n", (char*)(s->first)->value); // Doesnet work with ints
   }
 }
 
@@ -33,11 +31,18 @@ void *pop(stack *s){
   // printf("(%d)\n", s->size);
   if(s->size > 0){
     s->size--;
-    // printf("reduced size ");
-    // printf("Popping: %s\n", (char*)(s->first)->value); // doesnt work with ints
     item *temp = s->first;
     s->first = temp->next;
-    return temp->value;
+    void *val = temp->value;
+    free(temp);
+    return val;
+  }
+  return NULL;
+}
+
+void *check_first(stack *s){
+  if(s->size){
+    return (s->first)->value;
   }
   return NULL;
 }

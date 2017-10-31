@@ -1,5 +1,5 @@
 all:
-	 gcc -Werror repl.c -o repl
+	 gcc -Werror repl.c -o repl -ggdb
 
 
 clean:
