@@ -87,7 +87,10 @@ int precedence(char *op) {
   if(isequal(op, "(") || isequal(op, ")")){
     return 1;
   }
-  else if(isequal(op, "if") || isequal(op, "else") || isequal(op, "set")){
+  else if(isequal(op, "else")){
+    return 3;
+  }
+  else if(isequal(op, "if") || isequal(op, "set")){
     return 4;
   }
   else if(is_ccond(op)){
@@ -120,10 +123,8 @@ char *prefix(char *infix) {
   char *token, *temp;
   stack *op_stack = create_stack();
   stack *num_stack = create_stack();
-  infix = strdup(infix);
-  
+
   token = strtok(infix, DEL);
-  //printf("char : %s\n", token); 
   do{
     // printf("char : %s\n", token); 
     if(!is_keyword(token)){
@@ -163,9 +164,9 @@ char *prefix(char *infix) {
         }
       }
     }
-    //print_stack(op_stack, "OP");
-    //print_stack(num_stack, "NUM");
-    //printf("-------------------------\n");
+    // print_stack(op_stack, "OP");
+    // print_stack(num_stack, "NUM");
+    // printf("-------------------------\n");
   }
   while(token = strtok(NULL, DEL));
 
