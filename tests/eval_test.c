@@ -44,7 +44,7 @@ int main(int argc, char **argv){
   char* result = NULL;
 
   // token_list = lexer_tmp1("(+ 137 349)");
-
+  ///INGORE THIS
   h = create_variable("h");
   a = create_variable("a");
   number = create_number("2");
@@ -56,6 +56,8 @@ int main(int argc, char **argv){
   list2 = (car (car(environment)));
 
 
+  //This is legit
+  //(+ (+ 4 5) (+ 1 2))
   object *add = create_primitiveop("+");
   object *num1 = create_number("1");
   object *num2 = create_number("2");
