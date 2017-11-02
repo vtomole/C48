@@ -136,7 +136,7 @@ object* create_boolean(char* variable){
 object* create_primitiveop(char* variable){
   struct object *object1;
   object *var = malloc(sizeof(*object1));
-  var->type = "primop";
+  var->type = "primitive";
   //var->value = variable;
   var->variable = variable;
   return var;
