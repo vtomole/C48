@@ -121,7 +121,7 @@ int self_evaluatingp (object *exp){
  * - 0 otherwise
  */
 int primitivep (object *exp){
-  if(strcmp(exp->type, "primop") == 0){  
+  if(strcmp(exp->type, "primitive") == 0){  
     return 1;
   }else{
     return 0;
