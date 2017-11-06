@@ -43,37 +43,16 @@ int main(int argc, char **argv){
   // hashtable_t *env = ht_create( 65536 );
   char* result = NULL;
 
-  object *add1 = create_primitiveop("+");
-  object *num11 = create_number("4");
-  object *num22 = create_number("5");
-
-  
-  
-  temp_list = cons(num22, temp_list);
-  temp_list = cons(num11, temp_list);
-  temp_list = cons(add1, temp_list);
-  
-  cons1 = parse(lexer_tmp("( + 4 5 )"),result_expr);
-  printf("Should be + %d\n", car(cons1)->number);
-  //printf("Should be cons %d\n", car(cdr(cons1))->number);
-
-  
-
  
-  /*while (1){     
+  while (1){     
     printf("repl>");
     fgets (str, 10000, stdin);
     printf("=>");
     //micro_read(str);
-    //print(eval(parse(lexer_tmp(prefix(str)), expr_list),environment));
-    object* cons1 = parse(lexer_tmp(str), expr_list);
-     printf("Should be + %s\n", car(cons1)->variable);
-     printf("Should be cons %s\n", car(cdr(cons1))->type);
-     printf("Should be + %s\n", car(car(cdr(cons1)))->variable);
-     printf("Should be 4 %d\n", car(cdr(car(cdr(cons1))))->number);
-    print(eval(parse(lexer_tmp(str), expr_list),environment));
+    print(eval(parse(lexer_tmp(prefix(str)), expr_list),environment));
+    //print(eval(parse(lexer_tmp(str), expr_list),environment));
     
-    }*/
+  }
   return 0;
 }//end of main>
 
