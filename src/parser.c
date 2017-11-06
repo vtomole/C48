@@ -173,7 +173,7 @@ int count_objects(object* cursor){
 
 object* create_object_for_parse(char* type, char* value){
 
-  printf("DA TYPE %s\n", type);
+  // printf("DA TYPE %s\n", type);
    if(strcmp(type,"primitive")==0){
      return  create_primitiveop(value);
    } else if(strcmp(type,"variable")==0){
@@ -210,27 +210,29 @@ object* parse(token_list* token_list, object* expr){
   object*  expr2;
  
 
-  //  while(token_list != NULL){
+  // while(token_list != NULL){
     printf("DAE VALUE %s\n", token_list->val.value);
     if(strcmp(token_list->val.type,"right_paren")==0){
       //start new recursion
-      expr2 = parse(token_list->next, expr);      
+      expr2 = parse(token_list->next, expr); 
+      printf("testing recusion\n");
       expr = cons(expr2, expr);
     }else if(strcmp(token_list->val.type,"left_paren")==0){
       //exit recursion
-      // token_list = token_list->next;
+      token_list = token_list->next;
       printf("THIS SHOULD PRINT ONCE\n");
       return expr;
     }else{
       //add expression or prim to list
       expr2 = create_object_for_parse(token_list->val.type,token_list->val.value);
       expr = cons(expr2, expr);
-      printf("SHOULD BE + %d\n", car(expr)->number);
-      //expr = parse(token_list->next, expr);
+      // printf("SHOULD BE + %d\n", car(expr)->number);
+      expr = parse(token_list->next, expr);
       //token_list = token_list->next;
     }
-    // }
-  return expr;
+    //}
+    printf("Whatever idk\n");
+    // return expr;
 }
 
   /*

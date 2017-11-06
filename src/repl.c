@@ -53,8 +53,9 @@ int main(int argc, char **argv){
   temp_list = cons(num11, temp_list);
   temp_list = cons(add1, temp_list);
   
-  cons1 = parse(lexer_tmp("( + 4 5 )"),result_expr);
-  printf("Should be + %d\n", car(cons1)->number);
+  // cons1 = parse(lexer_tmp("( + 4 5 )"),result_expr);
+  cons1 = parse(lexer_tmp("( + ( + 4 5 ) ( + 1 2 ) )"),result_expr);
+  // printf("Should be + %d\n", car(cons1)->number);
   //printf("Should be cons %d\n", car(cdr(cons1))->number);
 
   
