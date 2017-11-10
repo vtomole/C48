@@ -52,19 +52,25 @@ int main(int argc, char **argv){
   temp_list = cons(num22, temp_list);
   temp_list = cons(num11, temp_list);
   temp_list = cons(add1, temp_list);
+  //////////////////THIS WORKS///////////////////////////////
+  // cons1 = parse_tmp(lexer_tmp("( + 4 5 )")); 
+  // cons1 = parse(lexer_tmp("( + 3 4 5 ) )"),result_expr);//THIS WORKS
+  //  printf("should be + is %s\n",(car(car(cons1)))->variable);
+  //  printf("should be + is %s\n",(car(cdr(car(cons1))))->variable);
+  //  printf("should be 4 is %d\n",(car(cdr(cdr(car(cons1)))))->number);
+  //  printf("should be 5 is %d\n",(car(cdr(cdr(cdr(car(cons1))))))->number);
+  ////////////////////////////////////////////////////////////
 
-  // cons1 = parse(lexer_tmp("( 5 )"), result_expr); // THIS WORKS
-   cons1 = parse(lexer_tmp("( + 4 5 )"),result_expr); // THIS WORKS
-  // cons1 = parse(lexer_tmp("( + 3 4 5 ) )"),result_expr);
-  // cons1 = parse(lexer_tmp("( + 3 ( + 4 5 ) )"),result_expr);
-  // cons1 = parse(lexer_tmp("( + ( + 4 5 ) 3 )"),result_expr);
-  // cons1 = parse(lexer_tmp("( - ( + 4 5 ) ( + 1 2 ) )"),result_expr);
-  printf("Should be + is %s\n", car(cons1)->variable);
-  printf("Should be 4 is %d\n", car(cdr(cons1))->number);
-  printf("Should be 5 is %d\n", car(cdr(cdr(cons1)))->number);
-  //  printf("should be 5 is %d\n", car(cdr(cdr(cdr(cons1))))->number);
-  //  printf("Should be null %s\n", car(cdr(cdr(cdr(cons1))))->);
-  print(eval(parse(lexer_tmp("( + 4 5 )"), expr_list),environment));
+
+  ////////////////////////////////////////////////////////////
+  cons1 = parse(lexer_tmp("( + 3 ( + 4 5 ) )"),result_expr);\
+
+  ////////////////////////////////////////////////////////////
+  // cons1 = parse_tmp(lexer_tmp("( + ( - 4 5 ) 3 )"));
+
+  //////////////////////////////////////////////////////////
+  // cons1 = parse_tmp(lexer_tmp("( - ( + 4 5 ) ( * 1 2 ) )"));
+  
 
   /*
   while (1) {     

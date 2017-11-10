@@ -20,6 +20,9 @@ typedef struct object{
   enum boolean boolean;
 }object;
 
+//global variables
+int parse_count = 0;
+
 object *create_object(char *value, char *type){
   object *obj = malloc(sizeof(obj));
   obj->type = type;
@@ -209,79 +212,69 @@ object* create_object_for_parse(char* type, char* value){
 object* parse(token_list* token_list, object* expr){
   object*  expr2;
  
-  printf("Token val: %s\n", token_list->val.value);
+  printf("\nToken val: %s\n", token_list->val.value);
+  print_token_list_value(token_list);
+
   if(strcmp(token_list->val.type,"right_paren")==0){
-    expr2 = parse(token_list->next, expr);//recurse 
+    token_list = token_list->next;
+    expr2 = parse(token_list, expr);//recurse 
+    printf("hi");
     expr = cons(expr2, expr);//attach
+
   }else if(strcmp(token_list->val.type,"left_paren")==0){
-    // token_list= token_list->next;
+    printf("\n");
     return expr;//exit recurse
+
   }else if(strcmp(token_list->val.type,"primitive")==0){
     expr2 = create_object_for_parse(token_list->val.type,token_list->val.value);
     expr = cons(car(expr2), cons(expr2, expr));
+
   }else{
     //add expression or prim to list
     expr2 = create_object_for_parse(token_list->val.type,token_list->val.value);
     expr = cons(expr2,expr);//attach previous to this car
+
   }
   if(token_list->next)
-    expr = parse(token_list->next, expr);
+    token_list=token_list->next;
+    expr = parse(token_list, expr);
   return expr;
 }
 
-  /*
-object* parse_tmp(token_list* token_list, object* expr_list){
-  struct object *expr2;
-  print_token_list(token_list);
 
-   while(token_list != NULL){
+object* parse_tmp(token_list* token_list){
+  struct object *node;
+  struct object *branch;
+  struct object *expression;
+
+  while(token_list){
+    print_token_list_value(token_list);
+    printf("\n");
+
     if(strcmp(token_list->val.type,"right_paren")==0){
-      //indicates the start of a new list
-      expr2 = parse_rec(token_list->next,expr_list);
-      expr_list = cons(expr2, expr_list);
-    }else if(strcmp(token_list->val.type,"left_paren") == 0){
-      //end of a list
+      branch = NULL;//start of a new cons list 
+    }else if(strcmp(token_list->val.type,"left_paren")==0){
+      printf("hello\n");
+      expression = cons(branch,expression);
     }else if(strcmp(token_list->val.type,"primitive")==0){
-      //constructing an operator onto the list
-      expr2 = create_primitiveop(token_list->val.value);
-      expr_list = cons(expr2, expr_list); 
-    }
-    else if(strcmp(token_list->val.type,"variable")==0){
-      //constructing an operator onto the list
-      expr2 = create_primitiveop(token_list->val.value);
-      expr_list = cons(expr2, expr_list); 
-    }
-    else if(strcmp(token_list->val.type,"num")==0){
-      //constructing a number onto the list
-      expr2 = create_number(token_list->val.value);
-      if(count_token_list(token_list) == 1){
-	return expr2;
-      }else{
-	expr_list = cons(expr2, expr_list);
-      }
-    }else if(strcmp(token_list->val.type,"string")==0){
-      //constructing a string onto the list
-      expr2 = create_string(token_list->val.value);
-      if(count_token_list(token_list) == 1){
-	return expr2;
-      }else{
-	expr_list = cons(expr2, expr_list);
-      }	 
-    }else if(strcmp(token_list->val.type,"boolean")==0){
-      //constructing a string onto the list
-      expr2 = create_boolean(token_list->val.value);
-      if(count_token_list(token_list) == 1){
-	return expr2;
-      }else{
-	expr_list = cons(expr2, expr_list);
-      }	 
-    }else{
-      printf("invalid token\n");
-      exit(0);
-    }
-    token_list = token_list->next;
-   }
-   return expr_list;
-   }*/
+      printf("test\n");
 
+      node = create_object_for_parse(token_list->val.type,token_list->val.value);
+      branch = cons(node, cons(node, branch));
+    }else{
+       node = create_object_for_parse(token_list->val.type,token_list->val.value);
+       branch = cons(node,branch);//attach previous to this car
+    } 
+    
+    token_list=token_list->next;
+  }
+  /* if(expression){
+    printf("%s\n",(car(car(expression)))->variable);
+    printf("%s\n",(car(cdr(car(expression))))->variable);
+    printf("%d\n",(car(cdr(cdr(car(expression)))))->number);
+    printf("%d\n",(car(cdr(cdr(cdr(car(expression))))))->number);
+    }*/
+
+    return expression;
+}
 

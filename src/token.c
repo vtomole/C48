@@ -221,7 +221,7 @@ void print_token_list(struct token_list *list){
  */ 
 void print_token_list_value(struct token_list *list){
   if(list){
-    printf("%s\n", first_value(list));
+    printf("%s ", first_value(list));
     print_token_list_value(rest(list));
   }
 }
