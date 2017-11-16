@@ -7,8 +7,8 @@
 #include "identifier.c"
 //#include "utils.c"
 
-char* number ="" , *symbol ="" ;
-
+char* number ="" , *symbol ="" , *oper="";
+int  open = 0 , close =0;
 struct  token_list *token_list_lexer = NULL;
 struct token_object Token;
 /*
@@ -21,18 +21,19 @@ void check_num_symbol()
 
   if(number!="")
 		{
-		 
+		  // printf("number");
 		  Token.type = "num";
 		  Token.value = number;
 		  number = "";
 		   /*printf("%s\n", Token.type);
-		     printf("%s\n", Token.value);*/		 
+		     printf("%s\n", Token.value);*/	
+		  //printf("number");
 		  token_list_lexer = prepend_token(Token, token_list_lexer);
 		} 
   if(symbol!= "")
-    {     printf("symbol:%s\n",symbol);
+    {     //printf("symbol");
 	      
-	      if(strcmp(symbol,"for") == 0||strcmp(symbol,"do")==0||strcmp(symbol,"while")==0||strcmp(symbol,"if")==0||strcmp(symbol,"else")==0)
+	      if(strcmp(symbol,"for") == 0||strcmp(symbol,"do")==0||strcmp(symbol,"while")==0||strcmp(symbol,"if")==0||strcmp(symbol,"else")==0||strcmp(symbol,"begin")==0||strcmp(symbol,"set")==0||strcmp(symbol,"go")==0||strcmp(symbol,"define")==0||strcmp(symbol,"ifelse")==0)
 		{
 		  Token.type = "reserved";
 		  
@@ -51,20 +52,38 @@ void check_num_symbol()
 	    }
 	  
 }
+void check_oper(char *oper){
+  if (!(strcmp(oper,"!=") == 0||strcmp(oper,"==")==0||strcmp(oper,">=")==0||strcmp(oper,"<=")==0||strcmp(oper,"++")==0))
+    {printf("invalid operator"); 
+      exit(0);}
+}
+int * paren( ) {
+
+   static int  r[2];
+   
+      r[1] = open;
+      //printf("%d",r[1]);
+      r[2] = close;
+      
+
+   return r;
+}
 
 /*
   read complete program and create token list
  */
 token_list* lexer_1(char* program2)
-{    
+{ //printf("received from parser %s \n", program2);
   char* program = trimwhitespace(program2);
   int i;  
-  int parenthesis=0;
+
   int n = strlen(program);
+  //printf("n %s \n", n);
   //trim white space before and after program
-  if(!(isparanthesis(program[0]))&&(strcmp(program,"q")!=0))
-	{ printf("Invalid number of Parenthesis at begining or end");
-	}
+  /*if((!(isparanthesis(program[0])))&&(!(isparanthesis(program[n-1]))))
+	{
+	  printf("Invalid number of Parenthesis at begining or end");
+	  }*/
 
   //loop through each character and create appropriate tokens.
     for(i=0; i< n; i++)
@@ -80,12 +99,11 @@ token_list* lexer_1(char* program2)
        create token
       */
       if(isparanthesis(program[i]))
-	{ 
-	  parenthesis ++;
+	{ ///printf("paranthesis");
 	  check_num_symbol();
 	   if(program[i]=='(')
 	     {
-	      
+	       open++;
 	      Token.type = "open_paren";	      
 	      Token.value = "(" ;
 	      /*printf("%s\n", Token.type);
@@ -94,6 +112,8 @@ token_list* lexer_1(char* program2)
 	     }
 	   if(program[i]==')')
 	     {check_num_symbol();
+	       close++;
+	       // printf("here");
 	       Token.type = "close_paren";	      
 	       Token.value =")";
 	        /*printf("%s\n", Token.type);
@@ -107,12 +127,11 @@ token_list* lexer_1(char* program2)
        create token
        set number to null again
       */
-     else if(isdigit(program[i]))
-     NUMBER :{
+      else if(isdigit(program[i])){
+	//printf("digit");
 	while (isdigit (program[i]))
 	{	    
-	  number  = append(number, program[i]);	
-	 
+	  number  = append(number, program[i]); 
 	  i++;
 	}
 	  i = i-1;  
@@ -130,8 +149,7 @@ token_list* lexer_1(char* program2)
        else ignore
       */
       else if(iswhitespace(program[i]))
-	{
-	  i++;
+	{// printf("space");
 	 check_num_symbol();	  
 	}
        /*
@@ -144,18 +162,28 @@ token_list* lexer_1(char* program2)
      else if (isoperator(program[i]))
        {
 	 check_num_symbol();
+	 if(i<n-1){
 	  if(isdigit(program[i+1]))
-	    {
-	      number = append(number, program[i]);
-	      
+	    {number = append(number, program[i]);
 	      i++;
-	      goto NUMBER;
+	      ///goto NUMBER;
 	    }
+	  if(isoperator(program[i+1])){
+	  while(isoperator(program[i])&&(i<n-1))
+	    {
+	      oper = append(oper, program[i]);
+	      i++;
+	    }
+	   check_oper(oper);
+	   i--;}
+	 }
+	 else{oper =  append("", program[i]);}
+	 
 	  
-	  Token.type = "primitive";	  
-	  Token.value = append("",program[i]);	  
-	  /*printf("%s\n", Token.type);
-	    printf("%s\n", Token.value);*/
+	  Token.type = "primitive";
+	  Token.value = oper;	 // printf("operator");  
+	  //printf("%s\n", Token.type);
+	  //printf("%s\n", Token.value);
 	  token_list_lexer = prepend_token(Token, token_list_lexer);
        }
       /*
@@ -163,23 +191,22 @@ token_list* lexer_1(char* program2)
 	THis will include alphabets and special symbols taht are not yet defined as operators
        */
      else
-       {	 
+       {//printf("elsenumber");	 
 	 symbol = append(symbol,program[i]);
        }
-    
-      
-      
     }
 
     /*
       Check if count of parenthesis were even in program
      */
-    if((parenthesis%2)!=0)
+    if(close != open)
 	{
 	  printf("Invalid number of parenthesis\n");
 	}
-    
+    //print_token_list(token_list_lexer);
+    paren();
     return token_list_lexer;
     
 }
+
 

@@ -164,8 +164,8 @@ int isparanthesis(char c)
 
 int isoperator(char c)
 {
-	if(c == '+' || c=='-'|| c=='*'|| c=='%'|| c=='/')
-	{return 1;}
+	if(c == '=' ||c == '+' || c=='-'|| c=='*'|| c=='%'|| c=='/'||c=='!'|| c=='<'||c=='>'||c=='&'||c=='|')
+	  {return 1;}
 	return 0;
 }
 
