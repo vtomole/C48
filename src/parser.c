@@ -20,9 +20,6 @@ typedef struct object{
   enum boolean boolean;
 }object;
 
-//global variables
-int parse_count = 0;
-
 object *create_object(char *value, char *type){
   object *obj = malloc(sizeof(obj));
   obj->type = type;
@@ -209,6 +206,46 @@ object* create_object_for_parse(char* type, char* value){
  * no seg_faults however the code isn't doing anything visible with the temp_list it creates and maintains.
 **/
 
+typedef struct fast_forward_node{
+  int count;
+  struct fast_forward_node* next;
+}
+
+fast_forward_node* create_node(fast_forward_node* next){
+  fast_forward_node* new_node = (fast_forward_node*)malloc(sizeof(fast_foward_node));
+  new_node->count = 0;
+  new_node->next = next;
+}
+
+fast_forward_node* prepend_node(fast_forward_node* head){
+  fast_forward_node* new_node = create_node(head);
+  head = new_node;
+  return head;
+}
+
+fast_forward_node* get_inner_node(fast_forward_node* head){
+  fast_forward_node* cursor = head;
+  while(cursor->next != NULL)
+    cursor = cursor->next;
+  return cursor;
+}
+
+fast_forward_node* apppend_node(fast_forward_node* head, fast_foward_node* new_node){
+  fast_forward_node* cursor = get_inner_node(head);
+  cursor->next = new_node;
+  return head;
+}
+
+void update_count(
+
+//global variables
+fast_forward_node* head;
+
+object* parse_helper(token_list* token_list, object* expr){
+  head = new fast_forward_node(NULL);
+  return parse(token_list* token_list, object* expr);
+}
+
 object* parse(token_list* token_list, object* expr){
   object*  expr2;
  
@@ -217,6 +254,13 @@ object* parse(token_list* token_list, object* expr){
 
   if(strcmp(token_list->val.type,"right_paren")==0){
     token_list = token_list->next;
+    /*if(head->next == NULL)
+      head->count++;
+    else{
+      fast_forward_node* new_node = create_node(NULL);
+      new_node->count++;
+      append_node(head);
+      }*/
     expr2 = parse(token_list, expr);//recurse 
     printf("hi");
     expr = cons(expr2, expr);//attach
