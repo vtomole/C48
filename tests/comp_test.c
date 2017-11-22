@@ -1,40 +1,21 @@
-#include "stdio.h"
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <limits.h>
+#include <assert.h>
+#include "../src/lexer.c"
+#include "../src/lexer_tmp.c"
+#include "../src/parser.c"
 #include "../src/comp_front.c"
 
-void stack_test(){
-  char str[25];
-  char *a = "+";
-  char *b = "4";
-  char *c = "5";
-  sprintf(str, "( %s %s %s )", a, b, c);
+//#include "../src/vm.h"
+//#include "../src/vm.c"
+//#include "../src/read_2.c"
+#include "../src/eval-apply.c"
+#include "../src/print.c"
+#include "../src/compiler.c"
 
-  stack *s = create_stack();
-  
-  push(s, (void*)"working");
-  push(s, (void*)"is");
-  push(s, (void*)"world");
-  push(s, (void*)"hello");
-  push(s, (void*)str);
-  
-
-  void *rtrn = pop(s);
-  while(rtrn != NULL){
-    printf("%s\n", (char*)rtrn);
-    rtrn = pop(s);
-  }
-
-  push(s, (void*)1);
-  push(s, (void*)2);
-  push(s, (void*)3);
-  push(s, (void*)4);
-  push(s, (void*)5);
-
-  rtrn = pop(s);
-  while(rtrn != NULL){
-    printf("%d\n", (int)rtrn);
-    rtrn = pop(s);
-  }
-}
 
 void postfix_test(){
   char *str = "( 7 - 4  + 5 )";
@@ -65,6 +46,5 @@ int main(){
   prefix_test("set x ( 3 + 4 ) x - 5");  // should be ( ( set x ( + 3 4 ) ) ( - x 5 ) ) 
   prefix_test("if ( x > 10 ) x - 10 else if ( x > 5 ) x - 5 else if ( x == 0 ) x * 100 else NULL"); 
   
-
   return 0;
 }
