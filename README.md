@@ -11,9 +11,10 @@ Now that you have built the interpreter you can start writing programs.
 Open up a file call hello.c48 and write this
 
 ```
-/*The following line calls the print function "Hello World" as the parameter */
-fun main(){
 //This is how functions are defined, the main function is the first function that the interpreter calls
+fun main(){
+
+//The following line calls the print function "Hello World" as the parameter
 print("Hello World");
 }
 ```
@@ -45,5 +46,25 @@ Comments are ignored by the compiler. They can start as // or /* */.
 
 
 
+# Syntax
 
+# Data types
+
+# Strings
+
+# Variables
+
+# Loops
+
+# Conditions
+
+# Functions
+
+# Arrays
+
+# Lists
+
+# Structs
+
+# Recursion
 
