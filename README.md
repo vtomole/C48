@@ -26,7 +26,7 @@ repl>6 * 7
 
 
 
-#C48 tuorial
+**c48 tuorial**
 
 Open up a file call hello.c48 and write this
 
@@ -39,7 +39,15 @@ print("Hello World");
 Now you can run this program through the interpreter to execute it
 
 ```
-make
-./repl hello.c48
+$ make
+
+$ ./repl hello.c48
 ```
+
+You should see
+```
+$ Hello World
+
+```
+
 
