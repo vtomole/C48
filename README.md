@@ -21,3 +21,25 @@ repl>6 / 2
 repl>6 * 7
 =>42
 </pre></code>
+
+
+
+
+
+#C48 tuorial
+
+Open up a file call hello.c48 and write this
+
+```
+fun main(){
+print("Hello World");
+}
+```
+
+Now you can run this program through the interpreter to execute it
+
+```
+make
+./repl hello.c48
+```
+
