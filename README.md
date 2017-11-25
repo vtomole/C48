@@ -1,7 +1,7 @@
 # c48
 Contact: sdmay18-35@iastate.edu
 
-**C48 tutorial**
+# Getting started
 
 1. c48/src$ cd src
 2. c48/src$ make
@@ -68,3 +68,37 @@ Comments are ignored by the compiler. They can start as // or /* */.
 
 # Recursion
 
+Recursion is when a functions is defined in terms of itself. It is when a function calls itself. One recursive program is called the factorial. Here is the factorial in C48
+
+```
+fun factorial(i){
+   if(i == 1) {
+      return 1;
+   }
+   return i * factorial(i - 1);
+}
+
+fun main() { 
+   i = 5;
+   print (factorial(i));
+}
+
+```
+
+This should give you the factorial of 5, which is 120.
+
+# Examples
+
+## Universal Turing Machine
+
+## FizzBuzz
+
+## QuickSort
+
+## MergeSort
+
+## Breadth-first search
+
+## Depth-first search
+
+## Fibonacci
