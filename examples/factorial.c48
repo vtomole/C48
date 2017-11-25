@@ -7,5 +7,5 @@ fun factorial(i){
 
 fun main() { 
    i = 5;
-   print ("Factorial of " + i + "is" + factorial(i));
+   print (factorial(i));
 }

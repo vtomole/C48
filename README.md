@@ -125,4 +125,4 @@ func main (){
 
 ## Depth-first search
 
-## Fibonacci
+## Dijkstra's algorithm
