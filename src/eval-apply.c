@@ -96,17 +96,22 @@ int read_arg(object *arg){
  * - 1 if the given object is a number or a string
  * - 0 otherwise
  */
-int self_evaluatingp (object *exp){
+int selfevaluatingp (object *exp){
 
   if(strcmp(exp->type, "number") == 0){  
     return 1;
   }else if(strcmp(exp->type, "string") == 0){
+   
     return 1;
   }
   
  else if(strcmp(exp->type, "boolean") == 0){
     return 1;
   }
+   else if(strcmp(exp->type, "empty_list") == 0){
+    return 1;
+  }
+
   else{
     return 0;
   }
@@ -135,24 +140,50 @@ int variablep (object *exp){
     return 0;
   }
 }
-
-
-
-int quotep (object *exp){
-  
+int eqp(object *obj1, object *obj2){
+  return obj1 == obj2;
 }
 
-int tagged_listp (object *exp, char* tag){
-  if(strcmp (car(exp) ->variable, tag) == 0){
-    return 1;
+int tagged_listp(object *exp, object *tag){
+  
+  if(pairp(exp)){
+    return eqp(car(exp), tag);
   }
-  else {
+  else{
     return 0;
   }
+
 }
 
-  
 
+int quotep (object *exp){ return tagged_listp(exp,quote); }
+
+object* text_of_quotation (object *exp) { return cadr(exp); }
+
+
+char no_operandsp(object *ops);
+object* first_operand(object *ops);
+object* rest_operands(object *ops);
+
+
+
+object *eval(object* exp, object* env );
+object* list_of_values(object *exps, object *env){
+  if(no_operandsp(exps)){
+    return empty_list;
+  }
+  else{
+    return cons(eval(first_operand(exps), env),list_of_values(rest_operands (exps), env));
+  }
+
+}
+
+char applicationp(object *exp){ return pairp(exp); }
+object* operator(object *exp){ return car(exp); }
+object* operands(object *exp){ return cdr(exp); }
+char no_operandsp(object *ops){ return nullp(ops); }
+object* first_operand(object *ops){ return car(ops);}
+object* rest_operands(object *ops) {return cdr(ops);}
 
 
 
@@ -168,15 +199,20 @@ int tagged_listp (object *exp, char* tag){
  * Example call:
  * apply('+', int[1,2])
  * expected return val: 3
- */ 
-object  *apply(object *procedure , object* arguments){
-   if (primitivep(procedure)){
-     procedure = apply_primitive_procedure(procedure, arguments);
+ */
+
+object  *apply(object* exp, object* env){
+  object *function , *arguments;
+  function = eval(operator(exp),env);
+  arguments = list_of_values(operands(exp), env);
+  
+   if (primitivep(function)){
+    return apply_primitive_procedure(function, arguments);
     } else{
      printf("Unkown apply procedure\n");
    }
  
-  return procedure;
+  return function;
 }
 
 object* lookup_variable_value(object* exp, object* env){
@@ -208,18 +244,44 @@ object* lookup_variable_value(object* exp, object* env){
  * expected return val: 
  */ 
 object *eval(object* exp, object* env ){
-  if (self_evaluatingp(exp)){
+  object* function, arguments;
+ 
+  if (selfevaluatingp(exp)){    
     return exp;
   }
   else if (variablep(exp)){
-    exp = lookup_variable_value(exp, env);
+    return lookup_variable_value(exp, env);
   }
-
-  else{
-    exp = apply(car(exp), cdr(exp));
+  else if (quotep(exp)){
+    return text_of_quotation(exp);
   }
+  /* else if (assignmentp(exp)){
+    return eval_assignment(exp, env);
+  }
+  else if (definitionp(exp)){
+    return eval_definition(exp, env);
+  }
+  else if (ifp(exp)){
+    return eval_if(exp,env);
+  }
+  else if (lambdap(exp)){
+    return make_function(lambda_parameters(exp), lambda_body(exp), env);
+  }
+  else if (beginp(exp)){
+    return eval_sequence(begin_actions(exp), env);    
+  }
+  else if (condp(exp)){
+    return eval(cond_to_if(exp), env);
+  }
+  else if (applicationp(exp)){
+    return apply(eval (operator(exp), env), list_of_values(operands(exp),env));
+    }*/
+    
 
- 
-  return exp;
+ else {
+        fprintf(stderr, "cannot eval unknown expression type\n");
+        exit(1);
+    }
+
 }
 
