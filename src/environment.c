@@ -450,22 +450,7 @@ void  initialize_environment(void) {
                     create_primitive_procedure(c_name),        \
                     environment);
 
-    add_procedure("null?"      , nullp_procedure);
-    /*add_procedure("boolean?"   , is_boolean_proc);
-    add_procedure("symbol?"    , is_symbol_proc);
-    add_procedure("integer?"   , is_integer_proc);
-    add_procedure("char?"      , is_char_proc);
-    add_procedure("string?"    , is_string_proc);
-    add_procedure("pair?"      , is_pair_proc);
-    add_procedure("procedure?" , is_procedure_proc);*/
-    
-    /*add_procedure("char->integer" , char_to_integer_proc);
-    add_procedure("integer->char" , integer_to_char_proc);
-    add_procedure("number->string", number_to_string_proc);
-    add_procedure("string->number", string_to_number_proc);
-    add_procedure("symbol->string", symbol_to_string_proc);
-    add_procedure("string->symbol", string_to_symbol_proc);*/
-      
+    add_procedure("null?"      , nullp_procedure);      
     add_procedure("+"        , add_procedure);
     /*add_procedure("-"        , sub_proc);
     add_procedure("*"        , mul_proc);
@@ -473,15 +458,6 @@ void  initialize_environment(void) {
     add_procedure("remainder", remainder_proc);
     add_procedure("="        , number_equalp_procedure);
     add_procedure("<"        , less_thanp_proceduce);
-    add_procedure(">"        , greater_thanp_procedure);*/
-
-    /*add_procedure("cons"    , cons_proc);
-    add_procedure("car"     , car_proc);
-    add_procedure("cdr"     , cdr_proc);
-    add_procedure("set-car!", set_car_proc);
-    add_procedure("set-cdr!", set_cdr_proc);
-    add_procedure("list"    , list_proc);
-
-    add_procedure("eq?", is_eq_proc);
+    add_procedure(">"        , greater_thanp_procedure);
     add_procedure("print"    , print_proc);*/
 }
