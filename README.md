@@ -49,6 +49,10 @@ Comments are ignored by the compiler. They can start as // or /* */.
 # Syntax
 
 # Data types
+--**Booleans** are either 'True' or 'False'
+--**Numbers** can be integers('1' and '2')
+--**Strings** are sequences of Unicode characters. '"Hello World"'
+--**Lists** are a linear collections of elements. '(1, 2, 3, 4, 5)'
 
 # Strings
 
@@ -89,7 +93,12 @@ This should give you the factorial of 5, which is 120.
 
 # Examples
 
-## Universal Turing Machine
+## Universal Turing Machine program
+
+This program is to simply prove that our programming language is theoretically equivalent to every other programming language that exists.
+
+What the machine does.
+- # 3 actions "left, "right" "stay"
 
 ## FizzBuzz
 What is is: A program that prints integers from 1 to 100
@@ -126,3 +135,6 @@ func main (){
 ## Depth-first search
 
 ## Dijkstra's algorithm
+
+
+Reference: rosettacode.org/wiki/Category:Programming_Tasks
