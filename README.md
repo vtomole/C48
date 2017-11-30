@@ -67,14 +67,18 @@ Comments are ignored by the compiler. They can start as // or /* */.
 
 # Conditions
 
-# Functions
 
-# Arrays
+# Structures
 
-# Lists
+A structure is a type that allows a programmers to hold several data types of different kinds
 
-# Structs
+```
+struct node {
+   int value;
+   node next;
+} 
 
+```
 # Recursion
 
 Recursion is when a functions is defined in terms of itself. It is when a function calls itself. One recursive program is called the factorial. Here is the factorial in C48
@@ -102,8 +106,6 @@ This should give you the factorial of 5, which is 120.
 
 This program is to simply prove that our programming language is theoretically equivalent to every other programming language that exists.
 
-What the machine does.
-- # 3 actions "left, "right" "stay"
 
 ## FizzBuzz
 What is is: A program that prints integers from 1 to 100
