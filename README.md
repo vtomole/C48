@@ -49,14 +49,19 @@ Comments are ignored by the compiler. They can start as // or /* */.
 # Syntax
 
 # Data types
---**Booleans** are either 'True' or 'False'
---**Numbers** can be integers('1' and '2')
---**Strings** are sequences of Unicode characters. '"Hello World"'
---**Lists** are a linear collections of elements. '(1, 2, 3, 4, 5)'
+--**Booleans** are either '''True''' or '''False''
 
-# Strings
+--**Numbers** can be integers('''1''' and '''2''')
 
-# Variables
+--**Characters** are a single byte of an integer type. '''A'''
+
+--**Strings** are sequences of Unicode characters. '''"Hello World"'''
+
+--**Lists** are a linear collections of elements. '''(1, 2, 3, 4, 5)'''
+
+--**Arrays** Can store a collection of elements that can be identified by the index. '''int balance[5] = {1, 2.0, 3, 4, 5};'''
+
+--**Functions** are procedures that return values
 
 # Loops
 
