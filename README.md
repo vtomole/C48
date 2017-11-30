@@ -49,19 +49,19 @@ Comments are ignored by the compiler. They can start as // or /* */.
 # Syntax
 
 # Data types
---**Booleans** are either '''True''' or '''False''
+--**Booleans** are either ```True``` or ```False```
 
---**Numbers** can be integers('''1''' and '''2''')
+--**Numbers** can be integers(```1``` and ```2```)
 
---**Characters** are a single byte of an integer type. '''A'''
+--**Characters** are a single byte of an integer type. ```A```
 
---**Strings** are sequences of Unicode characters. '''"Hello World"'''
+--**Strings** are sequences of Unicode characters. ```"Hello World"```
 
---**Lists** are a linear collections of elements. '''(1, 2, 3, 4, 5)'''
+--**Lists** are a linear collections of elements. ```(1, 2, 3, 4, 5)```
 
---**Arrays** Can store a collection of elements that can be identified by the index. '''int balance[5] = {1, 2.0, 3, 4, 5};'''
+--**Arrays** Can store a collection of elements that can be identified by the index. ```int balance[5] = {1, 2.0, 3, 4, 5};```
 
---**Functions** are procedures that return values
+--**Functions** are procedures that return values. ```int add (int x, int y) { return x + y}; ```
 
 # Loops
 
