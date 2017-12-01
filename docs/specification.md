@@ -72,7 +72,8 @@ imaginary = (decimals | float) "i"
 
 
 String:
-TODO
+Strings are represented in double quotes:
+Example " "
 
 
 
@@ -90,11 +91,35 @@ Array
 Boolean
 Struct
 Functions
+Lists
+
+Program → Expr
+Expr → Number | Variable | ArithExpr | IfExpr | VarExpr | FExpr | VarExpr | RefExpr
+
+ArithExpr → ( + Expr Expr) | ( - Expr Expr) | ( * Expr Expr) | ( / Expr Expr) | ( % Expr Expr)
+IfExpr → (CCond Expr Expr)
+CCond → BCond | (or CCond CCond) | (and CCond CCond) | (not CCond)
+BCond → (gt Expr Expr) | (lt Expr Expr) | (eq Expr Expr)
+
+VarExpr → (set VarAssign Expr)
+VarAssign → Variable Expr
+
+FExpr → (fun FAssign Expr)
+FAssign → ((name FormalParams ) Expr)
+FormalParams → () | (FormalParamList)
+FormalParamList → Variable | Variable FormalParamList
+
+ApplyF → (apply (name Args))
+Args → () | (ArgList)
+ArgList → Expr | Expr ArgList
+
+RefExpr → DRef | WRef | Ref
+DRef → (deref Expr)
+WRef → (wref Expr)
+Ref → (ref Expr) | (free Expr)
 
 
 
-Scope:
-TODO
 
 
 
