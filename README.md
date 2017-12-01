@@ -35,17 +35,9 @@ $ Hello World
 
 Congratulations on running your first C48 program!
 
-Every general purpose programming language usually contains:
-
-- Functions
-- Variables
-- Expressions
-- Comments
-
-
-
 # Syntax
-A c48 program is composed of tokens. A token can be a keyword, and identifier, a constant, a string, or a symbol
+A c48 program is composed of tokens. A token can be a keyword, and identifier, a constant, a string, or a symbol.
+
 --**Comments** are ignored by the intepreter. They can start as // or /* */.
 
 --**Identifiers** is a name used to indetify a variable, function, or anything else a user has defined. These are case sensitive
@@ -61,7 +53,7 @@ square x ascv hello
 ```
 case fun struct 
 else if switch
-for return while
+for return
 
 ```
 
@@ -83,7 +75,32 @@ for return while
 
 # Loops
 
-# Conditions
+Loops are for executing a block of code several times. The following loop prints "Hello C48" 10 times in a row.
+
+```
+for(i = 0; i < 10; i++){
+  print("Hello C48");
+ }		   
+
+```
+
+# Conditionals
+
+Conditionals allow the programmer to specify one more condititons to be evaluated or tested by the program including the expressions to be executed if the condition is true or if the condition is false.
+
+The following program prints that a is less than 10 because the if statement evaluated to ```true```.
+
+```
+a = 5;
+
+if(a < 10){
+  print("A is less than 10");
+ }
+ else{
+   print("A is more than 10");
+ }
+
+```
 
 
 # Structures
