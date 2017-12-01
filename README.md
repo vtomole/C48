@@ -135,6 +135,35 @@ func main (){
 
 ## QuickSort
 
+```
+fun quickSort(arr){
+  less = [];
+  pivotList = [];
+  more = [];
+  if(size(arr) <= 1){
+    return arr;
+  }
+  else{
+    pivot = arr[0];
+    for (i=0; i < size(arr); i++){
+      if (i < pivot){
+	less.append(i);
+      }
+      else if (i > pivot){
+	more.append(i);
+      }
+      else{
+	pivotList.append(i);
+      }
+      less = quickSort(less);
+      more = quickSort(more);
+      return less + pivotList + more;
+      }
+    }
+}
+
+```
+
 ## MergeSort
 
 ## Breadth-first search
