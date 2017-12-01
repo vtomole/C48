@@ -102,11 +102,6 @@ This should give you the factorial of 5, which is 120.
 
 # Examples
 
-## Universal Turing Machine program
-
-This program is to simply prove that our programming language is theoretically equivalent to every other programming language that exists.
-
-
 ## FizzBuzz
 What is is: A program that prints integers from 1 to 100
 - For multiples of 3, print Fizz instead of the number
@@ -206,11 +201,6 @@ fun merge_sort(m){
 
 ```
 
-## Breadth-first search
-
-## Depth-first search
-
-## Dijkstra's algorithm
 
 
 Reference: rosettacode.org/wiki/Category:Programming_Tasks
