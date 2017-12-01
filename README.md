@@ -42,11 +42,29 @@ Every general purpose programming language usually contains:
 - Expressions
 - Comments
 
-Comments are ignored by the compiler. They can start as // or /* */.
-
 
 
 # Syntax
+A c48 program is composed of tokens. A token can be a keyword, and identifier, a constant, a string, or a symbol
+--**Comments** are ignored by the intepreter. They can start as // or /* */.
+
+--**Identifiers** is a name used to indetify a variable, function, or anything else a user has defined. These are case sensitive
+
+```
+square x ascv hello 
+
+```
+
+
+--**Keywords** are reserved so that you cannot uses them as a constant or any other identifiers
+
+```
+case fun struct 
+else if switch
+for return while
+
+```
+
 
 # Data types
 --**Booleans** are either ```True``` or ```False```
