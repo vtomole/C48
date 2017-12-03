@@ -289,80 +289,54 @@ object* parse(token_list* token_list, object* expr){
       append_node(head, new_node); //add this node to the end of the list
     }
     
-    //printf("inner count %d, length of list %d\n", get_inner_node(head)->count, get_list_length(head));
-    
-    //print_token_list_value(token_list);
-    //printf("**\n");
     expr2 = parse(token_list, expr);//the recursion of all nested elements
 
-    //printf("step1\n");
     for(i = 0; i < get_inner_node(head)->count; i++){ //fast forward for each element in the above recusion
-      //print_token_list_value(token_list);
-      //printf("***\n");
       token_list = token_list->next;//fast forward one element
     }
-    //print_token_list_value(token_list);
-    //printf("****\n");
 
     // Add the last nodes element count to the 2nd to last nodes elements count. This
     // is in order to account for the 2nd to last node needing these elements. Each
     // node represents a layer of recursion, and each layer needs to be fast forwarded separately.
     // Thus adding this element count allows outer layers to be fast forwarded to account
     // for possible inner recursive layers.
-    //printf("step2\n");
     if(get_list_length(head) > 2){
-      //printf("step2a\n");
       get_2nd_to_last_node(head)->count += get_inner_node(head)->count; 
       get_2nd_to_last_node(head)->next = NULL; //remove recursive layer(represented as the node)
     }else if(get_list_length(head) == 2){
-      //printf("step2b\n");
       head->count += get_inner_node(head)->count; 
       head->next = NULL; //remove recursive layer(represented as the node)
     }
-    //printf("step3\n");
     free(get_inner_node(head)->next);//remove last node from memory
     
-    //printf("step4\n");
     expr = cons(expr2, expr);//attach
-    //printf("step5\n");
     if(token_list){
-      // printf("step7\n");
       expr = parse(token_list, expr);
     }
   }else if(strcmp(token_list->val.type,"left_paren")==0){
     
     get_inner_node(head)->count++;//add 1 to end node
-    //printf("inner count %d, length of list %d\n", get_inner_node(head)->count, get_list_length(head));
-    //printf("\n");
     return expr;//exit recurse
 
   }else if(strcmp(token_list->val.type,"primitive")==0){
     get_inner_node(head)->count++;//add 1 to end node
-    //printf("inner count %d, length of list %d\n", get_inner_node(head)->count, get_list_length(head));
     expr2 = create_object_for_parse(token_list->val.type,token_list->val.value);
     expr = cons(car(expr2), cons(expr2, expr));
 
-    //printf("step6\n");
     if(token_list){
-      //printf("step7\n");
       token_list=token_list->next;
       expr = parse(token_list, expr);
     }
   }else{
     get_inner_node(head)->count++;//add 1 to end node
-    //printf("inner count %d, length of list %d\n", get_inner_node(head)->count, get_list_length(head));
-    //add expression or prim to list
     expr2 = create_object_for_parse(token_list->val.type,token_list->val.value);
     expr = cons(expr2,expr);//attach previous to this car
     
-    // printf("step6\n");
     if(token_list){
-      //printf("step7\n");
       token_list=token_list->next;
       expr = parse(token_list, expr);
     }
   }
-  //printf("step8\n");
     
   return expr;
 }
