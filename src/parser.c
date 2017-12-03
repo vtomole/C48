@@ -270,6 +270,9 @@ int get_list_length(fast_forward_node* head){
 //global variables
 fast_forward_node* head;
 
+// current parse is able to read through a list properly with each set of parenthesis
+// representing a layer of recursion. However, the constructed tree seems to be not
+// working. This possibly has something to do with the missuse of cons.
 object* parse(token_list* token_list, object* expr){
   object*  expr2;
   int i;
