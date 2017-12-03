@@ -63,14 +63,14 @@ int main(int argc, char **argv){
 
 
   ////////////////////////////////////////////////////////////
-  cons1 = parse(lexer_tmp("( + 3 ( + 4 5 ) )"),result_expr);\
-
-  ////////////////////////////////////////////////////////////
-  // cons1 = parse_tmp(lexer_tmp("( + ( - 4 5 ) 3 )"));
-
-  //////////////////////////////////////////////////////////
-  // cons1 = parse_tmp(lexer_tmp("( - ( + 4 5 ) ( * 1 2 ) )"));
-  
+  printf("test1\n");
+  cons1 = parse(lexer_tmp("( + 3 ( + 4 5 ) )"),result_expr);
+  printf("test2\n");
+  cons1 = parse(lexer_tmp("( + 4 5 )"),result_expr);
+  printf("test3\n");
+  cons1 = parse(lexer_tmp("( + ( - 4 5 ) 3 )"),result_expr);
+  printf("test4\n");
+  cons1 = parse(lexer_tmp("( - ( + 4 5 ) ( * 1 2 ) )"),result_expr);  
 
   /*
   while (1) {     
