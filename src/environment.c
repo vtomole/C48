@@ -8,7 +8,7 @@ int left_paren=0, right_paren=0, right_paren_tmp;
 
 enum boolean{true, false};
 typedef struct object{
-  char* type;
+  
   object_type obj_type;
   struct cons_cell{
     struct object *car;
@@ -417,7 +417,7 @@ void  initialize_environment(void) {
 
     empty_list = allocate_object();
      
-    empty_list->type = EMPTY_LIST;
+    empty_list->obj_type = EMPTY_LIST;
 
     false_symbol = allocate_object();
     false_symbol->obj_type = BOOLEAN;
