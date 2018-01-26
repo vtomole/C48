@@ -43,6 +43,15 @@ SExpression *getAST(const char *source_code){
  *  (This is where the "now run it" part would
  *   happen for a larger programming language.)
  */
+
+object *convert_ast(SExpression *e){
+
+  object* hi;
+
+
+  return hi;
+
+}
  
 int evaluate(SExpression *e){
   switch (e->type) {
