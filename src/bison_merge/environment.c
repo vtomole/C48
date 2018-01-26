@@ -241,7 +241,7 @@ object* create_symbol(char *value){
   
   strcpy(obj->symbol, value);
   symbol_table = cons(obj, symbol_table);
-  //printf("Nullp %s\n", car(symbol_table)->symbol);
+  /*printf("Nullp %s\n", car(symbol_table)->symbol);*/
   return obj;
 }
 
@@ -254,7 +254,7 @@ object* create_symbol(char *value){
  */
 
 
-//constructor_cell* code_tree = NULL; //Put the cells in this
+/*constructor_cell* code_tree = NULL; //Put the cells in this*/
 
 typedef struct type_list{
   struct object val;
@@ -363,7 +363,7 @@ void define_variable (object *var, object *val, object* env){
  * -code_tree, the code_tree being built
  */
 
-//Will return object list
+/*Will return object list*/
 /*
  * this method recursivly goes through parse to create an unknown number of lists
  * by doing this each call to parse_rec should be a nested statement
@@ -438,7 +438,7 @@ void  initialize_environment(void) {
     begin_symbol = create_symbol("begin");
     cond_symbol = create_symbol("cond");
     else_symbol = create_symbol("else");
-    //let_symbol = create_symbol("let");
+    /*let_symbol = create_symbol("let");*/
     
     
     empty_environment = empty_list;

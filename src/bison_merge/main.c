@@ -5,6 +5,8 @@
 #include "expression.h"
 #include "parser.h"
 #include "lexer.h"
+#include "environment.c"
+#include "eval-apply.c"
 
 #include <stdio.h>
  
@@ -108,14 +110,20 @@ void write_graphviz(SExpression *e){
 
 /* -- main -- */
 
-int main(void){
+int main(int argc, char **argv){
   SExpression *e = NULL;
-  char test[] = " 4 + 2*10 + 3*( 5 + 1 ) ";
+  char test[1000];
   int result = 0;
+  while(1){
+  printf("repl> ");
+  fgets(test,1000,stdin);
   e = getAST(test);
+  /*e = typecheck(e)*/
   write_graphviz(e);
-  result = evaluate(e);
-  printf("Result of '%s' is %d\n", test, result);
+  
+  printf("%d", evaluate(e));
+  printf("\n");
   deleteExpression(e);
+  }
   return 0;
 }
