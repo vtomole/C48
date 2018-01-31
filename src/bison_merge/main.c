@@ -16,6 +16,8 @@
  int yyparse(SExpression **expression, yyscan_t scanner); 
 */
 
+object* exp1;
+
 SExpression *getAST(const char *source_code){
   /* get Abstract Syntax Tree , i.e. 
      source_code as text => parse_tree with SExpression for root node */
@@ -38,24 +40,17 @@ SExpression *getAST(const char *source_code){
 
   return expression;
 }
-
 /* (+ 5 6) -> cons(left (cons right (cons left null)  null))    */
-
-object *convert_ast(SExpression *e, object* exp){ 
+object *convert_ast(SExpression *e){
   switch (e->type) {
-   
+  case number:
+    return create_number(e->value);
   case plus:
-   exp = cons(create_number(e->left->value), empty_list);
-   exp = cons(create_number(e->right->value), exp);
-   exp = cons(create_symbol("+"), exp);   
+    return cons(create_symbol("+"),cons(convert_ast(e->left), cons(convert_ast(e->right), empty_list)));
+    /*return create_symbol("+");*/ 
 
-  }
-  /*printf("Here\n");*/
-  /*print(exp);*/
-  return exp;
-
+  }  
 }
-
 /* -- "execute" the parse tree -- 
  *
  *  (This is where the "now run it" part would
@@ -139,8 +134,8 @@ int main(int argc, char **argv){
   fgets(test,1000,stdin);
   e = getAST(test);
   /*e = typecheck(e)*/
-  exp = convert_ast(e, exp);
-  print(eval(exp, environment));
+  /*print(convert_ast(e));*/
+  print(eval(convert_ast(e), environment));
   write_graphviz(e);
   
   /*printf("%d", evaluate(e));*/
