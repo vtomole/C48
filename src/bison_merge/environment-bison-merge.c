@@ -411,6 +411,24 @@ object* add_procedure(object *arguments){
   return create_number(result);
 }
 
+object* sub_procedure(object *arguments){
+  int result = 0;
+  while(!nullp(arguments)){
+    result -= car(arguments)->number;
+    arguments = cdr(arguments);
+  }
+  return create_number(result);
+}
+
+object* mul_procedure(object *arguments){
+  int result = 0;
+  while(!nullp(arguments)){
+    result *= car(arguments)->number;
+    arguments = cdr(arguments);
+  }
+  return create_number(result);
+}
+
 
 
 void  initialize_environment(void) {
@@ -452,9 +470,9 @@ void  initialize_environment(void) {
 
     add_procedure("null?"      , nullp_procedure);      
     add_procedure("+"        , add_procedure);
-    /*add_procedure("-"        , sub_proc);
-    add_procedure("*"        , mul_proc);
-    add_procedure("quotient" , quotient_proc);
+    add_procedure("-"        , sub_procedure);
+    add_procedure("*"        , mul_procedure);
+    /*add_procedure("quotient" , quotient_proc);
     add_procedure("remainder", remainder_proc);
     add_procedure("="        , number_equalp_procedure);
     add_procedure("<"        , less_thanp_proceduce);
