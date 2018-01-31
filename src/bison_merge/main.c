@@ -5,8 +5,9 @@
 #include "expression.h"
 #include "parser.h"
 #include "lexer.h"
-#include "environment.c"
-#include "eval-apply.c"
+#include "environment-bison-merge.c"
+#include "eval-bison-merge.c"
+#include "print-bison-merge.c"
 
 #include <stdio.h>
  
@@ -38,28 +39,36 @@ SExpression *getAST(const char *source_code){
   return expression;
 }
 
+/* (+ 5 6) -> cons(left (cons right (cons left null)  null))    */
+
+object *convert_ast(SExpression *e, object* exp){ 
+  switch (e->type) {
+   
+  case plus:
+   exp = cons(create_number(e->left->value), empty_list);
+   exp = cons(create_number(e->right->value), exp);
+   exp = cons(create_symbol("+"), exp);   
+
+  }
+  /*printf("Here\n");*/
+  /*print(exp);*/
+  return exp;
+
+}
+
 /* -- "execute" the parse tree -- 
  *
  *  (This is where the "now run it" part would
  *   happen for a larger programming language.)
  */
-
-object *convert_ast(SExpression *e){
-
-  object* hi;
-
-
-  return hi;
-
-}
  
 int evaluate(SExpression *e){
   switch (e->type) {
   case eVALUE:
     return e->value;
-  case eMULTIPLY:
+  case multiply:
     return evaluate(e->left) * evaluate(e->right);
-  case ePLUS:
+  case plus:
     return evaluate(e->left) + evaluate(e->right);
   default:          
     return 0;
@@ -82,10 +91,10 @@ char* node_name(SExpression *e){
   case eVALUE:
     sprintf(name, "%i", e->value);
     return name;
-  case eMULTIPLY:
+  case multiply:
     sprintf(name, "*");
     return name;
-  case ePLUS:
+  case plus:
     sprintf(name, "+");
     return name;
   default:  
@@ -123,16 +132,21 @@ int main(int argc, char **argv){
   SExpression *e = NULL;
   char test[1000];
   int result = 0;
+  object* exp;
+  initialize_environment();
   while(1){
   printf("repl> ");
   fgets(test,1000,stdin);
   e = getAST(test);
   /*e = typecheck(e)*/
+  exp = convert_ast(e, exp);
+  print(eval(exp, environment));
   write_graphviz(e);
   
-  printf("%d", evaluate(e));
+  /*printf("%d", evaluate(e));*/
   printf("\n");
   deleteExpression(e);
   }
   return 0;
-}
+  }
+

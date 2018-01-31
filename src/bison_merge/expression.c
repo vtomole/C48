@@ -23,7 +23,7 @@ static SExpression *allocateExpression(){
 SExpression *createNumber(int value){
   SExpression *b = allocateExpression();
   if (b == NULL) return NULL;
-  b->type = eVALUE;
+  b->type = number;
   b->value = value;
   return b;
 }

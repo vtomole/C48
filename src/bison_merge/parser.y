@@ -51,8 +51,8 @@ input
   ;
  
 expr
-  : expr[L] TOKEN_PLUS expr[R]        { $$ = createOperation(ePLUS, $L,$R);}
-  | expr[L] TOKEN_MULTIPLY expr[R]    { $$ = createOperation(eMULTIPLY, $L,$R);}
+  : expr[L] TOKEN_PLUS expr[R]        { $$ = createOperation(plus, $L,$R);}
+  | expr[L] TOKEN_MULTIPLY expr[R]    { $$ = createOperation(multiply, $L,$R);}
   | TOKEN_LPAREN expr[E] TOKEN_RPAREN { $$ = $E;}
   | TOKEN_NUMBER                      { $$ = createNumber($1);}
   ;
