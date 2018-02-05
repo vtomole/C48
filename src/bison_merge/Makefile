@@ -3,7 +3,7 @@ CC	= gcc
 CFLAGS	= -g -ansi
 
 test:		$(FILES)
-		$(CC) $(CFLAGS) $(FILES) -o test
+		$(CC) $(CFLAGS) $(FILES) -o test -g
 
 Lexer.c:	lexer.l 
 		flex lexer.l

@@ -406,13 +406,14 @@ object* add_procedure(object *arguments){
   int result = 0;
   while(!nullp(arguments)){
     result += car(arguments)->number;
+    printf("Result %d\n", result);
     arguments = cdr(arguments);
   }
   return create_number(result);
 }
 
 object* sub_procedure(object *arguments){
-  int result = 0;
+  int result;
   while(!nullp(arguments)){
     result -= car(arguments)->number;
     arguments = cdr(arguments);
@@ -421,7 +422,7 @@ object* sub_procedure(object *arguments){
 }
 
 object* mul_procedure(object *arguments){
-  int result = 0;
+  int result = 1;
   while(!nullp(arguments)){
     result *= car(arguments)->number;
     arguments = cdr(arguments);
