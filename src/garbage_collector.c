@@ -1,5 +1,6 @@
 //Preliminary File for the implementation of Garbage collection
 #include "./parser.c"
+
 /**
 * gc_mark is the function we use to mark when and where we have called malloc
 * Parameters:
@@ -27,7 +28,7 @@ void gc_mark(object root)
 void gc()
 {
 	struct Allocation *a, **p;
-	//gc_mark(sym_table);
+	/*gc_mark(sym_table); we dont have a sym table */
 	/* Free unmarked allocations */
 	p = &global_allocations;
 	while (*p != NULL) {

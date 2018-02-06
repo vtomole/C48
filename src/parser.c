@@ -4,14 +4,16 @@
 //  char *name;
 //  struct symbol *next;
 //}symbol;
+
+/* Garbage collector struct*/
 /* Delete start */
 struct Allocation {
-	struct Pair pair;
+	struct cons_cell pair;
 	int mark : 1;
 	struct Allocation *next;
 };
 
-struct Allocation *global_allocations = NULL;
+struct Allocation *global_allocations = NULL;/*list used for the garbage collector*/
 
 /* Delete stop*/
 
@@ -27,21 +29,28 @@ typedef struct object{
   int number;
   enum boolean boolean;
 }object;
-
+/**
+*This function creates an object 
+* Parameters:
+* - value, the value of the object we are creating i.e. "hello", 3, foo 
+* - type, the type of object we are creating i.e string, cons, int,
+* Returns:
+* - obj, an object to be added to the code tree
+*/
 object *create_object(char *value, char *type){
-  object *obj = malloc(sizeof(obj));
+  object *obj = malloc(sizeof(obj));/*since we call malloc here we may need to do something with the garbage collector here*/
   obj->type = type;
   obj->variable = value;
 return obj;
 }
 
 /**
- *This function constructs ????
+ *This function constructs an object and allocates memory to it
  * Parameters:
  * - car, the first object in the code tree
  * - cdr, the rest of the objects in the code tree
- * Return Value:
- * - test1, an object ???
+ * Returns:
+ * - test1, an cons object
  */
 object* cons(object *car, object *cdr){
   struct Allocation *a;
@@ -53,6 +62,9 @@ object* cons(object *car, object *cdr){
 
   object *test1 = malloc(sizeof(*object1));
   
+	/*test1.type = AtomType_pair; */
+	/*test1.cons_cell.pair = &a->pair; */
+	
   test1->type = "cons";
   test1->cons_cell.car = car;
   test1->cons_cell.cdr = cdr;
