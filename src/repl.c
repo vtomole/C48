@@ -9,7 +9,7 @@
 #include "environment.c"
 #include "comp_front.c"
 #include "read.c"
-#include "eval.c"
+#include "eval-apply.c"
 #include "print.c"
 
 

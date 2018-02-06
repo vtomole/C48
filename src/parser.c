@@ -1,255 +1,315 @@
 //#include "parser.h"
 
-char is_delimiter(int c) {
-  return isspace(c) || c == EOF ||
-    c == '('   || c == ')' ||
-    c == '"'   || c == ';';
+//struct symbol{//typedef struct symbol???
+//  char *name;
+//  struct symbol *next;
+//}symbol;
+
+/* Garbage collector struct*/
+/* Delete start */
+struct Allocation {
+	struct cons_cell pair;
+	int mark : 1;
+	struct Allocation *next;
+};
+
+struct Allocation *global_allocations = NULL;/*list used for the garbage collector*/
+
+/* Delete stop*/
+
+typedef struct object{
+  char* type;
+  struct cons_cell{
+    struct object *car;
+    struct object *cdr;
+  }cons_cell;
+ 
+  char* variable;
+  char *string;
+  int number;
+  enum boolean boolean;
+}object;
+/**
+*This function creates an object 
+* Parameters:
+* - value, the value of the object we are creating i.e. "hello", 3, foo 
+* - type, the type of object we are creating i.e string, cons, int,
+* Returns:
+* - obj, an object to be added to the code tree
+*/
+object *create_object(char *value, char *type){
+  object *obj = malloc(sizeof(obj));/*since we call malloc here we may need to do something with the garbage collector here*/
+  obj->type = type;
+  obj->variable = value;
+return obj;
 }
 
-char is_initial(int c) {
-  return isalpha(c) || c == '*' || c == '/' || c == '>' ||
-    c == '<' || c == '=' || c == '?' || c == '!';
+/**
+ *This function constructs an object and allocates memory to it
+ * Parameters:
+ * - car, the first object in the code tree
+ * - cdr, the rest of the objects in the code tree
+ * Returns:
+ * - test1, an cons object
+ */
+object* cons(object *car, object *cdr){
+  struct Allocation *a;
+  struct object *object1;
+  a = malloc(sizeof(struct Allocation));
+  a->mark = 0;
+	a->next = global_allocations;
+	global_allocations = a;
+
+  object *test1 = malloc(sizeof(*object1));
+  
+	/*test1.type = AtomType_pair; */
+	/*test1.cons_cell.pair = &a->pair; */
+	
+  test1->type = "cons";
+  test1->cons_cell.car = car;
+  test1->cons_cell.cdr = cdr;
+
+  return test1;
 }
 
-int peek(FILE *in) {
-  int c;
+/**
+ *This function checks if the cells car is ???
+ * Parameters:
+ * - cell, an object ???
+ * Return Value:
+ * - ???
+ */
+object* car(object *cell){
+  assert (strcmp(cell->type, "cons") == 0);
+  return cell->cons_cell.car;
+}
 
-  c = getc(in);
-  ungetc(c, in);
+/**
+ *This function checks that the cells cdr is ???
+ * Parameters:
+ * - cell
+ * Return Value:
+ * - ???
+ */
+object* cdr(object *cell){
+  assert (strcmp(cell->type, "cons") == 0);
+  return cell->cons_cell.cdr;
+}
+
+/**
+ *This function creates an object representing a number
+ * Parameters:
+ * - number, the value of the object to create
+ * Return Value:
+ * - num an object with type number and value number
+ */
+object* create_number(char* number){
+  struct object *object1;
+  object *num = malloc(sizeof(*object1));
+  num->type  ="number";
+  int temp = atoi(number);
+  num->number = temp;
+  return num;
+}
+
+/**
+ *This function creates an object representing a number
+ * Parameters:
+ * - number, the value of the object to create
+ * Return Value:
+ * - num an object with type number and value number
+ */
+object* create_string(char* string){
+  struct object *object1;
+  object *str = malloc(sizeof(*object1));
+  str->type  ="string";
+  str->string = string;
+  return str;
+}
+
+/**
+ *This function creates an object representing a variable
+ * Parameters:
+ * - variable the value of the object to create
+ * Return Value:
+ * -var, an object with type "variable", and value variable
+ */
+object* create_variable(char* variable){
+  struct object *object1;
+  object *var = malloc(sizeof(*object1));
+  var->type = "variable";
+  //var->value = variable;
+  var->variable = variable;
+  return var;
+}
+
+object* create_boolean(char* variable){
+  struct object *object1;
+  object *var = malloc(sizeof(*object1));
+  var->type = "boolean";
+  //var->value = variable;
+  var->variable = variable;
+  return var;
+}
+
+/**
+ *This function creates an object representing a primitive operation
+ * Parameters:
+ * - variable the value of the object to create
+ * Return Value:
+ * -var, an object with type "primeop", and value variable
+ */
+object* create_primitiveop(char* variable){
+  struct object *object1;
+  object *var = malloc(sizeof(*object1));
+  var->type = "primitive";
+  //var->value = variable;
+  var->variable = variable;
+  return var;
+}
+
+//constructor_cell* code_tree = NULL; //Put the cells in this
+
+typedef struct type_list{
+  struct object val;
+  struct type_list *next;
+}type_list;
+
+/**Use this when you dereference void pointer to pointer fine
+ *This function gets the head of the code tree
+ * Parameters:
+ * -car, the cell containing the the type and value of the head of the code tree
+ * Return Value:
+ * -car, a c string of the value of the head of the code_tree
+ */
+char* get_car(void* car){
+  return *(char**)car;
+}
+
+
+int count_objects(object* cursor){
+  int c = 0;
+  while(cursor != NULL){
+    c++;
+    cursor = cursor->cons_cell.cdr;
+  }
   return c;
 }
 
-void eat_whitespace(FILE *in) {
-  int c;
-    
-  while ((c = getc(in)) != EOF) {
-    if (isspace(c)) {
-      continue;
+
+object* create_object_for_parse(char* type, char* value){
+
+  printf("DA TYPE %s\n", type);
+   if(strcmp(type,"primitive")==0 || strcmp(type,"variable")==0){
+     return create_primitiveop(value);
+   } else if(strcmp(type,"num")==0){
+     return create_number(value);
+   } else if(strcmp(type,"string")==0){
+     return create_string(value);
+   } else if(strcmp(type,"boolean")==0){
+     return create_boolean(value);
+   } else {
+     printf("invalid token\n");
+     exit(0);
+   }
+ }
+
+
+/**
+ *Recursivly adds tokens to the code_tree
+ * Parameters:
+ * -token_list, the list of tokens to add to the code_tree
+ * -code_tree, the code_tree being built
+ */
+
+//Will return object list
+/*
+ * this method recursivly goes through parse to create an unknown number of lists
+ * by doing this each call to parse_rec should be a nested statement
+ * each statement returns a list containing all the statements before a right or left paren
+ * no seg_faults however the code isn't doing anything visible with the temp_list it creates and maintains.
+**/
+
+object* parse(token_list* token_list, object* expr){
+  object*  expr2;
+ 
+
+  //  while(token_list != NULL){
+    printf("DAE VALUE %s\n", token_list->val.value);
+    if(strcmp(token_list->val.type,"right_paren")==0){
+      //start new recursion
+      expr2 = parse(token_list->next, expr);      
+      expr = cons(expr2, expr);
+    }else if(strcmp(token_list->val.type,"left_paren")==0){
+      //exit recursion
+      // token_list = token_list->next;
+      printf("THIS SHOULD PRINT ONCE\n");
+      return expr;
+    }else{
+      //add expression or prim to list
+      expr2 = create_object_for_parse(token_list->val.type,token_list->val.value);
+      expr = cons(expr2, expr);
+      printf("SHOULD BE + %d\n", car(expr)->number);
+      //expr = parse(token_list->next, expr);
+      //token_list = token_list->next;
     }
-    //comments are whitespace also 
-    else if (c == ';') { 
-      while (((c = getc(in)) != EOF) && (c != '\n'));
-      continue;
-    }
-    ungetc(c, in);
-    break;
-  }
+    // }
+  return expr;
 }
 
-void eat_expected_string(FILE *in, char *str) {
-  int c;
+  /*
+object* parse_tmp(token_list* token_list, object* expr_list){
+  struct object *expr2;
+  print_token_list(token_list);
 
-  while (*str != '\0') {
-    c = getc(in);
-    if (c != *str) {
-      fprintf(stderr, "unexpected character '%c'\n", c);
-      exit(1);
+   while(token_list != NULL){
+    if(strcmp(token_list->val.type,"right_paren")==0){
+      //indicates the start of a new list
+      expr2 = parse_rec(token_list->next,expr_list);
+      expr_list = cons(expr2, expr_list);
+    }else if(strcmp(token_list->val.type,"left_paren") == 0){
+      //end of a list
+    }else if(strcmp(token_list->val.type,"primitive")==0){
+      //constructing an operator onto the list
+      expr2 = create_primitiveop(token_list->val.value);
+      expr_list = cons(expr2, expr_list); 
     }
-    str++;
-  }
-}
-
-void peek_expected_delimiter(FILE *in) {
-  if (!is_delimiter(peek(in))) {
-    fprintf(stderr, "character not followed by delimiter\n");
-    exit(1);
-  }
-}
-
-object *read_character(FILE *in) {
-  int c;
-
-  c = getc(in);
-  switch (c) {
-  case EOF:
-    fprintf(stderr, "incomplete character literal\n");
-    exit(1);
-  case 's':
-    if (peek(in) == 'p') {
-      eat_expected_string(in, "pace");
-      peek_expected_delimiter(in);
-      return create_character(' ');
+    else if(strcmp(token_list->val.type,"variable")==0){
+      //constructing an operator onto the list
+      expr2 = create_primitiveop(token_list->val.value);
+      expr_list = cons(expr2, expr_list); 
     }
-    break;
-  case 'n':
-    if (peek(in) == 'e') {
-      eat_expected_string(in, "ewline");
-      peek_expected_delimiter(in);
-      return create_character('\n');
-    }
-    break;
-  }
-  peek_expected_delimiter(in);
-  return create_character(c);
-}
-
-object *read(FILE *in);
-
-object *read_pair(FILE *in) {
-  int c;
-  object *car_obj;
-  object *cdr_obj;
-    
-  eat_whitespace(in);
-    
-  c = getc(in);
-  //read the empty list 
-  if (c == ')') {
-    return empty_list;
-  }
-  ungetc(c, in);
-
-  car_obj = read(in);
-
-  eat_whitespace(in);
-    
-  c = getc(in);
-  //read improper list
-  if (c == '.') { 
-    c = peek(in);
-    if (!is_delimiter(c)) {
-      fprintf(stderr, "dot not followed by delimiter\n");
-      exit(1);
-    }
-    cdr_obj = read(in);
-    eat_whitespace(in);
-    c = getc(in);
-    if (c != ')') {
-      fprintf(stderr,
-	      "where was the trailing right paren?\n");
-      exit(1);
-    }
-    return cons(car_obj, cdr_obj);
-  }
-  //read list 
-  else { 
-    ungetc(c, in);
-    cdr_obj = read_pair(in);        
-    return cons(car_obj, cdr_obj);
-  }
-}
-
-object *read(FILE *in) {
-  int c;
-  short sign = 1;
-  int i;
-  int num = 0;
-#define BUFFER_MAX 1000
-  char buffer[BUFFER_MAX];
-
-  eat_whitespace(in);
-
-  c = getc(in);    
-  //read a boolean or character
-  if (c == '#') {
-    //printf("In the else\n");
-    c = getc(in);
-    switch (c) {
-    case 't':
-      return true_symbol;
-    case 'f':
-      return false_symbol;
-    case '\\':
-      return read_character(in);
-    default:
-      fprintf(stderr,
-	      "unknown boolean or character literal\n");
-      exit(1);
-    }
-  }
-  else if (isdigit(c) || (c == '-' && (isdigit(peek(in))))) {
-    //printf("In the else\n");	
-    // read a fixnum 
-    if (c == '-') {
-      sign = -1;
-    }
-    else {
-      ungetc(c, in);
-    }
-    while (isdigit(c = getc(in))) {
-      num = (num * 10) + (c - '0');
-    }
-    num *= sign;
-    if (is_delimiter(c)) {
-      ungetc(c, in);
-      return create_number(num);
-    }
-    else {
-      fprintf(stderr, "number not followed by delimiter\n");
-      exit(1);
-    }
-  }
-  else if (is_initial(c) ||
-	   ((c == '+' || c == '-') &&
-	    //read a symbol 
-	    is_delimiter(peek(in)))) {
-    //printf("In the else\n");
-    i = 0;
-    while (is_initial(c) || isdigit(c) ||
-	   c == '+' || c == '-') {
-      //subtract 1 to save space for '\0' terminator 
-      if (i < BUFFER_MAX - 1) {
-	buffer[i++] = c;
+    else if(strcmp(token_list->val.type,"num")==0){
+      //constructing a number onto the list
+      expr2 = create_number(token_list->val.value);
+      if(count_token_list(token_list) == 1){
+	return expr2;
+      }else{
+	expr_list = cons(expr2, expr_list);
       }
-      else {
-	fprintf(stderr, "symbol too long. "
-		"Maximum length is %d\n", BUFFER_MAX);
-	exit(1);
-      }
-      c = getc(in);
+    }else if(strcmp(token_list->val.type,"string")==0){
+      //constructing a string onto the list
+      expr2 = create_string(token_list->val.value);
+      if(count_token_list(token_list) == 1){
+	return expr2;
+      }else{
+	expr_list = cons(expr2, expr_list);
+      }	 
+    }else if(strcmp(token_list->val.type,"boolean")==0){
+      //constructing a string onto the list
+      expr2 = create_boolean(token_list->val.value);
+      if(count_token_list(token_list) == 1){
+	return expr2;
+      }else{
+	expr_list = cons(expr2, expr_list);
+      }	 
+    }else{
+      printf("invalid token\n");
+      exit(0);
     }
-    if (is_delimiter(c)) {
-      buffer[i] = '\0';
-      ungetc(c, in);
-      return create_symbol(buffer);
-    }
-    else {
-      fprintf(stderr, "symbol not followed by delimiter. "
-	      "Found '%c'\n", c);
-      exit(1);
-    }
-  }
-  //read a string 
-  else if (c == '"') {
-    //printf("In the else\n");
-    i = 0;
-    while ((c = getc(in)) != '"') {
-      if (c == '\\') {
-	c = getc(in);
-	if (c == 'n') {
-	  c = '\n';
-	}
-      }
-      if (c == EOF) {
-	fprintf(stderr, "non-terminated string literal\n");
-	exit(1);
-      }
-      //subtract 1 to save space for '\0' terminator 
-      if (i < BUFFER_MAX - 1) {
-	buffer[i++] = c;
-      }
-      else {
-	fprintf(stderr, 
-		"string too long. Maximum length is %d\n",
-		BUFFER_MAX);
-	exit(1);
-      }
-    }
-    buffer[i] = '\0';
-    return create_string(buffer);
-  }
-  //read the empty list or pair
-  else if (c == '(') { 
-    return read_pair(in);
-  }
-  //read quoted expression 
-  else if (c == '\'') {
-    return cons(quote_symbol, cons(read(in), empty_list));
-  }
-  else {
-    fprintf(stderr, "bad input. Unexpected '%c'\n", c);
-    exit(1);
-  }
-  fprintf(stderr, "read illegal state\n");
-  exit(1);
-}
+    token_list = token_list->next;
+   }
+   return expr_list;
+   }*/
+
+

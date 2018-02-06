@@ -1,57 +1,52 @@
-//Preliminary File for the implementation of Garbage collection
-#include <unistd.h>
-
-#define MIN_ALLOC_SIZE 4096 //size of a page in memory, smallest size we can use.
+//Preliminary File for the implementation of Garbage collector
+#include "./parser.c"
 
 /**
- *header_gc is a header struct used to keep blocks of memory aligned
- * Parameters:
- * - size, used to show the size a block of memory
- * - next, pointer to the next block of free memory
- */
-typedef struct header {
-  unsigned int size;  
-  struct block *next; 
-}header_gc;
+* gc_mark is the function we use to mark when and where we have called malloc
+* Parameters:
+* - root, the starting point of the code tree we are sweeping over 
+*/
+void gc_mark(object root)
+{
+	struct Allocation *a;
+	a = (struct Allocation *)
+		((char *) root.value.pair
+			- offsetof(struct Allocation, pair));
 
+	if (a->mark)
+		return;
 
-static header_gc  base; //empty list of memory blocks
-static header_gc *free_list = NULL; //start of the list of available free memory blocks
+	a->mark = 1;
 
-
-/**
- *add_to_free_list updates the list of free blocks of memory
- * Parameters:
- * -bp, 
- */
-static void add_to_free_list(header_gc *bp){
-
+	gc_mark(car(root));
+	gc_mark(cdr(root));
 }
-
 /**
- *more_core is used to request more memory from the machine
- *- this implementation only works on linux machines 
- * Parameters:
- * - num_units, the amount of memory we are requesting
- * Returns:
- * -NULL, if we are unable to aquire more memory.
- * -free_list, an updated free list with more blocks of memory
- */
-static header_gc *more_core(size_t num_units){
+* gc is function that collects free memory by calling free on the unused marked locations
+*
+*/
+void gc()
+{
+	struct Allocation *a, **p;
+	/*gc_mark(sym_table); we dont have a sym table */
+	/* Free unmarked allocations */
+	p = &global_allocations;
+	while (*p != NULL) {
+		a = *p;
+		if (!a->mark) {
+			*p = a->next;
+			free(a);
+		} else {
+			p = &a->next;
+		}
+	}
 
-  void *void_ptr;
-  header_gc *up;
-
-  if(num_units < MIN_ALLOC_SIZE)//if we are requesting less 1 page of memory
-    num_units = MIN_ALLOC_SIZE / sizeof(header_gc);//set request size to 1 page 
-
-  if((void_ptr = sbrk(num_units * sizeof(header_gc))) == (void *) -1)//UNIX method to reques memory from kernal
-    return NULL;
-  
-  up = (header_gc *)void_ptr;
-  up->size = num_units;
-  //add_to_free_list(up);
-  return free_list;
+	/* Clear marks */
+	a = global_allocations;
+	while (a != NULL) {
+		a->mark = 0;
+		a = a->next;
+	}
 }
 
 void *malloc_gc(size_t alloc_size){
