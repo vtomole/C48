@@ -1,5 +1,5 @@
 //Preliminary File for the implementation of Garbage collector
-#include "./parser.c"
+//#include "./parser.c"
 
 /**
 * gc_mark is the function we use to mark when and where we have called malloc
