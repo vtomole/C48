@@ -406,7 +406,6 @@ object* add_procedure(object *arguments){
   int result = 0;
   while(!nullp(arguments)){
     result += car(arguments)->number;
-    printf("Result %d\n", result);
     arguments = cdr(arguments);
   }
   return create_number(result);
@@ -429,8 +428,6 @@ object* mul_procedure(object *arguments){
   }
   return create_number(result);
 }
-
-
 
 void  initialize_environment(void) {
 
