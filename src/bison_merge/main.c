@@ -47,8 +47,8 @@ object *convert_ast(SExpression *e){
     return create_number(e->value);
   case plus:
     return cons(create_symbol("+"),cons(convert_ast(e->left), cons(convert_ast(e->right), empty_list)));
-    /*return create_symbol("+");*/ 
-
+  case multiply:
+    return cons(create_symbol("*"),cons(convert_ast(e->left), cons(convert_ast(e->right), empty_list)));
   }  
 }
 /* -- "execute" the parse tree -- 
@@ -134,7 +134,8 @@ int main(int argc, char **argv){
   fgets(test,1000,stdin);
   e = getAST(test);
   /*e = typecheck(e)*/
-  /*print(convert_ast(e));*/
+  print(convert_ast(e));
+  printf("\n");
   print(eval(convert_ast(e), environment));
   write_graphviz(e);
   

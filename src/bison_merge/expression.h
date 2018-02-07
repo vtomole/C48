@@ -10,8 +10,11 @@
  */
 typedef enum tagEOperationType {
     eVALUE,
-    eMULTIPLY,
-    ePLUS
+    number,
+    symbol,
+    string,
+    multiply,
+    plus
 } EOperationType;
 
 /**
@@ -19,7 +22,10 @@ typedef enum tagEOperationType {
  */
 typedef struct tagSExpression{
   EOperationType type;         
-  int value;                     
+  int value;
+  char* symbol;
+  char *string;
+  char character;
   struct tagSExpression *left;   
   struct tagSExpression *right; 
 } SExpression;
