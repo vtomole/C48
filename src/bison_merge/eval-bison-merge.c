@@ -56,8 +56,6 @@ int tagged_listp(object *exp, object *tag){
 
 }
 
-
-
 int quotep (object *exp){ return tagged_listp(exp,quote_symbol); }
 int assignmentp(object *exp){ return tagged_listp(exp, set_symbol); }
 int definitionp(object *exp){ return tagged_listp(exp, define_symbol);}
