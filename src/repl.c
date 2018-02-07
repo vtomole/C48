@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <limits.h>
 #include <assert.h>
+#include <stddef.h>
 #include "lexer.c"
 #include "lexer_tmp.c"
 #include "environment.c"
@@ -11,7 +12,7 @@
 #include "read.c"
 #include "eval-apply.c"
 #include "print.c"
-
+#include "garbage_collector.c"
 
 
 int main(int argc, char **argv){

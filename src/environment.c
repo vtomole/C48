@@ -21,7 +21,7 @@ typedef struct object{
   int number;
   enum boolean empty_list;
   enum boolean boolean;
-
+  
   struct{
     /*fn is a pointer to stuct arguments*/
     struct object *(*fn)(struct object *arguments);
@@ -52,6 +52,18 @@ object *empty_environment;
 object *the_global_environment;
 object *environment;
 
+
+/* Garbage collector struct*/
+/* Delete start */
+struct Allocation {
+	struct cons_cell pair;
+	int mark : 1;
+	struct Allocation *next;
+};
+
+struct Allocation *global_allocations = NULL;/*list used for the garbage collector*/
+
+/* Delete stop*/
 
 object* allocate_object(){
   object *obj;
@@ -124,15 +136,30 @@ object* cdr(object *obj){ return obj->cons_cell.cdr; }
  * - test1, an object ???
  */
 object* cons(object *car, object *cdr){
+  
+  struct Allocation *a;
   object *obj;
    
+  //add a marker upon the call to cons
+  a = malloc(sizeof(struct Allocation));
+  a->mark = 0;
+  a->next = global_allocations;
+  global_allocations = a;
+  
+
   obj = allocate_object();
   obj -> obj_type = PAIR;
+
+  obj->cons_cell = a->pair;
+
   obj->cons_cell.car = car;
   obj->cons_cell.cdr = cdr;
   
   return obj;  
 }
+
+
+
 #define caar(obj)   car(car(obj))
 #define cadr(obj)   car(cdr(obj))
 #define cdar(obj)   cdr(car(obj))
