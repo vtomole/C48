@@ -1,15 +1,14 @@
-#  include <stdio.h>
-#  include <stdlib.h>
-#  include <stdarg.h>
-#  include <string.h>
-#  include <math.h>
-#  include "expression.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <string.h>
+#include <math.h>
+#include "expression.h"
+#include "read_file.c"
 
 /* symbol table */
 /* hash a symbol */
-static unsigned
-symhash(char *sym)
-{
+static unsigned symhash(char *sym){
   unsigned int hash = 0;
   unsigned c;
 
@@ -18,9 +17,7 @@ symhash(char *sym)
   return hash;
 }
 
-struct symbol *
-lookup(char* sym)
-{
+struct symbol *lookup(char* sym){
   struct symbol *sp = &symtab[symhash(sym)%NHASH];
   int scount = NHASH;		/* how many have we looked at */
 
@@ -215,6 +212,7 @@ double eval(struct ast *a){
   case '-': v = eval(a->l) - eval(a->r); break;
   case '*': v = eval(a->l) * eval(a->r); break;
   case '/': v = eval(a->l) / eval(a->r); break;
+  case '%': v = (int)eval(a->l) % (int)eval(a->r); break;
   case '|': v = fabs(eval(a->l)); break;
   case 'M': v = -eval(a->l); break;
 
@@ -231,9 +229,9 @@ double eval(struct ast *a){
   case 'I': 
     if( eval( ((struct flow *)a)->cond) != 0) {
       if( ((struct flow *)a)->tl) {
-	v = eval( ((struct flow *)a)->tl);
+	      v = eval( ((struct flow *)a)->tl);
       } else
-	v = 0.0;		/* a default value */
+	      v = 0.0;		/* a default value */
     } else {
       if( ((struct flow *)a)->el) {
         v = eval(((struct flow *)a)->el);
@@ -247,7 +245,7 @@ double eval(struct ast *a){
     
     if( ((struct flow *)a)->tl) {
       while( eval(((struct flow *)a)->cond) != 0)
-	v = eval(((struct flow *)a)->tl);
+	      v = eval(((struct flow *)a)->tl);
     }
     break;			/* last value is value */
 	              
@@ -283,9 +281,7 @@ static double callbuiltin(struct fncall *f){
  }
 }
 
-static double
-calluser(struct ufncall *f)
-{
+static double calluser(struct ufncall *f){
   struct symbol *fn = f->s;	/* function name */
   struct symlist *sl;		/* dummy arguments */
   struct ast *args = f->l;	/* actual arguments */
@@ -357,9 +353,7 @@ calluser(struct ufncall *f)
 }
 
 
-void
-treefree(struct ast *a)
-{
+void treefree(struct ast *a){
   switch(a->nodetype) {
 
     /* two subtrees */
@@ -367,6 +361,7 @@ treefree(struct ast *a)
   case '-':
   case '*':
   case '/':
+  case '%':
   case '1':  case '2':  case '3':  case '4':  case '5':  case '6':
   case 'L':
     treefree(a->r);
@@ -397,9 +392,7 @@ treefree(struct ast *a)
 
 }
 
-void
-yyerror(char *s, ...)
-{
+void yyerror(char *s, ...){
   va_list ap;
   va_start(ap, s);
 
@@ -408,19 +401,21 @@ yyerror(char *s, ...)
   fprintf(stderr, "\n");
 }
 
-int
-main()
-{
-  printf("> "); 
+int main(int argc, char *argv[]){
+  if(argc > 1 && argv[1][0] == 'r'){
+    open_file("test.txt");
+  }
+  else{
+    printf("> ");
+  }
   return yyparse();
 }
 
 /* debugging: dump out an AST */
 int debug = 0;
-void
-dumpast(struct ast *a, int level)
-{
 
+void dumpast(struct ast *a, int level){
+  
   printf("%*s", 2*level, "");	/* indent to this level */
   level++;
 
@@ -441,7 +436,7 @@ dumpast(struct ast *a, int level)
     dumpast( ((struct symasgn *)a)->v, level); return;
 
     /* expressions */
-  case '+': case '-': case '*': case '/': case 'L':
+  case '+': case '-': case '*': case '/': case '%': case 'L':
   case '1': case '2': case '3':
   case '4': case '5': case '6': 
     printf("binop %c\n", a->nodetype);

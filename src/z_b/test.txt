@@ -1,0 +1,6 @@
+x = 5
+y = 4
+//
+//if(x < y){ 60; } else if(x == y){ 80; } else {90;}
+//let add(x, y) = x+ y;
+//add(x, y)
