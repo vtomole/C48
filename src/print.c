@@ -1,4 +1,5 @@
 void print(object *obj);
+
 void print_pair(object *pair) {
     object *car_obj;
     object *cdr_obj;
@@ -28,13 +29,13 @@ void print(object *obj) {
             printf("()");
             break;
         case BOOLEAN:
-            printf("#%c", falsep(obj) ? 'f' : 't');
+            printf("#%c", is_false(obj) ? 'f' : 't');
             break;
         case SYMBOL:
             printf("%s", obj->symbol);
             break;
-        case NUMBER:
-            printf("%d", obj->number);
+        case FIXNUM:
+            printf("%ld", obj->number);
             break;
         case CHARACTER:
             c = obj->character;
@@ -51,7 +52,7 @@ void print(object *obj) {
             }
             break;
         case STRING:
-            str = obj->string;
+	  str = obj->string;
             putchar('"');
             while (*str != '\0') {
                 switch (*str) {
@@ -76,8 +77,8 @@ void print(object *obj) {
             print_pair(obj);
             printf(")");
             break;
-        case PRIMITIVE_PROCEDURE:
-        case COMPOUND_PROCEDURE:
+        case PRIMITIVE_PROC:
+        case COMPOUND_PROC:
             printf("#<procedure>");
             break;
         default:

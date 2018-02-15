@@ -1,14 +1,8 @@
-typedef enum {EMPTY_LIST, BOOLEAN, SYMBOL, NUMBER,
-              CHARACTER, STRING, PAIR, PRIMITIVE_PROCEDURE,
-              COMPOUND_PROCEDURE} object_type;
+typedef enum {EMPTY_LIST, BOOLEAN, SYMBOL, FIXNUM,
+              CHARACTER, STRING, PAIR, PRIMITIVE_PROC,
+              COMPOUND_PROC} object_type;
 
-
-
-int left_paren=0, right_paren=0, right_paren_tmp;
-
-enum boolean{true, false};
-typedef struct object{
-  
+typedef struct object{  
   object_type obj_type;
   struct cons_cell{
     struct object *car;
@@ -18,45 +12,34 @@ typedef struct object{
   char* symbol;
   char *string;
   char character;
-  int number;
-  enum boolean empty_list;
-  enum boolean boolean;
+  long number;
+  //enum boolean empty_list;
+  int boolean;
   
-  struct{
-    /*fn is a pointer to stuct arguments*/
+  struct primitive_proc{
     struct object *(*fn)(struct object *arguments);
-  }primitive_procedure;
+  }primitive_proc;
 
-  struct{
+  struct compound_proc {
     struct object *parameters;
     struct object *body;
     struct object *env;
-  }compound_procedure;
+  }compound_proc;
   
 }object;
 
-object *empty_list;
-object *quote_symbol;
-object *set_symbol;
-object *ok_symbol;
-object *define_symbol;
-object *if_symbol;
-object *false_symbol;
-object *true_symbol;
-object *begin_symbol;
-object *lambda_symbol;
-object *cond_symbol;
-object *else_symbol;
-object *symbol_table;
-object *empty_environment;
-object *the_global_environment;
-object *environment;
-
-
+int count_objects(object* cursor){
+  int c = 0;
+  while(cursor != NULL){
+    c++;
+    cursor = cursor->cons_cell.cdr;
+  }
+  return c;
+}
 /* Garbage collector struct*/
 /* Delete start */
 struct Allocation {
-	struct cons_cell pair;
+         struct cons_cell pair;
 	int mark : 1;
 	struct Allocation *next;
 };
@@ -65,7 +48,7 @@ struct Allocation *global_allocations = NULL;/*list used for the garbage collect
 
 /* Delete stop*/
 
-object* allocate_object(){
+object* alloc_object(){
   object *obj;
 
   obj = malloc(sizeof(object));
@@ -79,62 +62,115 @@ object* allocate_object(){
 }
 
 
+object *the_empty_list;
+object *false;
+object *true;
+object *symbol_table;
+object *quote_symbol;
+object *define_symbol;
+object *set_symbol;
+object *ok_symbol;
+object *if_symbol;
+object *lambda_symbol;
+object *begin_symbol;
+object *cond_symbol;
+object *else_symbol;
+object *let_symbol;
+object *the_empty_environment;
+object *the_global_environment;
 
-int nullp(object *obj){ return obj==empty_list; }
-int pairp(object *obj){ return obj->obj_type == PAIR; }
-int symbolp(object *obj){ return obj->obj_type == SYMBOL; }
-int truep(object *obj){ return obj->boolean == true; }
-int falsep(object *obj){ return obj->boolean == false; }
-int booleanp(object *obj){ return obj->obj_type == BOOLEAN; }
-int numberp(object *obj){ return obj->obj_type == NUMBER; }
-int stringp(object *obj){ return obj->obj_type == STRING; }
-int characterp(object *obj){ return obj->obj_type == CHARACTER; }
-char compoundp(object *obj) { return obj->obj_type == COMPOUND_PROCEDURE;}
+object *cons(object *car, object *cdr);
+object *car(object *pair);
+object *cdr(object *pair);
 
-
-object* cons(object *car, object *cdr);
-object* make_frame(object *variables, object *values){ return cons(variables,values); }
-  
-object* extend_environment(object *vars, object *vals, object *base_env){ return cons(make_frame(vars, vals), base_env); }
-
-
-
-
-
-/**
- *This function checks if the cells car is ???
- * Parameters:
- * - cell, an object ???
- * Return Value:
- * - ???
- */
-object* car(object *obj){ return obj->cons_cell.car; }
-
-void set_car(object *z, object *new_value){
-  z->cons_cell.car = new_value;
+char is_the_empty_list(object *obj) {
+    return obj == the_empty_list;
 }
 
-void set_cdr(object *z, object *new_value){
-  z->cons_cell.cdr = new_value;
+char booleanp(object *obj) {
+    return obj->obj_type == BOOLEAN;
 }
 
-/**
- *This function checks that the cells cdr is ???
- * Parameters:
- * - cell
- * Return Value:
- * - ???
- */
-object* cdr(object *obj){ return obj->cons_cell.cdr; }
+char is_false(object *obj) {
+    return obj == false;
+}
 
-/**
- *This function constructs ????
- * Parameters:
- * - car, the first object in the code tree
- * - cdr, the rest of the objects in the code tree
- * Return Value:
- * - test1, an object ???
- */
+char is_true(object *obj) {
+    return !is_false(obj);
+}
+
+object *make_symbol(char *value) {
+    object *obj;
+    object *element;
+    
+    /* search for they symbol in the symbol table */
+    element = symbol_table;
+    while (!is_the_empty_list(element)) {
+        if (strcmp(car(element)->symbol, value) == 0) {
+            return car(element);
+        }
+        element = cdr(element);
+    };
+    
+    /* create the symbol and add it to the symbol table */
+    obj = alloc_object();
+    obj->obj_type = SYMBOL;
+    obj->symbol = malloc(strlen(value) + 1);
+    if (obj->symbol == NULL) {
+        fprintf(stderr, "out of memory\n");
+        exit(1);
+    }
+    strcpy(obj->symbol, value);
+    symbol_table = cons(obj, symbol_table);
+    return obj;
+}
+
+char is_symbol(object *obj) {
+    return obj->obj_type == SYMBOL;
+}
+
+object *make_fixnum(long value) {
+    object *obj;
+
+    obj = alloc_object();
+    obj->obj_type = FIXNUM;
+    obj->number = value;
+    return obj;
+}
+
+char numberp(object *obj) {
+    return obj->obj_type == FIXNUM;
+}
+
+object *make_character(char value) {
+    object *obj;
+
+    obj = alloc_object();
+    obj->obj_type = CHARACTER;
+    obj->character = value;
+    return obj;
+}
+
+char characterp(object *obj) {return obj->obj_type == CHARACTER;}
+
+object *make_string(char *value) {
+    object *obj;
+
+    obj = alloc_object();
+    obj->obj_type = STRING;
+    obj->string = malloc(strlen(value) + 1);
+    if (obj->string == NULL) {
+        fprintf(stderr, "out of memory\n");
+        exit(1);
+    }
+    strcpy(obj->string, value);
+    return obj;
+}
+
+char is_string(object *obj) {
+    return obj->obj_type == STRING;
+}
+
 object* cons(object *car, object *cdr){
   
   struct Allocation *a;
@@ -147,7 +183,7 @@ object* cons(object *car, object *cdr){
   global_allocations = a;
   
 
-  obj = allocate_object();
+  obj = alloc_object();
   obj -> obj_type = PAIR;
 
   obj->cons_cell = a->pair;
@@ -158,7 +194,25 @@ object* cons(object *car, object *cdr){
   return obj;  
 }
 
+char is_pair(object *obj) {
+    return obj->obj_type == PAIR;
+}
 
+object *car(object *pair) {
+    return pair->cons_cell.car;
+}
+
+void set_car(object *obj, object* value) {
+    obj->cons_cell.car = value;
+}
+
+object *cdr(object *pair) {
+    return pair->cons_cell.cdr;
+}
+
+void set_cdr(object *obj, object* value) {
+    obj->cons_cell.cdr = value;
+}
 
 #define caar(obj)   car(car(obj))
 #define cadr(obj)   car(cdr(obj))
@@ -189,147 +243,269 @@ object* cons(object *car, object *cdr){
 #define cdddar(obj) cdr(cdr(cdr(car(obj))))
 #define cddddr(obj) cdr(cdr(cdr(cdr(obj))))
 
-/**
- *This function creates an object representing a number
- * Parameters:
- * - number, the value of the object to create
- * Return Value:
- * - num an object with type number and value number
- */
-object *create_number(int value) {
+object *make_primitive_proc(
+           object *(*fn)(struct object *arguments)) {
     object *obj;
-    
-    obj = allocate_object();
-    obj->obj_type = NUMBER;
-    obj->number = value;      
+
+    obj = alloc_object();
+    obj->obj_type = PRIMITIVE_PROC;
+    obj->primitive_proc.fn = fn;
     return obj;
 }
 
-object *create_character(char value) {
-    object *obj;
-    
-    obj = allocate_object();
-    obj->obj_type = CHARACTER;
-    obj->character = value;      
-    return obj;
+char primitivep(object *obj) {
+    return obj->obj_type == PRIMITIVE_PROC;
 }
 
-/**
- *This function creates an object representing a number
- * Parameters:
- * - number, the value of the object to create
- * Return Value:
- * - num an object with type number and value number
- */
-object *create_string(char *value) {
-    object *obj;
+object *is_null_proc(object *arguments) {
+    return is_the_empty_list(car(arguments)) ? true : false;
+}
 
-    obj = allocate_object();
-    obj->obj_type = STRING;
-    obj->string = malloc(strlen(value) + 1);
-    if (obj->string == NULL) {
-        fprintf(stderr, "out of memory\n");
-        exit(1);
+object *is_boolean_proc(object *arguments) {
+    return booleanp(car(arguments)) ? true : false;
+}
+
+object *is_symbol_proc(object *arguments) {
+    return is_symbol(car(arguments)) ? true : false;
+}
+
+object *is_integer_proc(object *arguments) {
+    return numberp(car(arguments)) ? true : false;
+}
+
+object *is_char_proc(object *arguments) {
+    return characterp(car(arguments)) ? true : false;
+}
+
+object *is_string_proc(object *arguments) {
+    return is_string(car(arguments)) ? true : false;
+}
+
+object *is_pair_proc(object *arguments) {
+    return is_pair(car(arguments)) ? true : false;
+}
+
+char is_compound_proc(object *obj);
+
+object *is_procedure_proc(object *arguments) {
+    object *obj;
+    
+    obj = car(arguments);
+    return (primitivep(obj) ||
+            is_compound_proc(obj)) ?
+                true :
+                false;
+}
+
+object *char_to_integer_proc(object *arguments) {
+    return make_fixnum((car(arguments))->character);
+}
+
+object *integer_to_char_proc(object *arguments) {
+    return make_character((car(arguments))->number);
+}
+
+object *number_to_string_proc(object *arguments) {
+    char buffer[100];
+
+    sprintf(buffer, "%ld", (car(arguments))->number);
+    return make_string(buffer);
+}
+
+object *string_to_number_proc(object *arguments) {
+    return make_fixnum(atoi((car(arguments))->string));
+}
+
+object *symbol_to_string_proc(object *arguments) {
+    return make_string((car(arguments))->symbol);
+}
+
+object *string_to_symbol_proc(object *arguments) {
+    return make_symbol((car(arguments))->string);
+}
+
+object *add_proc(object *arguments) {
+    long result = 0;
+    
+    while (!is_the_empty_list(arguments)) {
+        result += (car(arguments))->number;
+        arguments = cdr(arguments);
     }
-    strcpy(obj->string, value);
+    return make_fixnum(result);
+}
+
+object *sub_proc(object *arguments) {
+    long result;
+    
+    result = (car(arguments))->number;
+    while (!is_the_empty_list(arguments = cdr(arguments))) {
+        result -= (car(arguments))->number;
+    }
+    return make_fixnum(result);
+}
+
+object *mul_proc(object *arguments) {
+    long result = 1;
+    
+    while (!is_the_empty_list(arguments)) {
+        result *= (car(arguments))->number;
+        arguments = cdr(arguments);
+    }
+    return make_fixnum(result);
+}
+
+object *quotient_proc(object *arguments) {
+    return make_fixnum(
+        ((car(arguments) )->number)/
+        ((cadr(arguments))->number));
+}
+
+object *remainder_proc(object *arguments) {
+    return make_fixnum(
+        ((car(arguments) )->number)%
+        ((cadr(arguments))->number));
+}
+
+object *is_number_equal_proc(object *arguments) {
+    long value;
+    
+    value = (car(arguments))->number;
+    while (!is_the_empty_list(arguments = cdr(arguments))) {
+        if (value != ((car(arguments))->number)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+object *is_less_than_proc(object *arguments) {
+    long previous;
+    long next;
+    
+    previous = (car(arguments))->number;
+    while (!is_the_empty_list(arguments = cdr(arguments))) {
+        next = (car(arguments))->number;
+        if (previous < next) {
+            previous = next;
+        }
+        else {
+            return false;
+        }
+    }
+    return true;
+}
+
+object *is_greater_than_proc(object *arguments) {
+    long previous;
+    long next;
+    
+    previous = (car(arguments))->number;
+    while (!is_the_empty_list(arguments = cdr(arguments))) {
+        next = (car(arguments))->number;
+        if (previous > next) {
+            previous = next;
+        }
+        else {
+            return false;
+        }
+    }
+    return true;
+}
+
+object *cons_proc(object *arguments) {
+    return cons(car(arguments), cadr(arguments));
+}
+
+object *car_proc(object *arguments) {
+    return caar(arguments);
+}
+
+object *cdr_proc(object *arguments) {return cdar(arguments);}
+
+object *set_car_proc(object *arguments) {
+    set_car(car(arguments), cadr(arguments));
+    return ok_symbol;
+}
+
+object *set_cdr_proc(object *arguments) {
+    set_cdr(car(arguments), cadr(arguments));
+    return ok_symbol;
+}
+
+
+
+object *is_eq_proc(object *arguments) {
+    object *obj1;
+    object *obj2;
+    
+    obj1 = car(arguments);
+    obj2 = cadr(arguments);
+    
+    if (obj1->obj_type != obj2->obj_type) {
+        return false;
+    }
+    switch (obj1->obj_type) {
+        case FIXNUM:
+            return (obj1->number == 
+                    obj2->number) ?
+                        true : false;
+            break;
+        case CHARACTER:
+            return (obj1->character == 
+                    obj2->character) ?
+                        true : false;
+            break;
+        case STRING:
+            return (strcmp(obj1->string, 
+                           obj2->string) == 0) ?
+                        true : false;
+            break;
+        default:
+            return (obj1 == obj2) ? true : false;
+    }
+}
+
+object *make_compound_proc(object *parameters, object *body,
+                           object* env) {
+    object *obj;
+    
+    obj = alloc_object();
+    obj->obj_type = COMPOUND_PROC;
+    obj->compound_proc.parameters = parameters;
+    obj->compound_proc.body = body;
+    obj->compound_proc.env = env;
     return obj;
 }
 
-/**
- *This function creates an object representing a variable
- * Parameters:
- * - variable the value of the object to create
- * Return Value:
- * -var, an object with type "variable", and value variable
- */
+object *list_proc(object *arguments) {return arguments;}
+char is_compound_proc(object *obj) {return obj->obj_type == COMPOUND_PROC;}
+object *enclosing_environment(object *env) {return cdr(env);}
+object *first_frame(object *env) {return car(env);}
+object *make_frame(object *variables, object *values) {return cons(variables, values);}
+object *frame_variables(object *frame) {return car(frame);}
+object *frame_values(object *frame) {return cdr(frame);}
 
-
-object* create_symbol(char *value){
-  object *obj, *element;
-  
-  element = symbol_table;
-
- 
-  while(!nullp(element)){
-    if(strcmp(car(element)->symbol, value) == 0){
-      return car(element);
-    }    
-    element = cdr(element);
-  }
-  
-  obj = allocate_object();
-  obj->obj_type = SYMBOL;
-  obj->symbol = malloc(strlen(value) + 1); 
-
-  if(obj->symbol == NULL){
-    fprintf(stderr, "out of memory\n");
-    exit(1);
-  }
-  
-  strcpy(obj->symbol, value);
-  symbol_table = cons(obj, symbol_table);
-  //printf("Nullp %s\n", car(symbol_table)->symbol);
-  return obj;
+void add_binding_to_frame(object *var, object *val, 
+                          object *frame) {
+    set_car(frame, cons(var, car(frame)));
+    set_cdr(frame, cons(val, cdr(frame)));
 }
 
-/**
- *This function creates an object representing a primitive operation
- * Parameters:
- * - variable the value of the object to create
- * Return Value:
- * -var, an object with type "primeop", and value variable
- */
-
-
-//constructor_cell* code_tree = NULL; //Put the cells in this
-
-typedef struct type_list{
-  struct object val;
-  struct type_list *next;
-}type_list;
-
-/**Use this when you dereference void pointer to pointer fine
- *This function gets the head of the code tree
- * Parameters:
- * -car, the cell containing the the type and value of the head of the code tree
- * Return Value:
- * -car, a c string of the value of the head of the code_tree
- */
-char* get_car(void* car){
-  return *(char**)car;
+object *extend_environment(object *vars, object *vals,
+                           object *base_env) {
+    return cons(make_frame(vars, vals), base_env);
 }
 
-object* assignment_variable(object *exp) {return cadr(exp); };
-object* assignment_value(object *exp) {return caddr(exp); };
-object* frame_variables (object *frame) { return car(frame); }
-object* frame_values (object *frame) { return cdr(frame); }
-void add_binding_to_frame(object *var, object *val, object *frame){
-  set_car(frame, cons(var, car(frame)));
-  set_cdr(frame, cons(val, cdr(frame))); 
-
-}
-object* enclosing_environment(object *env) { return cdr(env); }
-object* first_frame(object *env) { return car(env); }
-
-
-int count_objects(object* cursor){
-  int c = 0;
-  while(cursor != NULL){
-    c++;
-    cursor = cursor->cons_cell.cdr;
-  }
-  return c;
-}
-
-object* lookup_variable_value(object* var, object* env){
-  object *frame;
+object *lookup_variable_value(object *var, object *env) {
+//printf("Number of objects in environment %d\n", count_objects(env));
+    object *frame;
     object *vars;
     object *vals;
-    while (!nullp(env)) {
+    while (!is_the_empty_list(env)) {
         frame = first_frame(env);
         vars = frame_variables(frame);
         vals = frame_values(frame);
-        while (!nullp(vars)) {
+        while (!is_the_empty_list(vars)) {
             if (var == car(vars)) {
                 return car(vals);
             }
@@ -342,149 +518,121 @@ object* lookup_variable_value(object* var, object* env){
     exit(1);
 }
 
-void set_variable_value(object *var, object *val, object* env){
-  object *frame, *vars, *vals;
+void set_variable_value(object *var, object *val, object *env) {
+    object *frame;
+    object *vars;
+    object *vals;
+ 
 
-  while(!nullp(env)){
-    frame = first_frame(env);
+    while (!is_the_empty_list(env)) {
+        frame = first_frame(env);
+        vars = frame_variables(frame);
+        vals = frame_values(frame);
+        while (!is_the_empty_list(vars)) {
+            if (var == car(vars)) {
+                set_car(vals, val);
+                return;
+            }
+            vars = cdr(vars);
+            vals = cdr(vals);
+        }
+        env = enclosing_environment(env);
+    }
+    fprintf(stderr, "unbound variable\n");
+    exit(1);
+}
+
+void define_variable(object *var, object *val, object *env) {
+  object *frame, *vars, *vals;
+    frame = first_frame(env);    
     vars = frame_variables(frame);
     vals = frame_values(frame);
 
-    while(!nullp(vars)){
-      if(var == car(vars)){
-	set_car(vals,val);
-	return;
-      }
-      vars = cdr(vars);
-      vals = cdr(vals);
+    while (!is_the_empty_list(vars)) {
+        if (var == car(vars)) {
+            set_car(vals, val);
+            return;
+        }
+        vars = cdr(vars);
+        vals = cdr(vals);
     }
-    env = enclosing_environment(env);
-  }
-  fprintf(stderr, "unboud variable\n");
-  exit(1);
-
+    add_binding_to_frame(var, val, frame);
 }
 
-void define_variable (object *var, object *val, object* env){
-  object *frame, *vars, *vals;
-  
-  frame = first_frame(env);
-  vars = frame_variables(frame);
-  vals = frame_values(frame);
-
-  while(!nullp(vars)){
-    if(var == car(vars)){
-      set_car(vals,val);
-      return;
-    }
-    vars = cdr(vars);
-    vals = cdr(vals);
-  }
-  add_binding_to_frame(var, val, frame);   
-}
-
-/**
- *Recursivly adds tokens to the code_tree
- * Parameters:
- * -token_list, the list of tokens to add to the code_tree
- * -code_tree, the code_tree being built
- */
-
-//Will return object list
-/*
- * this method recursivly goes through parse to create an unknown number of lists
- * by doing this each call to parse_rec should be a nested statement
- * each statement returns a list containing all the statements before a right or left paren
- * no seg_faults however the code isn't doing anything visible with the temp_list it creates and maintains.
-**/
-object *create_primitive_procedure(object *(*fn)(struct object *arguments)){
-  object *obj;
-
-  obj = allocate_object();
-  obj->obj_type = PRIMITIVE_PROCEDURE;
-  obj->primitive_procedure.fn = fn;
-  return obj;
-}
-
-object *make_procedure(object* parameters, object* body, object* env){
-  object* obj;
-
-  obj = allocate_object();
-  obj->obj_type = COMPOUND_PROCEDURE;
-  obj->compound_procedure.parameters = parameters;
-  obj->compound_procedure.body = body;
-  obj->compound_procedure.env = env;
-  return obj;
-}
-
-object *setup_environment(){
-  object *initial_environment;
-
-  initial_environment = extend_environment(empty_list, empty_list, empty_environment);
-
-  return initial_environment;
-}
-
-object* nullp_procedure(object *arguments){
-  return nullp(car(arguments)) ? true_symbol : false_symbol;
-}
-
-object* add_procedure(object *arguments){
-  int result = 0;
-  while(!nullp(arguments)){
-    result += car(arguments)->number;
-    arguments = cdr(arguments);
-  }
-  return create_number(result);
-}
-
-
-
-void  initialize_environment(void) {
-
-    empty_list = allocate_object();
-     
-    empty_list->obj_type = EMPTY_LIST;
-
-    false_symbol = allocate_object();
-    false_symbol->obj_type = BOOLEAN;
-    false_symbol->boolean = 1;
-
-    true_symbol = allocate_object();
-    true_symbol->obj_type = BOOLEAN;
-    true_symbol->boolean = 0;
+object *setup_environment(void) {
+    object *initial_env;
     
-    
-    symbol_table = empty_list;    
-    quote_symbol = create_symbol("quote");
-    define_symbol = create_symbol("define");
-    set_symbol = create_symbol("set!");
-    ok_symbol = create_symbol("ok");
-    if_symbol = create_symbol("if");
-    lambda_symbol = create_symbol("lambda");
-    begin_symbol = create_symbol("begin");
-    cond_symbol = create_symbol("cond");
-    else_symbol = create_symbol("else");
-    //let_symbol = create_symbol("let");
-    
-    
-    empty_environment = empty_list;
+    initial_env = extend_environment(
+                      the_empty_list,
+                      the_empty_list,
+                      the_empty_environment);
+    return initial_env;
+}
 
-    environment = setup_environment();
+void init(void) {
+    the_empty_list = alloc_object();
+    the_empty_list->obj_type = EMPTY_LIST;
+
+    false = alloc_object();
+    false->obj_type = BOOLEAN;
+    false->boolean = 0;
+
+    true = alloc_object();
+    true->obj_type = BOOLEAN;
+    true->boolean = 1;
+    
+    symbol_table = the_empty_list;
+    quote_symbol = make_symbol("quote");
+    define_symbol = make_symbol("define");
+    set_symbol = make_symbol("set!");
+    ok_symbol = make_symbol("ok");
+    if_symbol = make_symbol("if");
+    lambda_symbol = make_symbol("lambda");
+    begin_symbol = make_symbol("begin");
+    cond_symbol = make_symbol("cond");
+    else_symbol = make_symbol("else");
+    let_symbol = make_symbol("let");
+    
+    the_empty_environment = the_empty_list;
+
+    the_global_environment = setup_environment();
 
 #define add_procedure(scheme_name, c_name)              \
-    define_variable(create_symbol(scheme_name),           \
-                    create_primitive_procedure(c_name),        \
-                    environment);
+    define_variable(make_symbol(scheme_name),           \
+                    make_primitive_proc(c_name),        \
+                    the_global_environment);
 
-    add_procedure("null?"      , nullp_procedure);      
-    add_procedure("+"        , add_procedure);
-    /*add_procedure("-"        , sub_proc);
+    add_procedure("null?"      , is_null_proc);
+    add_procedure("boolean?"   , is_boolean_proc);
+    add_procedure("symbol?"    , is_symbol_proc);
+    add_procedure("integer?"   , is_integer_proc);
+    add_procedure("char?"      , is_char_proc);
+    add_procedure("string?"    , is_string_proc);
+    add_procedure("pair?"      , is_pair_proc);
+    add_procedure("procedure?" , is_procedure_proc);
+    
+    add_procedure("char->integer" , char_to_integer_proc);
+    add_procedure("integer->char" , integer_to_char_proc);
+    add_procedure("number->string", number_to_string_proc);
+    add_procedure("string->number", string_to_number_proc);
+    add_procedure("symbol->string", symbol_to_string_proc);
+    add_procedure("string->symbol", string_to_symbol_proc);
+      
+    add_procedure("+"        , add_proc);
+    add_procedure("-"        , sub_proc);
     add_procedure("*"        , mul_proc);
     add_procedure("quotient" , quotient_proc);
     add_procedure("remainder", remainder_proc);
-    add_procedure("="        , number_equalp_procedure);
-    add_procedure("<"        , less_thanp_proceduce);
-    add_procedure(">"        , greater_thanp_procedure);
-    add_procedure("print"    , print_proc);*/
+    add_procedure("="        , is_number_equal_proc);
+    add_procedure("<"        , is_less_than_proc);
+    add_procedure(">"        , is_greater_than_proc);
+
+    add_procedure("cons"    , cons_proc);
+    add_procedure("car"     , car_proc);
+    add_procedure("cdr"     , cdr_proc);
+    add_procedure("set-car!", set_car_proc);
+    add_procedure("set-cdr!", set_cdr_proc);
+    add_procedure("list"    , list_proc);
+
+    add_procedure("eq?", is_eq_proc);
 }
