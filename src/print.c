@@ -1,5 +1,4 @@
-void print(object *obj);
-
+# include "print-bison-merge.h" 
 void print_pair(object *pair) {
     object *car_obj;
     object *cdr_obj;
@@ -35,7 +34,7 @@ void print(object *obj) {
             printf("%s", obj->symbol);
             break;
         case FIXNUM:
-            printf("%ld", obj->number);
+            printf("%lu", obj->number);
             break;
         case CHARACTER:
             c = obj->character;
@@ -52,7 +51,7 @@ void print(object *obj) {
             }
             break;
         case STRING:
-	  str = obj->string;
+            str = obj->string;
             putchar('"');
             while (*str != '\0') {
                 switch (*str) {

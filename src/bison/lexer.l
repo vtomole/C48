@@ -22,6 +22,9 @@ LPAREN      "("
 RPAREN      ")"
 PLUS        "+"
 MULTIPLY    "*"
+MINUS       "-"
+DIVIDE      "/"
+SET         "="
  
 NUMBER      [0-9]+
 WS          [ \r\n\t]*
@@ -33,6 +36,9 @@ WS          [ \r\n\t]*
  
 {MULTIPLY}      { return TOKEN_MULTIPLY; }
 {PLUS}          { return TOKEN_PLUS; }
+{MINUS}         { return TOKEN_MINUS; }
+{DIVIDE}        { return TOKEN_DIVIDE; }
+{SET}           { return SET; }
 {LPAREN}        { return TOKEN_LPAREN; }
 {RPAREN}        { return TOKEN_RPAREN; }
 .               {  }

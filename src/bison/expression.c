@@ -13,7 +13,7 @@
 static SExpression *allocateExpression(){
   SExpression *b = (SExpression *)malloc(sizeof(SExpression));
   if (b == NULL) return NULL;
-  b->type = eVALUE;
+  b->type = VALUE;
   b->value = 0;
   b->left = NULL;
   b->right = NULL;
@@ -23,7 +23,7 @@ static SExpression *allocateExpression(){
 SExpression *createNumber(int value){
   SExpression *b = allocateExpression();
   if (b == NULL) return NULL;
-  b->type = eVALUE;
+  b->type = VALUE;
   b->value = value;
   return b;
 }

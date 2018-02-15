@@ -8,9 +8,6 @@
 #include "parser.h"
 #include "lexer.h"
   
-  /*int yyerror(SExpression **expression, yyscan_t scanner, const char *msg) {
-  printf("Error message %s\n", msg);
-  }*/
 %}
 
 %code requires {
@@ -35,12 +32,18 @@ typedef void* yyscan_t;
  
 %left '+' TOKEN_PLUS
 %left '*' TOKEN_MULTIPLY
+%left '-' TOKEN_MINUS
+%left '/' TOKEN_DIVIDE
+%left '=' TOKEN_SET
  
 %token TOKEN_LPAREN
 %token TOKEN_RPAREN
 %token TOKEN_PLUS
 %token TOKEN_MULTIPLY
 %token <value> TOKEN_NUMBER
+%token TOKEN_MINUS
+%token TOKEN_DIVIDE
+%token TOKEN_SET
 
 %type <expression> expr
  
@@ -51,8 +54,11 @@ input
   ;
  
 expr
-  : expr[L] TOKEN_PLUS expr[R]        { $$ = createOperation(ePLUS, $L,$R);}
-  | expr[L] TOKEN_MULTIPLY expr[R]    { $$ = createOperation(eMULTIPLY, $L,$R);}
+  : expr[L] TOKEN_PLUS expr[R]        { $$ = createOperation(PLUS, $L,$R);}
+  | expr[L] TOKEN_MULTIPLY expr[R]    { $$ = createOperation(MULTIPLY, $L,$R);}
+  | expr[L] TOKEN_MINUS expr[R]       { $$ = createOperation(MINUS, $L,$R);}
+  | expr[L] TOKEN_DIVIDE expr[R]      { $$ = createOperation(DIVIDE, $L,$R);}
+  | expr[L] TOKEN_SET expr[R]         { $$ = createOperation(SET, $L,$R);}
   | TOKEN_LPAREN expr[E] TOKEN_RPAREN { $$ = $E;}
   | TOKEN_NUMBER                      { $$ = createNumber($1);}
   ;

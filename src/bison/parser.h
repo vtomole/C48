@@ -40,7 +40,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 16 "parser.y" /* yacc.c:1909  */
+#line 13 "parser.y" /* yacc.c:1909  */
 
 #ifndef YY_TYPEDEF_YY_SCANNER_T
 #define YY_TYPEDEF_YY_SCANNER_T
@@ -56,29 +56,35 @@ typedef void* yyscan_t;
   {
     TOKEN_PLUS = 258,
     TOKEN_MULTIPLY = 259,
-    TOKEN_LPAREN = 260,
-    TOKEN_RPAREN = 261,
-    TOKEN_NUMBER = 262
+    TOKEN_MINUS = 260,
+    TOKEN_DIVIDE = 261,
+    TOKEN_SET = 262,
+    TOKEN_LPAREN = 263,
+    TOKEN_RPAREN = 264,
+    TOKEN_NUMBER = 265
   };
 #endif
 /* Tokens.  */
 #define TOKEN_PLUS 258
 #define TOKEN_MULTIPLY 259
-#define TOKEN_LPAREN 260
-#define TOKEN_RPAREN 261
-#define TOKEN_NUMBER 262
+#define TOKEN_MINUS 260
+#define TOKEN_DIVIDE 261
+#define TOKEN_SET 262
+#define TOKEN_LPAREN 263
+#define TOKEN_RPAREN 264
+#define TOKEN_NUMBER 265
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 
 union YYSTYPE
 {
-#line 31 "parser.y" /* yacc.c:1909  */
+#line 28 "parser.y" /* yacc.c:1909  */
 
   int value;
   SExpression *expression;
 
-#line 82 "parser.h" /* yacc.c:1909  */
+#line 88 "parser.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

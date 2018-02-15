@@ -9,9 +9,17 @@
  * @brief The operation type
  */
 typedef enum tagEOperationType {
-    eVALUE,
-    eMULTIPLY,
-    ePLUS
+    VALUE,
+    MULTIPLY,
+    DIVIDE,
+    PLUS,
+    SET,
+    MINUS,
+    BOOLEAN,
+    PAIR,
+    NUMBER,
+    STRING,
+    CHARACTER,
 } EOperationType;
 
 /**

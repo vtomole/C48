@@ -1,3 +1,5 @@
+#include "eval-apply.h"
+
 int self_evaluatingp(object *exp) {
     return booleanp(exp) || numberp(exp) || characterp(exp) ||
            is_string(exp);

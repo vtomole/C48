@@ -23,12 +23,15 @@ SExpression *getAST(const char *source_code){
   int lex_status;
 
   lex_status = yylex_init(&scanner);             
-  if (lex_status) return NULL;                   
+  if (lex_status){
+    fprintf(stderr, "Lex status Returning null\n");
+    return NULL;}                   
 
   state = yy_scan_string(source_code, scanner);   
-
   parse_status = yyparse(&expression, scanner);   
-  if (parse_status) return NULL;                 
+  if (parse_status){
+    fprintf(stderr,"Parse status Returning null\n");
+    return NULL;}               
 
   yy_delete_buffer(state, scanner);               
   yylex_destroy(scanner);
@@ -41,18 +44,55 @@ SExpression *getAST(const char *source_code){
  *  (This is where the "now run it" part would
  *   happen for a larger programming language.)
  */
+
+int pairp(SExpression *exp){ return exp->type == PAIR; }
+int booleanp(SExpression *exp){ return exp->type == BOOLEAN; }
+int numberp(SExpression *exp){ return exp->type == NUMBER; }
+int stringp(SExpression *exp){ return exp->type == STRING; }
+int characterp(SExpression *exp){ return exp->type == CHARACTER; }
+int valuep(SExpression *exp){ return exp->type == VALUE; }
+int self_evaluatingp (SExpression *exp){
+  return booleanp(exp) || numberp(exp) || characterp(exp) || stringp(exp)|| valuep(exp); 
+}
+int applicationp(SExpression *exp){ return pairp(exp); }
+
+
+SExpression *typeCheck(SExpression *AST){
  
-int evaluate(SExpression *e){
-  switch (e->type) {
-  case eVALUE:
-    return e->value;
-  case eMULTIPLY:
-    return evaluate(e->left) * evaluate(e->right);
-  case ePLUS:
-    return evaluate(e->left) + evaluate(e->right);
-  default:          
+
+  return AST;
+}
+
+int evaluate(SExpression *exp){
+  /*printf("In eval\n");*/
+ tailcall:
+  if (self_evaluatingp(exp)){
+    return exp->value;
+  }
+  else if (exp->type == MULTIPLY) {
+     return evaluate(exp->left) * evaluate(exp->right);
+  }
+  else if (exp->type == PLUS) {
+     return evaluate(exp->left) + evaluate(exp->right);
+  }
+  else if (exp->type == MINUS) {
+     return evaluate(exp->left) - evaluate(exp->right);
+  }
+   else if (exp->type == DIVIDE) {
+     return evaluate(exp->left) / evaluate(exp->right);
+  }
+   else if (exp->type == SET) {
+     printf("The operation is SET\n");
+     exit(1);
+  }
+   else if (applicationp(exp)){
+
+   }
+  else{
     return 0;
   }
+  
+  
 }
 
 /* -- start graphviz parse tree code -- 
@@ -68,14 +108,17 @@ char* node_name(SExpression *e){
   /* return char* description of parse tree node, e.g. '+', '-', '3', etc */
   char* name = (char *)malloc(16); 
   switch (e->type){
-  case eVALUE:
+  case VALUE:
     sprintf(name, "%i", e->value);
     return name;
-  case eMULTIPLY:
+  case MULTIPLY:
     sprintf(name, "*");
     return name;
-  case ePLUS:
+  case PLUS:
     sprintf(name, "+");
+    return name;
+  case MINUS:
+    sprintf(name, "-");
     return name;
   default:  
     sprintf(name, "???");
@@ -108,14 +151,20 @@ void write_graphviz(SExpression *e){
 
 /* -- main -- */
 
-int main(void){
+int main(int argc, char **argv){
   SExpression *e = NULL;
-  char test[] = " 4 + 2*10 + 3*( 5 + 1 ) ";
+  char test[1000];
   int result = 0;
+  while(1){
+  printf("repl> ");
+  fgets(test,1000,stdin);
   e = getAST(test);
+  /*e = typecheck(e)*/
   write_graphviz(e);
-  result = evaluate(e);
-  printf("Result of '%s' is %d\n", test, result);
+  
+  printf("%d", evaluate(e));
+  printf("\n");
   deleteExpression(e);
+  }
   return 0;
 }
