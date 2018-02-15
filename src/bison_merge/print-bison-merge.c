@@ -1,4 +1,4 @@
-void print(object *obj);
+# include "print-bison-merge.h" 
 void print_pair(object *pair) {
     object *car_obj;
     object *cdr_obj;

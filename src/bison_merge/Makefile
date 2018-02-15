@@ -1,15 +1,17 @@
-FILES	= lexer.c parser.c expression.c main.c 
-CC	= gcc
-CFLAGS	= -g -ansi
+# $Header: /home/johnl/flnb/code/RCS/Makefile.ch3,v 2.1 2009/11/08 02:53:18 johnl Exp $
+# Companion source code for "flex & bison", published by O'Reilly
+# Media, ISBN 978-0-596-15597-1
+# Copyright (c) 2009, Taughannock Networks. All rights reserved.
+# See the README file for license conditions and contact info.
 
-test:		$(FILES)
-		$(CC) $(CFLAGS) $(FILES) -o test -g
+# programs in chapter 3
 
-Lexer.c:	lexer.l 
-		flex lexer.l
 
-Parser.c:	parser.y pexer.c
-		bison parser.y
+test:	lexer.l parser.y expression.h expression.c
+	bison -d parser.y && \
+	flex -olexer.lex.c lexer.l && \
+	cc -g -o $@ parser.tab.c lexer.lex.c expression.c -lm
+
 
 clean:
-		rm -f *.o *~ lexer.c lexer.h parser.c parser.h tree.dot test 
+	rm -f parser.tab.c lexer.lex.c parser.tab.h test
