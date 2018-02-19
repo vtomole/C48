@@ -7,9 +7,7 @@
 
 /* symbol table */
 /* hash a symbol */
-static unsigned
-symhash(char *sym)
-{
+static unsigned symhash(char *sym){
   unsigned int hash = 0;
   unsigned c;
 
@@ -18,9 +16,7 @@ symhash(char *sym)
   return hash;
 }
 
-struct symbol *
-lookup(char* sym)
-{
+struct symbol *lookup(char* sym){
   struct symbol *sp = &symtab[symhash(sym)%NHASH];
   int scount = NHASH;		/* how many have we looked at */
 
@@ -283,9 +279,7 @@ static double callbuiltin(struct fncall *f){
  }
 }
 
-static double
-calluser(struct ufncall *f)
-{
+static double calluser(struct ufncall *f){
   struct symbol *fn = f->s;	/* function name */
   struct symlist *sl;		/* dummy arguments */
   struct ast *args = f->l;	/* actual arguments */
@@ -357,9 +351,7 @@ calluser(struct ufncall *f)
 }
 
 
-void
-treefree(struct ast *a)
-{
+void treefree(struct ast *a){
   switch(a->nodetype) {
 
     /* two subtrees */
@@ -397,9 +389,7 @@ treefree(struct ast *a)
 
 }
 
-void
-yyerror(char *s, ...)
-{
+void yyerror(char *s, ...){
   va_list ap;
   va_start(ap, s);
 
@@ -417,9 +407,7 @@ main()
 
 /* debugging: dump out an AST */
 int debug = 0;
-void
-dumpast(struct ast *a, int level)
-{
+void dumpast(struct ast *a, int level){
 
   printf("%*s", 2*level, "");	/* indent to this level */
   level++;
