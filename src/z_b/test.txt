@@ -1,4 +1,12 @@
-//fun factorial(i){if(i==1){ return(1); } else { return (factorial(i-1);); }; }
+fun factorial(i){ 
+	if(i==1){ 
+		return(1); 
+	} 
+	else { 
+		return (factorial(i-1) * i); 
+	}; 
+}
+factorial(4);
 //fun factorial(i){}
 //fun main() { i = 5; print (factorial(i)); }
 //fun factorial(i){ if(i==1) {  1; }  else { 5; } }
@@ -7,4 +15,4 @@
 //add(2, 3);
 //fun fizzbuzz(i){if((i%3)==0){ print fizz; } else { print buzz; }
 //fizzbuzz(3);
-print();
+//print();
