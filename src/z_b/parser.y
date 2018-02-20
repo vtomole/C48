@@ -18,13 +18,13 @@
 %token <fn> FUNC
 %token EOL
 
-%token IF THEN ELSE WHILE DO LET
+%token IF THEN ELSE WHILE DO FUN FOR
 
 
 %nonassoc <fn> CMP
 %right '='
 %left '+' '-'
-%left '*' '/'
+%left '*' '/' '%'
 %nonassoc '|' UMINUS
 
 %type <a> exp stmt list explist
@@ -34,18 +34,15 @@
 
 %%
 
-stmt: IF exp THEN list           { $$ = newflow('I', $2, $4, NULL); }
-   | IF exp THEN list ELSE list  { $$ = newflow('I', $2, $4, $6); }
-   | WHILE exp DO list           { $$ = newflow('W', $2, $4, NULL); }
+stmt:IF '(' exp ')' '{' list '}'                   { $$ = newflow('I', $3, $6, NULL); }
+   | IF '(' exp ')'  '{' list '}' ELSE '{'list '}'  { $$ = newflow('I', $3, $6, $10); }
+   | IF '(' exp ')'  '{' list '}' ELSE stmt         { $$ = newflow('I', $3, $6, $9); }
+   | WHILE '(' exp ')'  '{' list '}'                { $$ = newflow('W', $3, $6, NULL); }    
    | exp
 ;
 
 list: /* nothing */ { $$ = NULL; }
-   | stmt ';' list { if ($3 == NULL)
-	                $$ = $1;
-                      else
-			$$ = newast('L', $1, $3);
-                    }
+   | stmt ';' list { if ($3 == NULL) $$ = $1; else $$ = newast('L', $1, $3); }
    ;
 
 exp: exp CMP exp          { $$ = newcmp($2, $1, $3); }
@@ -53,6 +50,7 @@ exp: exp CMP exp          { $$ = newcmp($2, $1, $3); }
    | exp '-' exp          { $$ = newast('-', $1,$3);}
    | exp '*' exp          { $$ = newast('*', $1,$3); }
    | exp '/' exp          { $$ = newast('/', $1,$3); }
+   | exp '%' exp          { $$ = newast('%', $1,$3); }
    | '|' exp              { $$ = newast('|', $2, NULL); }
    | '(' exp ')'          { $$ = $2; }
    | '-' exp %prec UMINUS { $$ = newast('M', $2, NULL); }
@@ -71,15 +69,10 @@ symlist: NAME       { $$ = newsymlist($1, NULL); }
 ;
 
 calclist: /* nothing */
-  | calclist stmt EOL {
-    if(debug) dumpast($2, 0);
-     printf("= %4.4g\n> ", eval($2));
-     treefree($2);
-    }
-  | calclist LET NAME '(' symlist ')' '=' list EOL {
-                       dodef($3, $5, $8);
-                       printf("Defined %s\n> ", $3->name); }
-
+  | EOL
+  | calclist stmt ';' EOL { if(debug) dumpast($2, 0); printf("= %4.4g\n> ", eval($2)); treefree($2); }
+  | calclist FUN NAME '(' symlist ')' '{' list '}' EOL 
+				{ dodef($3, $5, $8); printf("Defined %s\n> ", $3->name); }
   | calclist error EOL { yyerrok; printf("> "); }
  ;
 %%

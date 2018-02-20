@@ -1,0 +1,13 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+char *open_file(char *name){
+  FILE *file;
+  file = fopen(name, "r");
+  if(!file){
+    fprintf(stderr, "File does not exist.");
+    return NULL;
+  }
+
+  
+}

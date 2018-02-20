@@ -13,12 +13,15 @@ EXP	([Ee][-+]?[0-9]+)
 "-" |
 "*" |
 "/" |
+"%" |
 "=" |
 "|" |
 "," |
 ";" |
 "(" |
-")"     { return yytext[0]; }
+")" |
+"{" |
+"}"   { return yytext[0]; }
 
  /* comparison ops */
 ">"     { yylval.fn = 1; return CMP; }
@@ -35,16 +38,19 @@ EXP	([Ee][-+]?[0-9]+)
 "else"  { return ELSE; }
 "while" { return WHILE; }
 "do"    { return DO; }
-"let"   { return LET;}
+"fun"   { return FUN;}
+"for"   { return FOR; }
+	/** "end"   { return EOL; } **/
 
  /* built in functions */
 "sqrt"  { yylval.fn = B_sqrt; return FUNC; }
 "exp"   { yylval.fn = B_exp; return FUNC; }
 "log"   { yylval.fn = B_log; return FUNC; }
 "print" { yylval.fn = B_print; return FUNC; }
-
+"return" { yylval.fn = B_return; return FUNC; }
  /* debug hack */
 "debug"[0-9]+ { debug = atoi(&yytext[5]); printf("debug set to %d\n", debug); }
+
 
  /* names */
 [a-zA-Z][a-zA-Z0-9]*  { yylval.s = lookup(yytext); return NAME; }
@@ -52,10 +58,12 @@ EXP	([Ee][-+]?[0-9]+)
 [0-9]+"."[0-9]*{EXP}? |
 "."?[0-9]+{EXP}? { yylval.d = atof(yytext); return NUMBER; }
 
-"//".*  
-[ \t]   /* ignore white space */ 
+"//".*"\n"  
+[ \t]   /* ignore white space */
+
+	/** [\n]    /* ignore white space */
 \\\n    printf("c> "); /* ignore line continuation */
 "\n"    { return EOL; }
-
 .	{ yyerror("Mystery character %c\n", *yytext); }
+
 %%
