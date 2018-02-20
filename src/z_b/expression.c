@@ -6,10 +6,20 @@
 #include "expression.h"
 #include "read_file.c"
 
+
 /* symbol table */
 /* hash a symbol */
 static unsigned symhash(char *sym){
-  unsigned int hash = 0;
+  unsigned int hash = 0;int main(int argc, char *argv[]){
+  if(argc > 1 && argv[1][0] == 'r'){
+    open_file("test.txt");
+ }
+  else{
+    //printf("In else statement\n");
+    printf("> ");
+  }
+  return yyparse();
+}
   unsigned c;
 
   while(c = *sym++) hash = hash*9 ^ c;
@@ -275,6 +285,9 @@ static double callbuiltin(struct fncall *f){
  case B_print:
    printf("= %4.4g\n", v);
    return v;
+ case B_return:
+   //printf("= %4.4g\n", v);
+   return v;
  default:
    yyerror("Unknown built-in function %d", functype);
    return 0.0;
@@ -404,8 +417,9 @@ void yyerror(char *s, ...){
 int main(int argc, char *argv[]){
   if(argc > 1 && argv[1][0] == 'r'){
     open_file("test.txt");
-  }
+ }
   else{
+    //printf("In else statement\n");
     printf("> ");
   }
   return yyparse();
@@ -471,3 +485,5 @@ void dumpast(struct ast *a, int level){
     return;
   }
 }
+
+

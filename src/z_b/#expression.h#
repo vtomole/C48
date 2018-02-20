@@ -39,8 +39,7 @@ enum bifs {			/* built-in functions */
   B_sqrt = 1,
   B_exp,
   B_log,
-  B_print,
-  B_return
+  B_print
 };
 
 /* nodes in the Abstract Syntax Tree */
@@ -113,5 +112,3 @@ void yyerror(char *s, ...);
 extern int debug;
 void dumpast(struct ast *a, int level);
 
-/*to read commands from a file */
-int open_file(const char *name);

@@ -38,7 +38,7 @@ EXP	([Ee][-+]?[0-9]+)
 "else"  { return ELSE; }
 "while" { return WHILE; }
 "do"    { return DO; }
-"let"   { return LET;}
+"fun"   { return FUN;}
 "for"   { return FOR; }
 	/** "end"   { return EOL; } **/
 
@@ -47,7 +47,7 @@ EXP	([Ee][-+]?[0-9]+)
 "exp"   { yylval.fn = B_exp; return FUNC; }
 "log"   { yylval.fn = B_log; return FUNC; }
 "print" { yylval.fn = B_print; return FUNC; }
-
+"return" { yylval.fn = B_return; return FUNC; }
  /* debug hack */
 "debug"[0-9]+ { debug = atoi(&yytext[5]); printf("debug set to %d\n", debug); }
 

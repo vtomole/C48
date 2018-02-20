@@ -1,6 +1,10 @@
-x = 5
-y = 4
-//
-//if(x < y){ 60; } else if(x == y){ 80; } else {90;}
-//let add(x, y) = x+ y;
-//add(x, y)
+//fun factorial(i){if(i==1){ return(1); } else { return (factorial(i-1);); }; }
+//fun factorial(i){}
+//fun main() { i = 5; print (factorial(i)); }
+//fun factorial(i){ if(i==1) {  1; }  else { 5; } }
+//factorial(4);
+//fun add(x, y){ x + y; }
+//add(2, 3);
+//fun fizzbuzz(i){if((i%3)==0){ print fizz; } else { print buzz; }
+//fizzbuzz(3);
+print();
