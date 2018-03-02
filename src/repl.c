@@ -17,7 +17,7 @@ int main(int argc, char **argv){
   object* cons1;
   char* res;
   FILE  *fp, *fp1, *fp2;
-  
+  /* USES S EXPRESSIONS */
   init();
   /*fp1 = fopen("hello.c48", "r");
   fgets (str, 10000, fp1);
@@ -29,9 +29,13 @@ int main(int argc, char **argv){
   fp = fopen("hello.sexpr", "r");*/
   while (1) {
     printf("repl> ");
-    print(eval(read(stdin), the_global_environment));
+    print(typecheck_eval(read(stdin), the_global_environment));
     printf("\n");
-  }    
+    }
+
+   
+
+  cons1 = cons(define_symbol, the_empty_list);
   return 0;
 }//end of main>
 

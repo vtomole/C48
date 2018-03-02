@@ -1,5 +1,5 @@
 # include "environment.h" 
-
+void print(object *obj);
 int count_objects(object* cursor){
   int c = 0;
   while(cursor != NULL){
@@ -215,13 +215,42 @@ void set_cdr(object *obj, object* value) {
 #define cdddar(obj) cdr(cdr(cdr(car(obj))))
 #define cddddr(obj) cdr(cdr(cdr(cdr(obj))))
 
-object *make_primitive_proc(
-           object *(*fn)(struct object *arguments)) {
+primitive_type char_to_enum(char* proc){
+  if(strcmp(proc, "+") ==0){
+    printf("It's a plus\n");
+    return MATH;
+  }
+  else{
+    return CHAR;
+  }
+}
+object *set_acceptable(object *obj, primitive_type prim_type){
+  switch (prim_type){
+  case 0:
+    printf("In case 1\n");
+    obj->primitive_proc.acceptables = cons(make_string("FIXNUM"), (cons (make_string("DOUBLE"), the_empty_list)));
+    print(obj->primitive_proc.acceptables);
+    break;
+  case 1:
+    obj->primitive_proc.acceptables = cons(make_string("CHAR"),  the_empty_list);break;
+  default:
+    printf("This should not happen after PLUS\n");
+    obj->primitive_proc.acceptables = the_empty_list;
+    
+  }
+  return obj;
+}
+
+object *make_primitive_proc(object *(*fn)(struct object *arguments), char *proc) {
     object *obj;
+
+    printf("PRIM PROC %s\n", proc);
 
     obj = alloc_object();
     obj->obj_type = PRIMITIVE_PROC;
     obj->primitive_proc.fn = fn;
+    obj ->primitive_proc.prim_type = 1;
+    set_acceptable(obj, char_to_enum(proc));
     return obj;
 }
 
@@ -490,6 +519,28 @@ object *lookup_variable_value(object *var, object *env) {
     exit(1);
 }
 
+object *lookup_variable_type(object *var, object *env) {
+//printf("Number of objects in environment %d\n", count_objects(env));
+    object *frame;
+    object *vars;
+    object *vals;
+    while (!is_the_empty_list(env)) {
+        frame = first_frame(env);
+        vars = frame_variables(frame);
+        vals = frame_values(frame);
+        while (!is_the_empty_list(vars)) {
+            if (var == car(vars)) {
+                return car(vals);
+            }
+            vars = cdr(vars);
+            vals = cdr(vals);
+        }
+        env = enclosing_environment(env);
+    }
+    fprintf(stderr, "unbound variable\n");
+    exit(1);
+}
+
 void set_variable_value(object *var, object *val, object *env) {
     object *frame;
     object *vars;
@@ -571,7 +622,7 @@ void init(void) {
 
 #define add_procedure(scheme_name, c_name)              \
     define_variable(make_symbol(scheme_name),           \
-                    make_primitive_proc(c_name),        \
+                    make_primitive_proc(c_name, scheme_name),	\
                     the_global_environment);
 
     add_procedure("null?"      , is_null_proc);
