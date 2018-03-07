@@ -1,6 +1,8 @@
-typedef enum {EMPTY_LIST, BOOLEAN, SYMBOL, FIXNUM,
+typedef enum {EMPTY_LIST, BOOLEAN, SYMBOL, FIXNUM, FLOAT,
               CHARACTER, STRING, PAIR, PRIMITIVE_PROC,
               COMPOUND_PROC} object_type;
+
+typedef enum {MATH, CHAR} primitive_type;
 
 typedef struct object{  
   object_type obj_type;
@@ -18,6 +20,8 @@ typedef struct object{
   
   struct primitive_proc{
     struct object *(*fn)(struct object *arguments);
+    primitive_type prim_type;
+    struct object* acceptables;
   }primitive_proc;
 
   struct compound_proc {
