@@ -228,7 +228,7 @@ object *set_acceptable(object *obj, primitive_type prim_type){
   switch (prim_type){
   case 0:
     printf("In case 1\n");
-    obj->primitive_proc.acceptables = cons(make_string("FIXNUM"), (cons (make_string("DOUBLE"), the_empty_list)));
+    obj->primitive_proc.acceptables = cons(make_fixnum(FIXNUM), (cons (make_fixnum(FLOAT), the_empty_list)));
     print(obj->primitive_proc.acceptables);
     break;
   case 1:
