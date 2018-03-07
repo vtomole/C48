@@ -47,7 +47,7 @@ extern int yydebug;
   {
     NUMBER = 258,
     NAME = 259,
-    FUNC = 260,
+    FUNCT = 260,
     EOL = 261,
     IF = 262,
     THEN = 263,
@@ -66,7 +66,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 7 "parser.y" /* yacc.c:1909  */
+#line 8 "parser.y" /* yacc.c:1909  */
 
   struct ast *a;
   double d;

@@ -10,18 +10,7 @@
 /* symbol table */
 /* hash a symbol */
 static unsigned symhash(char *sym){
-
-    unsigned int hash = 0;int main(int argc, char *argv[]){
-    if(argc > 1 && argv[1][0] == 'r'){
-      open_file("test.txt");
-    }
-    else{
-      //printf("In else statement\n");
-      printf("> ");
-    }
-    return yyparse();
-  }
-
+  unsigned int hash = 0;
   unsigned c;
 
   while(c = *sym++) hash = hash*9 ^ c;
@@ -427,6 +416,8 @@ int main(int argc, char *argv[]){
   return yyparse();
 }
 
+
+
 /* debugging: dump out an AST */
 int debug = 0;
 
@@ -487,5 +478,6 @@ void dumpast(struct ast *a, int level){
     return;
   }
 }
+
 
 
