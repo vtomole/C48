@@ -455,23 +455,28 @@ tailcall:
 	  
 	  while (!is_the_empty_list(type_arguments)) {
 	    if(primary_type->obj_type != car(type_arguments)->obj_type){
-	      fprintf(stderr, "Type error\n");
+	      fprintf(stderr, "Type error expression\n");
 	      exit(0);
 	    }	      
 	    type_arguments = cdr(type_arguments);
 	  }
-
+	  //printf("%d\n",car(acceptables)->number);
 	  type_arguments = list_of_values(operands(exp), env);
-	  /*
+
+	  int type_flag = 0;
+
 	  while (!is_the_empty_list(acceptables)) {
-	    printf("%d\n",car(type_arguments->primitive_proc.acceptables)->obj_type );
-	    if(primary_type->obj_type != car(type_arguments->primitive_proc.acceptables)->obj_type){
-	      fprintf(stderr, "Type error\n");
-	    }	      
+	   // printf("%d\n",car(type_arguments->primitive_proc.acceptables)->number);
+	     if(primary_type->obj_type == car(acceptables)->number){
+	      	     //fprintf(stderr, "Type error\n");
+	       type_flag = 1;
+	      }	     
 	    acceptables = cdr(acceptables);
-	    }*/
-      
-            return (procedure->primitive_proc.fn)(arguments);
+	    }
+	  if(type_flag == 0)
+	    fprintf(stderr, "Type error variables\n");
+	  
+          return (procedure->primitive_proc.fn)(arguments);
         }
         else if (is_compound_proc(procedure)) {
             env = extend_environment( 
