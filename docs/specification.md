@@ -41,6 +41,8 @@ and
 or 
 equal
 switch
+true
+false
 
 
 Operators and punctuation:
