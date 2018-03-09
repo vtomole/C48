@@ -43,11 +43,11 @@ EXP	([Ee][-+]?[0-9]+)
 	/** "end"   { return EOL; } **/
 
  /* built in functions */
-"sqrt"  { yylval.fn = B_sqrt; return FUNC; }
-"exp"   { yylval.fn = B_exp; return FUNC; }
-"log"   { yylval.fn = B_log; return FUNC; }
-"print" { yylval.fn = B_print; return FUNC; }
-"return" { yylval.fn = B_return; return FUNC; }
+"sqrt"  { yylval.fn = B_sqrt; return FUNCT; }
+"exp"   { yylval.fn = B_exp; return FUNCT; }
+"log"   { yylval.fn = B_log; return FUNCT; }
+"print" { yylval.fn = B_print; return FUNCT; }
+"return" { yylval.fn = B_return; return FUNCT; }
  /* debug hack */
 "debug"[0-9]+ { debug = atoi(&yytext[5]); printf("debug set to %d\n", debug); }
 
