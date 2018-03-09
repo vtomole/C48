@@ -1,0 +1,94 @@
+//**************************************************************
+//                    single length number test
+//**************************************************************
+
+//positive number test
+4 + 2; //returns 6
+4 - 2; //returns 2
+4 * 2; //returns 8
+4 / 2; //returns 2
+4 % 2; //returns 0
+| 4;   //returns 4.0
+(4);   //returns 4
+-4;    //returns -4
+4 / 0; //throws a divide by zero error
+
+//negative number test
+-4 + 2; //returns -2
+-4 - 2; //returns -6
+-4 * 2; //returns -8
+-4 / 2; //returns -2
+-4 % 2; //returns 0
+| -4;   //returns 4.0
+(-4);   //returns -4
+--4;    //thrown an error for no second operand
+
+//**************************************************************
+//                    2+ length number test
+//**************************************************************
+
+//todo
+
+//**************************************************************
+//                         decimal test
+//**************************************************************
+
+//positive decimal test
+4.0 + 2.0; //returns 6.0
+4.0 - 2.0; //returns 2.0
+4.0 * 2.0; //returns 8.0
+4.0 / 2.0; //returns 2.0
+4.0 % 2.0; //returns 0.0
+| 4.0;     //returns 4.0
+(4.0);     //returns 4.0
+-4.0;      //returns -4.0
+4.0 / 0.0; //throws a divide by zero error
+
+//negative decimal test
+-4.0 + 2.0; //returns -2.0
+-4.0 - 2.0; //returns -6.0
+-4.0 * 2.0; //returns -8.0
+-4.0 / 2.0; //returns -2.0
+-4.0 % 2.0; //returns 0.0
+| -4.0;     //returns 4.0
+(-4.0);     //returns -4.0
+--4.0;      //thrown an error for no second operand
+
+//**************************************************************
+//                    incompatable type testing
+//**************************************************************
+
+//testing numbers with +
+4 + 'a';   //character comparison
+4 + "a";   //string comparison
+4 + 4.0;   //decimal comparison
+4 + true;  //boolean comparisons
+4 + false;
+
+//testing decimals with +
+4.0 + 'a';
+4.0 + "a";
+4.0 + true;
+4.0 + false;
+
+//**************************************************************
+//                      comparison testing
+//**************************************************************
+
+//todo
+
+//**************************************************************
+//                       keyword testing
+//**************************************************************
+
+//todo
+
+//**************************************************************
+//                 built in function testing
+//**************************************************************
+
+//refer to built in funcitons in lexer.l
+sqrt(4); //returns 2
+
+
+
