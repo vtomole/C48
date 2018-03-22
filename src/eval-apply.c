@@ -443,12 +443,12 @@ tailcall:
         goto tailcall;
     }
     else if (is_application(exp)) {
-      printf("It's apply \n");
+      //printf("It's apply \n");
       procedure = eval(operator(exp), env);
         arguments = list_of_values(operands(exp), env);
 	type_arguments = list_of_values(operands(exp), env);
         if (primitivep(procedure)) {
-	  printf("It's primitive\n");
+	  //printf("It's primitive\n");
 	  acceptables = procedure->primitive_proc.acceptables;
 	  
 	  primary_type = car(cdr(type_arguments));
@@ -456,7 +456,7 @@ tailcall:
 	  while (!is_the_empty_list(type_arguments)) {
 	    if(primary_type->obj_type != car(type_arguments)->obj_type){
 	      fprintf(stderr, "Type error expression\n");
-	      exit(0);
+	      exit(1);
 	    }	      
 	    type_arguments = cdr(type_arguments);
 	  }
@@ -473,8 +473,12 @@ tailcall:
 	      }	     
 	    acceptables = cdr(acceptables);
 	    }
-	  if(type_flag == 0)
+	  
+	  if(type_flag == 0){
 	    fprintf(stderr, "Type error variables\n");
+	    exit(1);
+	  }
+	  
 	  
           return (procedure->primitive_proc.fn)(arguments);
         }

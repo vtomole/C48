@@ -75,7 +75,7 @@ object *make_symbol(char *value) {
     object *obj;
     object *element;
     
-    /* search for they symbol in the symbol table */
+    /* search for the symbol in the symbol table */
     element = symbol_table;
     while (!is_the_empty_list(element)) {
         if (strcmp(car(element)->symbol, value) == 0) {
@@ -107,6 +107,15 @@ object *make_fixnum(long value) {
     obj = alloc_object();
     obj->obj_type = FIXNUM;
     obj->number = value;
+    return obj;
+}
+
+object *make_float(double value) {
+    object *obj;
+
+    obj = alloc_object();
+    obj->obj_type = FLOAT;
+    obj->decimal = value;
     return obj;
 }
 
@@ -216,10 +225,11 @@ void set_cdr(object *obj, object* value) {
 #define cddddr(obj) cdr(cdr(cdr(cdr(obj))))
 
 primitive_type char_to_enum(char* proc){
-  if(strcmp(proc, "+") ==0){
-    printf("It's a plus\n");
+  if(strcmp(proc, "+") ==0 || strcmp(proc, "-") ==0) || strcmp(proc, "+") ==0){
+    //printf("It's a plus\n");
     return MATH;
   }
+     
   else{
     return CHAR;
   }
@@ -227,14 +237,14 @@ primitive_type char_to_enum(char* proc){
 object *set_acceptable(object *obj, primitive_type prim_type){
   switch (prim_type){
   case 0:
-    printf("In case 1\n");
+    //printf("In case 1\n");
     obj->primitive_proc.acceptables = cons(make_fixnum(FIXNUM), (cons (make_fixnum(FLOAT), the_empty_list)));
-    print(obj->primitive_proc.acceptables);
+    //print(obj->primitive_proc.acceptables);
     break;
   case 1:
     obj->primitive_proc.acceptables = cons(make_string("CHAR"),  the_empty_list);break;
   default:
-    printf("This should not happen after PLUS\n");
+    //printf("This should not happen after PLUS\n");
     obj->primitive_proc.acceptables = the_empty_list;
     
   }
@@ -244,7 +254,7 @@ object *set_acceptable(object *obj, primitive_type prim_type){
 object *make_primitive_proc(object *(*fn)(struct object *arguments), char *proc) {
     object *obj;
 
-    printf("PRIM PROC %s\n", proc);
+    //printf("PRIM PROC %s\n", proc);
 
     obj = alloc_object();
     obj->obj_type = PRIMITIVE_PROC;
