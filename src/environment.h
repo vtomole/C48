@@ -17,6 +17,7 @@ typedef struct object{
   long number;
   //enum boolean empty_list;
   int boolean;
+  double decimal;
   
   struct primitive_proc{
     struct object *(*fn)(struct object *arguments);

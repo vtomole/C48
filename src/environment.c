@@ -225,7 +225,7 @@ void set_cdr(object *obj, object* value) {
 #define cddddr(obj) cdr(cdr(cdr(cdr(obj))))
 
 primitive_type char_to_enum(char* proc){
-  if(strcmp(proc, "+") ==0 || strcmp(proc, "-") ==0) || strcmp(proc, "+") ==0){
+  if(strcmp(proc, "+") ==0 || strcmp(proc, "-") ==0 || strcmp(proc, "+") ==0){
     //printf("It's a plus\n");
     return MATH;
   }
