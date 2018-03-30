@@ -1,183 +1,125 @@
-#include "expression.h"
+#include "eval-apply.h"
 
-/**********************************************************
-* Notes
-*
-* Data types:
-*
-* Env: environment for evaluating the scopes
-* Expr: parent model of Expr_
-* Expr_Add:
-* Expr_Double:
-* Expr_Int:
-* Expr_Var:
-* object: Node from tree, arguement in this situation
-* Prog: Used to read statements, similar to Stm_Block
-* Program: Assumed to be the orignal tree
-* scope: layers of the program that contain variable names
-* Stm: parent model of Stm_
-* Stm_Assign:
-* Stm_Block:
-* Stm_Decl:
-* Stm_Print:
-* Type: Parent model of Type_
-* Type_Int:
-* Type_Double:
-* typeCode: enum of the data types, assumed to be types from lexer.l
+object *typecheck(object *exp, object *env) {
+    object *procedure;
+    object *arguments;
+    object *type_object;
+    object *primary_type;
+    object *acceptables;
+    object *type_arguments;
 
-***********************************************************/
-/*TypeChecker elements*/
+tailcall:
+    if (self_evaluatingp(exp)) {
+        return exp;
+    }
+    else if (variablep(exp)) {
+      type_object = lookup_variable_value(exp, env);
+      printf("Type of object %d\n", type_object->obj_type);
+      return type_object;
+    }
+    else if (is_quoted(exp)) {
+      printf("It's quoted \n");
+        return text_of_quotation(exp);
+    }
+    else if (is_assignment(exp)) {
+      printf("It's an assignment \n");
+        return eval_assignment(exp, env);
+    }
+    else if (is_definition(exp)) {
+      printf("It's define \n");
+        return eval_definition(exp, env);
+    }
+    else if (is_if(exp)) {
+      printf("It's if \n");
+        exp = is_true(eval(if_predicate(exp), env)) ?
+                  if_consequent(exp) :
+                  if_alternative(exp);
+        goto tailcall;
+    }
+    else if (is_lambda(exp)) {
+      printf("It's lambda \n");
+        return make_compound_proc(lambda_parameters(exp),
+                                  lambda_body(exp),
+                                  env);
+    }
+    else if (is_begin(exp)) {
+      printf("It's begin \n");
+        exp = begin_actions(exp);
+        while (!is_last_exp(exp)) {
+            eval(first_exp(exp), env);
+            exp = rest_exps(exp);
+        }
+        exp = first_exp(exp);
+        goto tailcall;
+    }
+    else if (is_cond(exp)) {
+      printf("It's cond \n");
+        exp = cond_to_if(exp);
+        goto tailcall;
+    }
+    else if (is_let(exp)) {
+      printf("It's let \n");
+        exp = let_to_application(exp);
+        goto tailcall;
+    }
+    else if (is_application(exp)) {
+      //printf("It's apply \n");
+      procedure = eval(operator(exp), env);
+        arguments = list_of_values(operands(exp), env);
+	type_arguments = list_of_values(operands(exp), env);
+        if (primitivep(procedure)) {
+	  //printf("It's primitive\n");
+	  acceptables = procedure->primitive_proc.acceptables;
+	  
+	  primary_type = car(cdr(type_arguments));
+	  
+	  while (!is_the_empty_list(type_arguments)) {
+	    if(primary_type->obj_type != car(type_arguments)->obj_type){
+	      fprintf(stderr, "Type error expression\n");
+	      exit(1);
+	    }	      
+	    type_arguments = cdr(type_arguments);
+	  }
+	  //printf("%d\n",car(acceptables)->number);
+	  type_arguments = list_of_values(operands(exp), env);
 
-/*enum the types an object can be*/
-static enum typeCode{
-	ERROR,
-	NUMBER,
-	VALUE
-	/*NAME,
-	NUM,
-	EOL*/	
+	  int type_flag = 0;
+
+	  while (!is_the_empty_list(acceptables)) {
+	   // printf("%d\n",car(type_arguments->primitive_proc.acceptables)->number);
+	     if(primary_type->obj_type == car(acceptables)->number){
+	      	     //fprintf(stderr, "Type error\n");
+	       type_flag = 1;
+	      }	     
+	    acceptables = cdr(acceptables);
+	    }
+	  
+	  if(type_flag == 0){
+	    fprintf(stderr, "Type error variables\n");
+	    exit(1);
+	  }
+	  
+	  
+          return exp;
+        }
+        else if (is_compound_proc(procedure)) {
+            env = extend_environment( 
+                       procedure->compound_proc.parameters,
+                       arguments,
+                       procedure->compound_proc.env);
+            exp = make_begin(procedure->compound_proc.body);
+            goto tailcall;
+        }
+        else {
+            fprintf(stderr, "unknown procedure type\n");
+            exit(1);
+        }
+        
+    }
+    else {
+        fprintf(stderr, "cannot eval unknown expression type\n");
+        exit(1);
+    }
+    fprintf(stderr, "eval illegal state\n");
+    exit(1);
 }
-
-/*Environment elements*/
-typedef struct scope{
-	char *name;
-	scope *next;
-}scope;
-
-static scope scopes = enterScope();
-
-typeCode lookUpVar(char *x){
-	scope cur = scopes;
-	while(cur != NULL){
-		typeCode t = cur.name; /*interesting*/
-		if(t != NULL)
-			return t;
-		cur = cur->next;
-	}
-	return 0; /*error needs to be thrown*/
-}
-
-void addVar(char *x, typeCode t){
-	scope cur = scopes;
-	scope newScope; /* need to allocate memory */
-
-	/*iterate through current scopes*/
-	while(cur != NULL){
-		if(strcmp(cur->name, x) == 0)
-			/* needs to throw an error */
-		cur = cur->next;
-	}
-	
-	/* declare and add new scope */
-	cur->next = newScope;
-}
-	
-void enterScope(){
-	scope newScope; /* need to allocate memory */
-
-	scopes->next = newScope;
-}
-
-void leaveScope(){
-	/* need to free memory */
-	scopes->next = NULL;
-}
-
-/*typecheck elements*/
-
-void typecheck(object *e){
-	Prog prog = (Prog e);
-	Env env = new Env(); //fix new
-	for(Stm s : prog.liststm_){
-		checkStm(s, env);
-	}
-}
-
-/*statement accepter elements*/
-
-void checkStm(Stm st, Env env){
-	//call the statement checker in the environment
-	//make sure it accepts. make sure type is valid in env.
-}
-
-/*statement checker elements*/
-//contains the methods of the java StmChecker class that implements Stm.Visitor
-
-object visit(Stm_Decl p, Env env){
-	env.addVar(p.ident_, typeCode(p.type_));
-	return null;
-}
-
-object visit(Stm_Assign p, Env env){
-	TypeCode t = env.lookUpVar(p.ident_);
-	checkExpr(p.expr_, t, env);
-	return null;
-}
-
-object visit(Stm_Block p, Env env){
-	env.enterScope(); /* under environment elements */
-	for(Stm s : p.liststm_){
-		checkStm(s, env);
-	}
-	env.leaveScope();
-	return null;
-}
-
-object visit(Stm_Print p, Env env){
-	//make sure that a type must exist
-	inferExpr(p.expr_, env);
-	return null;
-}
-
-/*expression checker elements*/
-
-void checkExpr(Expr e, TypeCode t, Env env){
-	TypeCode expr_type = inferExpr(e, env);
-	if(expr_type != t){
-		/* needs to throw an error*/
-	}
-}
-
-/*type inference elements*/
-//contains the methods of the java TypeInferrer class that implements Exp.Visitor
-
-TypeCode visit(Expr_Var p, Env env){
-	return env.lookupVar(p.ident_);
-}
-
-TypeCode visit(Expr_Int p, Env env){
-	return TypeCode.INT;
-}
-
-TypeCode visit(Expr_Double p, Env env){
-	return TypeCode.DOUBLE;
-}
-
-TypeCode visit(Expr_Add p, Env env){
-	TypeCode t1 = p.expr_1.accept(this, env); //this refers to p
-	TypeCode t2 = p.expr_2.accept(this, env);
-		
-	if(t1 != t2){
-		/* needs to throw an error */
-	}
-
-	return t1;
-}
-
-/*TypeCode elements*/
-TypeCode typeCode(Type t){
-	return t.accept(new TypeCoder(), null); //fix new
-}
-
-/*TypeCoder elements*/
-//contains the methods of the java TypeCoder class that implements Type.Visitor
-
-TypeCode visit(Type_Int t, object arg){
-	return TypeCode.INT;
-}
-
-TypeCode visit(Type_Double t, object arg){
-	return TypeCode.DOUBLE;
-}
-
-

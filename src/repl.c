@@ -10,7 +10,7 @@
 #include "eval-apply.c"
 #include "print.c"
 #include "garbage_collector.c"
-
+#include "typechecker.c"
 
 int main(int argc, char **argv){
   char str[1000];
