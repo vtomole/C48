@@ -35,10 +35,10 @@ int main(int argc, char **argv){
   object *temp_list = the_empty_list;
 
  
-  object *add =  make_symbol("-");
+  object *add =  make_symbol("+");
  
-  object *num1 = make_fixnum(2);
-  object *num2 = make_fixnum(1);
+  object *num1 = make_float(2.9);
+  object *num2 = make_float(1.1);
 
   
  
@@ -53,7 +53,7 @@ int main(int argc, char **argv){
   //print(temp_list);
   
 
-  print(typecheck_eval(temp_list, the_global_environment));
+  print(eval(typecheck(temp_list, the_global_environment), the_global_environment));
 
   
   return 0;

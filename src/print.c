@@ -36,6 +36,9 @@ void print(object *obj) {
         case FIXNUM:
             printf("%lu", obj->number);
             break;
+        case FLOAT:
+            printf("%f", obj->decimal);
+            break;
         case CHARACTER:
             c = obj->character;
             printf("#\\");

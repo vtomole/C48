@@ -2,7 +2,7 @@
 /*Temporary import of print if this breaks expression.c this is why*/
 void print(object *obj);
 int self_evaluatingp(object *exp) {
-    return booleanp(exp) || numberp(exp) || characterp(exp) ||
+    return booleanp(exp) || numberp(exp) || characterp(exp) || floatp(exp) ||
            is_string(exp);
 }
 
@@ -380,7 +380,7 @@ tailcall:
 
 
 
-object *typecheck_eval(object *exp, object *env) {
+object *typecheck(object *exp, object *env) {
     object *procedure;
     object *arguments;
     object *type_object;
@@ -480,7 +480,7 @@ tailcall:
 	  }
 	  
 	  
-          return (procedure->primitive_proc.fn)(arguments);
+          return exp;
         }
         else if (is_compound_proc(procedure)) {
             env = extend_environment( 

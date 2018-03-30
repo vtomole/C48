@@ -123,6 +123,10 @@ char numberp(object *obj) {
     return obj->obj_type == FIXNUM;
 }
 
+char floatp(object *obj) {
+    return obj->obj_type == FLOAT;
+}
+
 object *make_character(char value) {
     object *obj;
 
@@ -337,12 +341,22 @@ object *string_to_symbol_proc(object *arguments) {
 
 object *add_proc(object *arguments) {
     long result = 0;
+    double resultf = 0;
     
-    while (!is_the_empty_list(arguments)) {
-        result += (car(arguments))->number;
-        arguments = cdr(arguments);
+    if(car(arguments)->obj_type == FIXNUM){
+	    while (!is_the_empty_list(arguments)) {
+		result += (car(arguments))->number;
+		arguments = cdr(arguments);
+	    }
+	    return make_fixnum(result);
     }
-    return make_fixnum(result);
+    else if(car(arguments)->obj_type == FLOAT){
+	    while (!is_the_empty_list(arguments)) {
+		resultf += (car(arguments))->decimal;
+		arguments = cdr(arguments);
+	    }
+	    return make_float(resultf);
+    }
 }
 
 object *sub_proc(object *arguments) {
