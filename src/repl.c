@@ -26,16 +26,16 @@ int main(int argc, char **argv){
   fp2 = fopen("hello.sexpr", "w");
   fprintf(fp2, "%s", res);
   fclose(fp2);
-  fp = fopen("hello.sexpr", "r");*/
-  /*while (1) {
+  fp = fopen("hello.sexpr", "r");
+  while (1) {
     printf("repl> ");
-    print(typecheck_eval(read(stdin), the_global_environment));
+    print(eval(typecheck(read(stdin), the_global_environment),the_global_environment));
     printf("\n");
     }*/
   object *temp_list = the_empty_list;
 
  
-  object *add =  make_symbol("+");
+  object *add =  make_symbol("-");
  
   object *num1 = make_float(2.9);
   object *num2 = make_float(1.1);

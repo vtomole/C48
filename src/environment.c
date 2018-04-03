@@ -360,13 +360,29 @@ object *add_proc(object *arguments) {
 }
 
 object *sub_proc(object *arguments) {
-    long result;
+    long result = 0;
+    double resultf = 0;
     
-    result = (car(arguments))->number;
-    while (!is_the_empty_list(arguments = cdr(arguments))) {
-        result -= (car(arguments))->number;
+    if(car(arguments)->obj_type == FIXNUM){
+	    result += (car(arguments))->number;
+	    arguments = cdr(arguments);
+
+	    while (!is_the_empty_list(arguments)) {
+		result -= (car(arguments))->number;
+		arguments = cdr(arguments);
+	    }
+	    return make_fixnum(result);
     }
-    return make_fixnum(result);
+    else if(car(arguments)->obj_type == FLOAT){
+	    resultf += (car(arguments))->decimal;
+	    arguments = cdr(arguments);
+
+	    while (!is_the_empty_list(arguments)) {
+		resultf -= (car(arguments))->decimal;
+		arguments = cdr(arguments);
+	    }
+	    return make_float(resultf);
+    }
 }
 
 object *mul_proc(object *arguments) {
