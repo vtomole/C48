@@ -289,6 +289,7 @@ object *eval_assignment(object *exp, object *env) {
     set_variable_value(assignment_variable(exp), 
                        eval(assignment_value(exp), env),
                        env);
+    //print(exp);
     return ok_symbol;
 }
 
@@ -296,6 +297,7 @@ object *eval_definition(object *exp, object *env) {
     define_variable(definition_variable(exp), 
                     eval(definition_value(exp), env),
                     env);
+    //print(exp);
     return ok_symbol;
 }
 

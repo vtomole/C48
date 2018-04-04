@@ -235,7 +235,7 @@ object *read(FILE *in) {
         return cons(quote_symbol, cons(read(in), the_empty_list));
     }
     else {
-        fprintf(stderr, "bad input. Unexpected '%c'\n", c);
+      //fprintf(stderr, "bad input. Unexpected '%c'\n", c);
         exit(1);
     }
     fprintf(stderr, "read illegal state\n");

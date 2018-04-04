@@ -1,5 +1,21 @@
 #include "eval-apply.h"
 
+object *eval_assignmenttp(object *exp, object *env) {
+    set_variable_value(assignment_variable(exp), 
+                       eval(assignment_value(exp), env),
+                       env);
+    //print(exp);
+    return exp;
+}
+
+object *eval_definitiontp(object *exp, object *env) {
+    define_variable(definition_variable(exp), 
+                    eval(definition_value(exp), env),
+                    env);
+    //print(exp);
+    return exp;
+}
+
 object *typecheck(object *exp, object *env) {
     object *procedure;
     object *arguments;
@@ -23,11 +39,11 @@ tailcall:
     }
     else if (is_assignment(exp)) {
       printf("It's an assignment \n");
-        return eval_assignment(exp, env);
+        return eval_assignmenttp(exp, env);
     }
     else if (is_definition(exp)) {
-      printf("It's define \n");
-        return eval_definition(exp, env);
+      //printf("It's define \n");
+        return eval_definitiontp(exp, env);
     }
     else if (is_if(exp)) {
       printf("It's if \n");

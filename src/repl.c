@@ -26,18 +26,22 @@ int main(int argc, char **argv){
   fp2 = fopen("hello.sexpr", "w");
   fprintf(fp2, "%s", res);
   fclose(fp2);
-  fp = fopen("hello.sexpr", "r");*/
-  /*while (1) {
+  fp = fopen("hello.sexpr", "r");
+  while (1) {
     printf("repl> ");
+<<<<<<< HEAD
     //print(eval(typecheck(read(stdin), the_global_environment), the_global_environment));
     //print(eval(read(stdin), the_global_environment));
     print(typecheck(read(stdin), the_global_environment));
+=======
+    print(eval(typecheck(read(stdin), the_global_environment),the_global_environment));
+>>>>>>> 3a3ebf39a414335a5b22463de7dfb4761a3043ab
     printf("\n");
     }*/
   object *temp_list = the_empty_list;
 
  
-  object *add =  make_symbol("+");
+  object *add =  make_symbol("-");
  
   object *num1 = make_float(2.9);
   object *num2 = make_float(1.1);
