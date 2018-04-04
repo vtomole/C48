@@ -29,7 +29,9 @@ int main(int argc, char **argv){
   fp = fopen("hello.sexpr", "r");*/
   /*while (1) {
     printf("repl> ");
-    print(typecheck_eval(read(stdin), the_global_environment));
+    //print(eval(typecheck(read(stdin), the_global_environment), the_global_environment));
+    //print(eval(read(stdin), the_global_environment));
+    print(typecheck(read(stdin), the_global_environment));
     printf("\n");
     }*/
   object *temp_list = the_empty_list;
@@ -51,9 +53,20 @@ int main(int argc, char **argv){
   temp_list = cons(add, temp_list);
  
   //print(temp_list);
+
+  fp = fopen("array.scm", "r");
+  object *exp;
+
   
 
-  print(eval(typecheck(temp_list, the_global_environment), the_global_environment));
+  while ((exp = read(fp)) != NULL) {
+    //print(exp);
+    //print(eval(typecheck(exp, the_global_environment), the_global_environment));
+    //print(typecheck(exp, the_global_environment));
+    print(eval(exp, the_global_environment));
+    }
+
+  fclose(fp);
 
   
   return 0;
