@@ -58,7 +58,9 @@ int main(int argc, char **argv){
  
   //print(temp_list);
 
-  fp = fopen("array.scm", "r");
+ 
+
+  fp = fopen(argv[1], "r");
   object *exp;
 
   
