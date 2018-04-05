@@ -2,7 +2,7 @@
 #  include <stdio.h>
 #  include <stdlib.h>
 #  include "expression.h"
-#  include "convert.c"
+//#  include "convert.c"
 %}
 
 %union {
@@ -17,9 +17,9 @@
 %token <d> NUMBER
 %token <s> NAME
 %token <fn> FUNCT
-%token EOL
+%token EOL 
 
-%token IF THEN ELSE WHILE DO FUN FOR
+%token IF THEN ELSE WHILE DO FUN FOR END
 
 
 %nonassoc <fn> CMP
@@ -62,21 +62,23 @@ exp: exp CMP exp          { $$ = newcmp($2, $1, $3); }
    | NAME '(' explist ')' { $$ = newcall($1, $3); }
 ;
 
-explist: exp
+explist:            { $$ = NULL; }
+ | exp
  | exp ',' explist  { $$ = newast('L', $1, $3); }
 ;
-symlist: NAME       { $$ = newsymlist($1, NULL); }
+symlist:      { $$ = NULL; }
+ | NAME       { $$ = newsymlist($1, NULL); }
  | NAME ',' symlist { $$ = newsymlist($1, $3); }
 ;
 
 calclist: /* nothing */
   | calclist EOL
   | calclist stmt ';' 
-            //{ if(debug) dumpast($2, 0); printf("= %4.4g\n> ", eval($2)); treefree($2); }
-            { if(debug) dumpast($2, 0); print_expr(convert_expr($2)); treefree($2); printf("\n"); }
+            { if(debug) dumpast($2, 0); printf("= %4.4g\n> ", eval($2)); treefree($2); }
+            //{ if(debug) dumpast($2, 0); print_expr(convert_expr($2)); treefree($2); printf("\n"); }
   | calclist FUN NAME '(' symlist ')' '{' list '}' 
-				    //{ dodef($3, $5, $8); printf("Defined %s\n> ", $3->name); }
-				    { dodef($3, $5, $8); print_expr(convert_func($3)); printf("\n"); }
+				    { dodef($3, $5, $8); printf("Defined %s\n> ", $3->name); }
+				    //{ dodef($3, $5, $8); print_expr(convert_func($3)); printf("\n"); }
   
   | calclist error  { yyerrok; printf("> "); }
  ;

@@ -59,11 +59,14 @@ EXP	([Ee][-+]?[0-9]+)
 "."?[0-9]+{EXP}? { yylval.d = atof(yytext); return NUMBER; }
 
 "//".*"\n"  
-[ \t]   /* ignore white space */
+"/*"(.|\0|\n)*?"*/" 
+[ \t\n]   /* ignore white space */
 
 	/** [\n]    /* ignore white space */
 \\\n    printf("c> "); /* ignore line continuation */
-"\n"    { return EOL; }
-.	{ yyerror("Mystery character %c\n", *yytext); }
+'\n'    { return EOL; }
+'\Z'    { return END; }
+.       { yyerror("Mystery character %c\n", *yytext); }
 
 %%
+/** "\Z"    { return EofF; } **/
