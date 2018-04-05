@@ -358,6 +358,7 @@ static double calluser(struct ufncall *f){
 
 
 void treefree(struct ast *a){
+  if(!a) return;
   switch(a->nodetype) {
 
     /* two subtrees */
