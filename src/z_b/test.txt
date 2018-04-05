@@ -4,13 +4,17 @@
 //factorial(4);
 //fun factorial(i){}
 //fun main() { i = 5; print (factorial(i)); }
-//fun factorial(i){ if(i==1) {  1; }  else { 5; } }
+//fun factorial(i){ if(i==1){(return 1); } else { return (i * factorial(i - 1)); } }
 //factorial(4);
 
 //fun fizzbuzz(i){if((i%3)==0){ print fizz; } else { print buzz; }
 //fizzbuzz(3);
 //print();
 
-fun add(x, y){ x + y; }
 
-//add(2, 3);
+//if(i==0){ x; } else { y; };
+
+x * 6;
+//(5 + 6) - 3;
+//x + (5 * 3);
+//x - 5 * 4;

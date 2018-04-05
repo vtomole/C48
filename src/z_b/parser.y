@@ -71,13 +71,13 @@ symlist: NAME       { $$ = newsymlist($1, NULL); }
 
 calclist: /* nothing */
   | calclist EOL
-  | calclist stmt ';' EOL
+  | calclist stmt ';' 
             //{ if(debug) dumpast($2, 0); printf("= %4.4g\n> ", eval($2)); treefree($2); }
-            { if(debug) dumpast($2, 0); print_expr(convert($2)); treefree($2); }
-  | calclist FUN NAME '(' symlist ')' '{' list '}' EOL
+            { if(debug) dumpast($2, 0); print_expr(convert_expr($2)); treefree($2); printf("\n"); }
+  | calclist FUN NAME '(' symlist ')' '{' list '}' 
 				    //{ dodef($3, $5, $8); printf("Defined %s\n> ", $3->name); }
-				    { print_expr(convert_func($3)); }
+				    { dodef($3, $5, $8); print_expr(convert_func($3)); printf("\n"); }
   
-  | calclist error EOL { yyerrok; printf("> "); }
+  | calclist error  { yyerrok; printf("> "); }
  ;
 %%

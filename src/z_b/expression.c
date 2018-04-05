@@ -408,7 +408,7 @@ void yyerror(char *s, ...){
 int main(int argc, char *argv[]){
   if(argc > 1 && argv[1][0] == 'r'){
     open_file("test.txt");
- }
+  }
   else{
     //printf("In else statement\n");
     printf("> ");
