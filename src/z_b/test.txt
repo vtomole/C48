@@ -1,6 +1,13 @@
-//fun factorial(i){ 
-//	if(i==1){ 
-//		return(1); } else { return (factorial(i-1) * i);};  }
+/*
+fun factorial(i){ 
+	if(i==1){ 
+		return(1); 
+	} else { 
+		return (factorial(i-1) * i);
+	};  
+}
+*/
+		
 //factorial(4);
 //fun factorial(i){}
 //fun main() { i = 5; print (factorial(i)); }
@@ -11,10 +18,26 @@
 //fizzbuzz(3);
 //print();
 
+//if(6 == 0){ "if"; } else { "else"; };
 
-//if(i==0){ x; } else { y; };
+fun factorial(i){ 
+	if(i==1){ 
+		return(1); 
+	} else { 
+		return (factorial(i-1) * i);
+	};  
+}
 
-x * 6;
-//(5 + 6) - 3;
-//x + (5 * 3);
-//x - 5 * 4;
+fun add(){
+	1 + 2;
+}
+
+add();
+
+fun main() { 
+	i = 5; 
+	//factorial(i); 
+}
+
+
+
