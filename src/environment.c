@@ -229,7 +229,10 @@ void set_cdr(object *obj, object* value) {
 #define cddddr(obj) cdr(cdr(cdr(cdr(obj))))
 
 primitive_type char_to_enum(char* proc){
-  if(strcmp(proc, "+") ==0 || strcmp(proc, "-") ==0 || strcmp(proc, "+") ==0){
+  if(strcmp(proc, "+") == 0 || strcmp(proc, "-") == 0 
+                            || strcmp(proc, "*") == 0
+                            || strcmp(proc, "/") == 0
+                            || strcmp(proc, "%") == 0){
     //printf("It's a plus\n");
     return MATH;
   }
@@ -387,24 +390,65 @@ object *sub_proc(object *arguments) {
 
 object *mul_proc(object *arguments) {
     long result = 1;
+    double resultf = 1;
     
-    while (!is_the_empty_list(arguments)) {
-        result *= (car(arguments))->number;
-        arguments = cdr(arguments);
+    if(car(arguments)->obj_type == FIXNUM){
+	    while (!is_the_empty_list(arguments)) {
+		result *= (car(arguments))->number;
+		arguments = cdr(arguments);
+	    }
+	    return make_fixnum(result);
     }
-    return make_fixnum(result);
+    else if(car(arguments)->obj_type == FLOAT){
+	    while (!is_the_empty_list(arguments)) {
+		resultf *= (car(arguments))->decimal;
+		arguments = cdr(arguments);
+	    }
+	    return make_float(resultf);
+    }
 }
 
+//assumes that all 0's will be found at compile time
 object *quotient_proc(object *arguments) {
-    return make_fixnum(
-        ((car(arguments) )->number)/
-        ((cadr(arguments))->number));
+    long result = 0;
+    double resultf = 0;
+    
+    if(car(arguments)->obj_type == FIXNUM){
+	    result += (car(arguments))->number;
+	    arguments = cdr(arguments);
+
+	    while (!is_the_empty_list(arguments)) {
+		result /= (car(arguments))->number;
+		arguments = cdr(arguments);
+	    }
+	    return make_fixnum(result);
+    }
+    else if(car(arguments)->obj_type == FLOAT){
+	    resultf += (car(arguments))->decimal;
+	    arguments = cdr(arguments);
+
+	    while (!is_the_empty_list(arguments)) {
+		resultf /= (car(arguments))->decimal;
+		arguments = cdr(arguments);
+	    }
+	    return make_float(resultf);
+    }
 }
 
 object *remainder_proc(object *arguments) {
-    return make_fixnum(
-        ((car(arguments) )->number)%
-        ((cadr(arguments))->number));
+    long result = 0;
+    double resultf = 0;
+    
+    if(car(arguments)->obj_type == FIXNUM){
+	    result += (car(arguments))->number;
+	    arguments = cdr(arguments);
+
+	    while (!is_the_empty_list(arguments)) {
+		result %= (car(arguments))->number;
+		arguments = cdr(arguments);
+	    }
+	    return make_fixnum(result);
+    }
 }
 
 object *is_number_equal_proc(object *arguments) {
@@ -557,7 +601,7 @@ object *lookup_variable_value(object *var, object *env) {
         }
         env = enclosing_environment(env);
     }
-    fprintf(stderr, "unbound variable\n");
+    fprintf(stderr, "unbound variable (value)\n");
     exit(1);
 }
 
@@ -579,7 +623,7 @@ object *lookup_variable_type(object *var, object *env) {
         }
         env = enclosing_environment(env);
     }
-    fprintf(stderr, "unbound variable\n");
+    fprintf(stderr, "unbound variable (type)\n");
     exit(1);
 }
 
@@ -603,7 +647,7 @@ void set_variable_value(object *var, object *val, object *env) {
         }
         env = enclosing_environment(env);
     }
-    fprintf(stderr, "unbound variable\n");
+    fprintf(stderr, "unbound variable (set)\n");
     exit(1);
 }
 
@@ -686,8 +730,8 @@ void init(void) {
     add_procedure("+"        , add_proc);
     add_procedure("-"        , sub_proc);
     add_procedure("*"        , mul_proc);
-    add_procedure("quotient" , quotient_proc);
-    add_procedure("remainder", remainder_proc);
+    add_procedure("/" , quotient_proc);
+    add_procedure("%", remainder_proc);
     add_procedure("="        , is_number_equal_proc);
     add_procedure("<"        , is_less_than_proc);
     add_procedure(">"        , is_greater_than_proc);

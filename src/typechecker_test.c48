@@ -38,7 +38,7 @@
 4.0 - 2.0; //returns 2.0
 4.0 * 2.0; //returns 8.0
 4.0 / 2.0; //returns 2.0
-4.0 % 2.0; //returns 0.0
+4.0 % 2.0; //throws error
 | 4.0;     //returns 4.0
 (4.0);     //returns 4.0
 -4.0;      //returns -4.0
@@ -49,7 +49,7 @@
 -4.0 - 2.0; //returns -6.0
 -4.0 * 2.0; //returns -8.0
 -4.0 / 2.0; //returns -2.0
--4.0 % 2.0; //returns 0.0
+-4.0 % 2.0; //throws error
 | -4.0;     //returns 4.0
 (-4.0);     //returns -4.0
 --4.0;      //thrown an error for no second operand

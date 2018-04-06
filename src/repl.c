@@ -39,38 +39,28 @@ int main(int argc, char **argv){
     printf("\n");
     }*/
   object *temp_list = the_empty_list;
-
- 
-  object *add =  make_symbol("-");
- 
-  object *num1 = make_float(2.9);
-  object *num2 = make_float(1.1);
-
-  
- 
+  object *add =  make_symbol("%");
+  object *num1 = make_fixnum(6);
+  object *num2 = make_fixnum(4);
   temp_list = cons(num2, temp_list);
-  
- 
- 
   temp_list = cons(num1, temp_list);
-  
   temp_list = cons(add, temp_list);
- 
+  print(eval(typecheck(temp_list, the_global_environment),the_global_environment));
   //print(temp_list);
 
-  fp = fopen("array.scm", "r");
-  object *exp;
+  //fp = fopen("array.scm", "r");
+  //object *exp;
 
   
 
-  while ((exp = read(fp)) != NULL) {
+  /*while ((exp = read(fp)) != NULL) {
     //print(exp);
     //print(eval(typecheck(exp, the_global_environment), the_global_environment));
     //print(typecheck(exp, the_global_environment));
     print(eval(exp, the_global_environment));
     }
 
-  fclose(fp);
+  fclose(fp);*/
 
   
   return 0;
