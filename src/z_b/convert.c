@@ -1,11 +1,5 @@
 #include "convert.h"
 
-object *convert(struct ast *a){
-  object *obj = convert_expr(a);
-  if(obj->obj_type != PAIR){ obj = cons(obj, the_empty_list); }
-  return obj;
-}
-
 //Builds properly
 object *convert_symlist(struct symlist *syms){
   if(syms == NULL){ return the_empty_list; }
@@ -26,8 +20,12 @@ object *convert_func(struct symbol *func){
   return cons(define_symbol, cons(fun, cons(expr, the_empty_list)));         
 }
 
+//Builds properly
 object *convert_exprlist(struct ast *a){
-  if(a->nodetype == 'L') {
+  if(!a){
+    return the_empty_list;
+  }
+  else if(a->nodetype == 'L') {
     object *obj = convert_expr(a->l);
     return cons(obj, convert_exprlist(a->r));
   }
@@ -44,7 +42,7 @@ object *convert_funccall(struct ufncall *f){
   return cons(name, list);
 }
 
-//Builds properly (except return)
+//Builds properly
 object *convert_builtinfunc(struct fncall *f){
   char *str;
   switch(f->functype){

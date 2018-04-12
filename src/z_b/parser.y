@@ -76,7 +76,7 @@ calclist: /* nothing */
   | calclist EOL
   | calclist stmt ';' 
     //{ if(debug) dumpast($2, 0); printf("= %4.4g\n> ", eval_ast($2)); treefree($2); }
-    { if(debug) dumpast($2, 0); print(convert($2)); treefree($2); printf("\n"); }
+    { if(debug) dumpast($2, 0); print(convert_expr($2)); treefree($2); printf("\n"); }
     //{ test_print(); }
             
   | calclist FUN NAME '(' symlist ')' '{' list '}' 
