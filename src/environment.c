@@ -229,26 +229,34 @@ void set_cdr(object *obj, object* value) {
 #define cddddr(obj) cdr(cdr(cdr(cdr(obj))))
 
 primitive_type char_to_enum(char* proc){
-  if(strcmp(proc, "+") == 0 || strcmp(proc, "-") == 0 
-                            || strcmp(proc, "*") == 0
-                            || strcmp(proc, "/") == 0
-                            || strcmp(proc, "%") == 0){
-    //printf("It's a plus\n");
+  if(strcmp(proc, "+") == 0 || 
+     strcmp(proc, "-") == 0 ||
+     strcmp(proc, "*") == 0 ||
+     strcmp(proc, "/") == 0 ||
+     strcmp(proc, "%") == 0){
     return MATH;
-  }
-     
-  else{
+  }else if(strcmp(proc, ">")  == 0 || 
+           strcmp(proc, "<")  == 0 ||
+     	   strcmp(proc, "<>") == 0 ||
+           strcmp(proc, "==") == 0 ||
+	   strcmp(proc, ">=") == 0 ||
+           strcmp(proc, "<=") == 0){
+     return EQUALITY;
+  }else{
     return CHAR;
   }
 }
 object *set_acceptable(object *obj, primitive_type prim_type){
   switch (prim_type){
   case 0:
-    //printf("In case 1\n");
     obj->primitive_proc.acceptables = cons(make_fixnum(FIXNUM), (cons (make_fixnum(FLOAT), the_empty_list)));
     //print(obj->primitive_proc.acceptables);
     break;
   case 1:
+    obj->primitive_proc.acceptables = cons(make_fixnum(FIXNUM), cons (make_fixnum(FLOAT), cons (make_fixnum(CHARACTER), cons (make_fixnum(STRING), the_empty_list))));
+    //print(obj->primitive_proc.acceptables);
+    break;
+  case 2:
     obj->primitive_proc.acceptables = cons(make_string("CHAR"),  the_empty_list);break;
   default:
     //printf("This should not happen after PLUS\n");
@@ -519,9 +527,91 @@ object *set_cdr_proc(object *arguments) {
     return ok_symbol;
 }
 
+object *equal_to_proc(object *arguments) {
+    long previousNum;
+    long nextNum;
+    double previousFloat;
+    double nextFloat;
+    char previousChar;
+    char nextChar;
+    char* previousString;
+    char* nextString;
+    int previousBool;
+    int nextBool;
 
+    switch (car(arguments)->obj_type) {
+        case FIXNUM:	    
+	    previousNum = (car(arguments))->number;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextNum = (car(arguments))->number;
+		if (previousNum == nextNum) {
+		    previousNum = nextNum;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+	case FLOAT:
+	    previousFloat = (car(arguments))->decimal;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextFloat = (car(arguments))->decimal;
+		if (previousFloat == nextFloat) {
+		    previousFloat = nextFloat;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+        case CHARACTER:    
+	    previousChar = (car(arguments))->character;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextChar = (car(arguments))->character;
+		if (previousChar == nextChar) {
+		    previousChar = nextChar;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+        case STRING:	    
+	    previousString = (car(arguments))->string;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextString = (car(arguments))->string;
+		if (strcmp(previousString, 
+                           nextString) == 0) {
+		    previousString = nextString;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+	case BOOLEAN:	    
+	    previousBool = (car(arguments))->boolean;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextBool = (car(arguments))->boolean;
+		if (previousBool == nextBool) {
+		    previousBool = nextBool;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+        default:
+            return (car(arguments) == cadr(arguments)) ? true : false;
+    }
+}
 
-object *is_eq_proc(object *arguments) {
+object *equal_to_proc_v2(object *arguments) {
     object *obj1;
     object *obj2;
     
@@ -537,6 +627,11 @@ object *is_eq_proc(object *arguments) {
                     obj2->number) ?
                         true : false;
             break;
+	case FLOAT:
+            return (obj1->decimal == 
+                    obj2->decimal) ?
+                        true : false;
+            break;
         case CHARACTER:
             return (obj1->character == 
                     obj2->character) ?
@@ -545,6 +640,11 @@ object *is_eq_proc(object *arguments) {
         case STRING:
             return (strcmp(obj1->string, 
                            obj2->string) == 0) ?
+                        true : false;
+            break;
+	case BOOLEAN:
+            return (obj1->boolean ==
+                    obj2->boolean) ?
                         true : false;
             break;
         default:
@@ -730,11 +830,17 @@ void init(void) {
     add_procedure("+"        , add_proc);
     add_procedure("-"        , sub_proc);
     add_procedure("*"        , mul_proc);
-    add_procedure("/" , quotient_proc);
-    add_procedure("%", remainder_proc);
+    add_procedure("/" 	     , quotient_proc);
+    add_procedure("%"	     , remainder_proc);
+
     add_procedure("="        , is_number_equal_proc);
-    add_procedure("<"        , is_less_than_proc);
-    add_procedure(">"        , is_greater_than_proc);
+
+    //add_procedure(">"        , greater_than_proc);
+    //add_procedure("<"        , less_than_proc);
+    //add_procedure("<>"	     , not_equal_to_proc);
+    add_procedure("=="	     , equal_to_proc);
+    //add_procedure(">="	     , greater_or_equal_to_proc);
+    //add_procedure("<="	     , less_or_equal_to_proc);
 
     add_procedure("cons"    , cons_proc);
     add_procedure("car"     , car_proc);
@@ -743,5 +849,5 @@ void init(void) {
     add_procedure("set-cdr!", set_cdr_proc);
     add_procedure("list"    , list_proc);
 
-    add_procedure("eq?", is_eq_proc);
+    //add_procedure("eq?", is_eq_proc);
 }

@@ -2,7 +2,7 @@ typedef enum {EMPTY_LIST, BOOLEAN, SYMBOL, FIXNUM, FLOAT,
               CHARACTER, STRING, PAIR, PRIMITIVE_PROC,
               COMPOUND_PROC} object_type;
 
-typedef enum {MATH, CHAR} primitive_type;
+typedef enum {MATH, EQUALITY, CHAR} primitive_type;
 
 typedef struct object{  
   object_type obj_type;
