@@ -19,7 +19,7 @@
 %token <fn> FUNCT
 %token EOL 
 
-%token IF THEN ELSE WHILE DO FUN FOR END
+%token IF THEN ELSE WHILE DO FUN FOR END RETURN
 
 
 %nonassoc <fn> CMP
@@ -60,6 +60,7 @@ exp: exp CMP exp          { $$ = newcmp($2, $1, $3); }
    | NAME                 { $$ = newref($1); }
    | NAME '=' exp         { $$ = newasgn($1, $3); }
    | NAME '(' explist ')' { $$ = newcall($1, $3); }
+   | RETURN exp           { $$ = $2; }
 ;
 
 explist:            { $$ = NULL; }
@@ -75,7 +76,7 @@ calclist: /* nothing */
   | calclist EOL
   | calclist stmt ';' 
     //{ if(debug) dumpast($2, 0); printf("= %4.4g\n> ", eval_ast($2)); treefree($2); }
-    { if(debug) dumpast($2, 0); print(convert_expr($2)); treefree($2); printf("\n"); }
+    { if(debug) dumpast($2, 0); print(convert($2)); treefree($2); printf("\n"); }
     //{ test_print(); }
             
   | calclist FUN NAME '(' symlist ')' '{' list '}' 

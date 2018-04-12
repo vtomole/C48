@@ -1,12 +1,9 @@
 #include "convert.h"
 
-void test_print(){
-  object *obj = cons(make_symbol("+"), 
-                  cons(make_fixnum(4),  
-                    cons(make_fixnum(5), 
-                      the_empty_list)));
-  print(obj);
-  printf("\n");
+object *convert(struct ast *a){
+  object *obj = convert_expr(a);
+  if(obj->obj_type != PAIR){ obj = cons(obj, the_empty_list); }
+  return obj;
 }
 
 //Builds properly
@@ -63,9 +60,6 @@ object *convert_builtinfunc(struct fncall *f){
    case B_print:
      str = "print";
      break;
-   case B_return:
-     str = "return";
-     break;
   }
   
   object *name = make_symbol(str);
@@ -94,7 +88,6 @@ object *convert_expr(struct ast* a){
   switch(a->nodetype){
   case 'K': 
     num = (float)((struct numval *)a)->number;
-    //num = ((struct numval *)a)->number;
     return make_fixnum(num);
   case 'M':
     num = (float)-((struct numval *)a)->number;
@@ -111,6 +104,7 @@ object *convert_expr(struct ast* a){
   case 'L':
     car = convert_expr(a->l);
     cdr = convert_expr(a->r);
+    if(cdr->obj_type != PAIR){ cdr = cons(cdr, the_empty_list); }
     return cons(car, cdr);
   /** Creates Operation Objects**/
   case '+': case '-': case '*':  case '/':  case '%':
@@ -139,7 +133,7 @@ object *convert_expr(struct ast* a){
   case '4': 
     car = convert_expr(a->l);
     cdr = convert_expr(a->r);
-    op = make_symbol("==");
+    op = make_symbol("=");
     return cons(op, cons(car, cons(cdr, the_empty_list)));
   case '5': 
     car = convert_expr(a->l);
@@ -163,4 +157,6 @@ object *convert_expr(struct ast* a){
     return cons(if_symbol, cons(cond, cons(tl, cons(el, the_empty_list))));
   }
 }
+
+
 

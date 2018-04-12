@@ -277,9 +277,7 @@ static double callbuiltin(struct fncall *f){
  case B_print:
    printf("= %4.4g\n", v);
    return v;
- case B_return:
-   //printf("= %4.4g\n", v);
-   return v;
+ 
  default:
    yyerror("Unknown built-in function %d", functype);
    return 0.0;
