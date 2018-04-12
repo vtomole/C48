@@ -1,7 +1,15 @@
 #include "convert.h"
 
+void test_print(){
+  object *obj = cons(make_symbol("+"), 
+                  cons(make_fixnum(4),  
+                    cons(make_fixnum(5), 
+                      the_empty_list)));
+  print(obj);
+  printf("\n");
+}
 
-
+//Builds properly
 object *convert_symlist(struct symlist *syms){
   if(syms == NULL){ return the_empty_list; }
   object *obj = make_symbol(syms->sym->name);
@@ -9,17 +17,16 @@ object *convert_symlist(struct symlist *syms){
 }
 
 
+//Builds properly
 object *convert_func(struct symbol *func){
-  object *b, *params, *expr;
-  
+  object *b, *fun, *params, *expr;
+
   params = convert_symlist(func->syms);
   expr = convert_expr(func->func);
   
-  b = make_symbol(func->name);
-  b = cons(b, cons(params, the_empty_list));
-  b = cons(b, cons(expr, the_empty_list));
+  fun = cons(make_symbol(func->name), params);
   
-  return cons(define_symbol, cons(b, the_empty_list));  
+  return cons(define_symbol, cons(fun, cons(expr, the_empty_list)));         
 }
 
 object *convert_exprlist(struct ast *a){
@@ -33,12 +40,14 @@ object *convert_exprlist(struct ast *a){
   }
 }
 
+//Builds properly
 object *convert_funccall(struct ufncall *f){
   object *name = make_symbol(f->s->name);
   object *list = convert_exprlist(f->l);
-  return cons(name, cons(list, the_empty_list));
+  return cons(name, list);
 }
 
+//Builds properly (except return)
 object *convert_builtinfunc(struct fncall *f){
   char *str;
   switch(f->functype){
@@ -61,9 +70,10 @@ object *convert_builtinfunc(struct fncall *f){
   
   object *name = make_symbol(str);
   object *list = convert_exprlist(f->l);
-  return cons(name, cons(list, the_empty_list));
+  return cons(name, list);
 }
 
+//Builds properly
 object *convert_varexpr(struct ast* a){
  object *var = make_symbol(((struct symasgn*)a)->s->name);
  object *expr = convert_expr(((struct symasgn*)a)->v);
@@ -74,15 +84,17 @@ object *convert_varexpr(struct ast* a){
 object *convert_expr(struct ast* a){
   object *car, *cdr, *op, *obj;
   object *cond, *tl, *el;
+  char *operation = malloc(sizeof(char));
   char *val;
   int num;
-  printf("node type %c\n", a->nodetype);
+  //printf("node type %c\n", a->nodetype);
   if(!a)
     return the_empty_list;
   
   switch(a->nodetype){
   case 'K': 
     num = (float)((struct numval *)a)->number;
+    //num = ((struct numval *)a)->number;
     return make_fixnum(num);
   case 'M':
     num = (float)-((struct numval *)a)->number;
@@ -104,7 +116,8 @@ object *convert_expr(struct ast* a){
   case '+': case '-': case '*':  case '/':  case '%':
     car = convert_expr(a->l);
     cdr = convert_expr(a->r);
-    op = make_symbol((char *)a->nodetype);
+    sprintf(operation, "%c", a->nodetype);
+    op = make_symbol(operation);
     return cons(op, cons(car, cons(cdr, the_empty_list)));
 
   /** Creates Comparison Object **/

@@ -1,6 +1,8 @@
 #include <stdlib.h>
-#include "environment.c"
-#include "print.c"
+#include <string.h>
+#include "../environment.c"
+#include "../eval-apply.c"
+#include "../print.c"
 
 object *convert_symlist(struct symlist *);
 

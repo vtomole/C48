@@ -2,7 +2,7 @@
 #  include <stdio.h>
 #  include <stdlib.h>
 #  include "expression.h"
-//#  include "convert.c"
+#  include "convert.c"
 %}
 
 %union {
@@ -74,11 +74,14 @@ symlist:      { $$ = NULL; }
 calclist: /* nothing */
   | calclist EOL
   | calclist stmt ';' 
-            { if(debug) dumpast($2, 0); printf("= %4.4g\n> ", eval($2)); treefree($2); }
-            //{ if(debug) dumpast($2, 0); print_expr(convert_expr($2)); treefree($2); printf("\n"); }
+    //{ if(debug) dumpast($2, 0); printf("= %4.4g\n> ", eval_ast($2)); treefree($2); }
+    { if(debug) dumpast($2, 0); print(convert_expr($2)); treefree($2); printf("\n"); }
+    //{ test_print(); }
+            
   | calclist FUN NAME '(' symlist ')' '{' list '}' 
-				    { dodef($3, $5, $8); printf("Defined %s\n> ", $3->name); }
-				    //{ dodef($3, $5, $8); print_expr(convert_func($3)); printf("\n"); }
+    //{ dodef($3, $5, $8); printf("Defined %s\n> ", $3->name); }
+	  { dodef($3, $5, $8); print(convert_func($3)); printf("\n"); }
+	  //{ test_print(); }
   
   | calclist error  { yyerrok; printf("> "); }
  ;
