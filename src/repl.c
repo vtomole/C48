@@ -37,7 +37,7 @@ int main(int argc, char **argv){
     print(eval(typecheck(read(stdin), the_global_environment),the_global_environment));
 >>>>>>> 3a3ebf39a414335a5b22463de7dfb4761a3043ab
     printf("\n");
-    }*/
+    }
   object *temp_list = the_empty_list;
   object *add =  make_symbol("%");
   object *num1 = make_fixnum(6);
@@ -61,6 +61,9 @@ int main(int argc, char **argv){
     }
 
   fclose(fp);*/
+
+  object *obj = cons(make_symbol("+"), cons(make_fixnum(4), cons(make_fixnum(5), the_empty_list)));
+  print(obj);
 
   
   return 0;
