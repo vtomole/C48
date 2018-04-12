@@ -39,9 +39,9 @@ int main(int argc, char **argv){
     printf("\n");
     }*/
   object *temp_list = the_empty_list;
-  object *add =  make_symbol("%");
-  object *num1 = make_fixnum(6);
-  object *num2 = make_fixnum(4);
+  object *add =  make_symbol("==");
+  object *num1 = make_character('a');
+  object *num2 = make_character('b');
   temp_list = cons(num2, temp_list);
   temp_list = cons(num1, temp_list);
   temp_list = cons(add, temp_list);
