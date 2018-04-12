@@ -1,43 +1,21 @@
-/*
-fun factorial(i){ 
-	if(i==1){ 
-		return(1); 
-	} else { 
-		return (factorial(i-1) * i);
-	};  
-}
-*/
-		
-//factorial(4);
-//fun factorial(i){}
-//fun main() { i = 5; print (factorial(i)); }
-//fun factorial(i){ if(i==1){(return 1); } else { return (i * factorial(i - 1)); } }
-//factorial(4);
 
-//fun fizzbuzz(i){if((i%3)==0){ print fizz; } else { print buzz; }
-//fizzbuzz(3);
-//print();
 
-//if(6 == 0){ "if"; } else { "else"; };
-
-fun factorial(i){ 
-	if(i==1){ 
-		return(1); 
-	} else { 
-		return (factorial(i-1) * i);
-	};  
+fun fib(n){
+	if(n < 2){
+		return n;
+	}
+	else {
+		return fib(n - 1) + fib(n - 2);
+	};
+	
 }
 
-fun add(){
-	1 + 2;
+
+fun main() {
+	return fib(10);
 }
 
-add();
-
-fun main() { 
-	i = 5; 
-	//factorial(i); 
-}
+main();
 
 
 

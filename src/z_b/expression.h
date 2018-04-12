@@ -1,3 +1,4 @@
+
 /* symbol table */
 struct symbol {		/* a variable name */
   char *name;
@@ -101,7 +102,7 @@ struct ast *newflow(int nodetype, struct ast *cond, struct ast *tl, struct ast *
 void dodef(struct symbol *name, struct symlist *syms, struct ast *stmts);
 
 /* evaluate an AST */
-double eval(struct ast *);
+double eval_ast(struct ast *);
 
 /* delete and free an AST */
 void treefree(struct ast *);

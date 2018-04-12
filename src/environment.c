@@ -1,5 +1,13 @@
-# include "environment.h" 
+#include "environment.h" 
 void print(object *obj);
+
+/**count_objects()
+ *This function is used to count the objects we have
+ * Parameters:
+ *-cursor, an object pointer used to deterimine our place in the list/tree
+ * Returns:
+ *-c, the count of objects we have
+ */
 int count_objects(object* cursor){
   int c = 0;
   while(cursor != NULL){
@@ -8,18 +16,30 @@ int count_objects(object* cursor){
   }
   return c;
 }
-/* Garbage collector struct*/
-/* Delete start */
+
+/**Allocation
+*This struct is used for our garbage collector to maintain a list of allocated blocks of memory
+* Fields:
+*-pair, the cons_Cell we are allocation memory to
+*-mark, 1 if marked 0 if not marked, initialzed to 1
+*-next, a pointer to the next place we allocated memory to
+*/
 struct Allocation {
+	
          struct cons_cell pair;
 	int mark : 1;
 	struct Allocation *next;
 };
 
-struct Allocation *global_allocations = NULL;/*list used for the garbage collector*/
+/*list used for the garbage collector*/
+struct Allocation *global_allocations = NULL;
 
-/* Delete stop*/
-
+/** alloc_object()
+ *alloc_object is the function used to allocate memory upon the creation of an object
+ *This should be the only place we call malloc
+ * Returns:
+ *-an object with a defined space in memory
+ */
 object* alloc_object(){
   object *obj;
 
@@ -33,7 +53,7 @@ object* alloc_object(){
 
 }
 
-
+/*global variables*/
 object *the_empty_list;
 object *false;
 object *true;
@@ -51,26 +71,23 @@ object *let_symbol;
 object *the_empty_environment;
 object *the_global_environment;
 
+/*function delcarations*/
 object *cons(object *car, object *cdr);
 object *car(object *pair);
 object *cdr(object *pair);
 
-char is_the_empty_list(object *obj) {
-    return obj == the_empty_list;
-}
+char is_the_empty_list(object *obj) { return obj == the_empty_list; }
+char booleanp(object *obj) { return obj->obj_type == BOOLEAN; }
+char is_false(object *obj) {return obj == false; }
+char is_true(object *obj) { return !is_false(obj); }
 
-char booleanp(object *obj) {
-    return obj->obj_type == BOOLEAN;
-}
-
-char is_false(object *obj) {
-    return obj == false;
-}
-
-char is_true(object *obj) {
-    return !is_false(obj);
-}
-
+/**make symbol()
+ *this function is used to generate an object of type symbol i.e.
+ * Parameters:
+ *- *value, a char string that represents what symbol the object we are creating is
+ * Returns:
+ *- *obj, the newly created object with obj_type symbol
+ */
 object *make_symbol(char *value) {
     object *obj;
     object *element;
@@ -97,10 +114,13 @@ object *make_symbol(char *value) {
     return obj;
 }
 
-char is_symbol(object *obj) {
-    return obj->obj_type == SYMBOL;
-}
-
+/**make_fixnum()
+   *this function is used to generate an object of type FIXNUM which we use as ints
+   * Parameters:
+   *-value, the actual numerical value of our fixnum object
+   * Returns:
+   *-obj, a newly created object pointer for our fixnum
+   */
 object *make_fixnum(long value) {
     object *obj;
 
@@ -110,6 +130,13 @@ object *make_fixnum(long value) {
     return obj;
 }
 
+/**make float()
+ *this function is used to generate an object of type float, i.e 2.1
+ * Parameters:
+ *- value, a double that represents what number the object we are creating is
+ * Returns:
+ *- *obj, the newly created object with obj_type float
+ */
 object *make_float(double value) {
     object *obj;
 
@@ -119,14 +146,13 @@ object *make_float(double value) {
     return obj;
 }
 
-char numberp(object *obj) {
-    return obj->obj_type == FIXNUM;
-}
-
-char floatp(object *obj) {
-    return obj->obj_type == FLOAT;
-}
-
+/**make_character()
+ * this function is used to generate an object of type char i.e. 'a', '4' etc.
+ * Parameters:
+ *-value, the given charater our char object represents
+ * Returns:
+ *-obj, a newly created object pointer for our character
+ */
 object *make_character(char value) {
     object *obj;
 
@@ -136,8 +162,13 @@ object *make_character(char value) {
     return obj;
 }
 
-char characterp(object *obj) {return obj->obj_type == CHARACTER;}
-
+/**make_string()
+ *this function is used to generate an object of type String
+ * Parameters:
+ *-value, the string of our new object
+ * Returns:
+ *-obj, a newly created object pointer for our string
+ */
 object *make_string(char *value) {
     object *obj;
 
@@ -152,10 +183,22 @@ object *make_string(char *value) {
     return obj;
 }
 
-char is_string(object *obj) {
-    return obj->obj_type == STRING;
-}
+char is_symbol(object *obj) { return obj->obj_type == SYMBOL; }
+char numberp(object *obj) { return obj->obj_type == FIXNUM; }
+char floatp(object *obj) { return obj->obj_type == FLOAT; }
+char characterp(object *obj) {return obj->obj_type == CHARACTER;}
+char is_string(object *obj) { return obj->obj_type == STRING; }
+char is_pair(object *obj) { return obj->obj_type == PAIR; }
 
+/**cons()
+ *This function is used to cons the given objects onto our list 
+ *This function is one of two functions that should be allowed to call malloc
+ * Parameters:
+ *-car, the first object in the list
+ *-cdr, the rest of the list
+ * returns:
+ *-obj, the list with the two given arguments cons' onto it
+ */
 object* cons(object *car, object *cdr){
   
   struct Allocation *a;
@@ -179,25 +222,11 @@ object* cons(object *car, object *cdr){
   return obj;  
 }
 
-char is_pair(object *obj) {
-    return obj->obj_type == PAIR;
-}
-
-object *car(object *pair) {
-    return pair->cons_cell.car;
-}
-
-void set_car(object *obj, object* value) {
-    obj->cons_cell.car = value;
-}
-
-object *cdr(object *pair) {
-    return pair->cons_cell.cdr;
-}
-
-void set_cdr(object *obj, object* value) {
-    obj->cons_cell.cdr = value;
-}
+//car/cdr get/set methods
+object *car(object *pair) { return pair->cons_cell.car; }
+object *cdr(object *pair) { return pair->cons_cell.cdr; }
+void set_car(object *obj, object* value) { obj->cons_cell.car = value; }
+void set_cdr(object *obj, object* value) {obj->cons_cell.cdr = value; }
 
 #define caar(obj)   car(car(obj))
 #define cadr(obj)   car(cdr(obj))
@@ -228,6 +257,13 @@ void set_cdr(object *obj, object* value) {
 #define cdddar(obj) cdr(cdr(cdr(car(obj))))
 #define cddddr(obj) cdr(cdr(cdr(cdr(obj))))
 
+/**char_to_enum()
+ * this function is used determine the enumuration of the sent in char pointer
+ * Parameters:
+ *-proc, the character we are evaluating
+ * Returns:
+ *-returns the primitive_type either a MATH function or a Char function
+ */
 primitive_type char_to_enum(char* proc){
   if(strcmp(proc, "+") == 0 || 
      strcmp(proc, "-") == 0 ||
@@ -246,6 +282,15 @@ primitive_type char_to_enum(char* proc){
     return CHAR;
   }
 }
+
+/**set_acceptables()
+ *this function is used to determine the acceptable types for an operator in our typechecker
+ * Parameters:
+ *-obj, the object that we are setting acceptables for
+ * -prim_type si the enumartion used to determine what type the object is.
+ * Returns:
+ *-obj, the object is returned with an updated acceptables field, based on prim_type
+ */
 object *set_acceptable(object *obj, primitive_type prim_type){
   switch (prim_type){
   case 0:
@@ -266,6 +311,14 @@ object *set_acceptable(object *obj, primitive_type prim_type){
   return obj;
 }
 
+/**make_primitive_proc()
+ * is used to assign the primitive type to an object as well as updating the objects acceptables list by calling set_acceptables
+ * Parameters:
+ *-arguments, an object function pointer containing the nessecary elements to determin the primitive procedure
+ *-proc, the char string representing the actual primitive procedure, i.e. +, char, etc.
+ * Returns:
+ *-obj, a newly created object that has a proper type and acceptables list
+ */
 object *make_primitive_proc(object *(*fn)(struct object *arguments), char *proc) {
     object *obj;
 
@@ -279,40 +332,33 @@ object *make_primitive_proc(object *(*fn)(struct object *arguments), char *proc)
     return obj;
 }
 
-char primitivep(object *obj) {
-    return obj->obj_type == PRIMITIVE_PROC;
-}
+char primitivep(object *obj) { return obj->obj_type == PRIMITIVE_PROC; }
 
-object *is_null_proc(object *arguments) {
-    return is_the_empty_list(car(arguments)) ? true : false;
-}
-
-object *is_boolean_proc(object *arguments) {
-    return booleanp(car(arguments)) ? true : false;
-}
-
-object *is_symbol_proc(object *arguments) {
-    return is_symbol(car(arguments)) ? true : false;
-}
-
-object *is_integer_proc(object *arguments) {
-    return numberp(car(arguments)) ? true : false;
-}
-
-object *is_char_proc(object *arguments) {
-    return characterp(car(arguments)) ? true : false;
-}
-
-object *is_string_proc(object *arguments) {
-    return is_string(car(arguments)) ? true : false;
-}
-
-object *is_pair_proc(object *arguments) {
-    return is_pair(car(arguments)) ? true : false;
-}
-
+/**is_foo_proc()
+ *the following functions are used to determine which procedure the given arguements are
+ * Parameters:
+ *-arguments, an object pointer that we are trying to determine the type of procdeure it is
+ * Returns:
+ *-true, if the argument is the named procedure
+ *-false, otherwise
+ */
+object *is_null_proc(object *arguments)    { return is_the_empty_list(car(arguments)) ? true : false; }
+object *is_boolean_proc(object *arguments) { return booleanp(car(arguments)) ? true : false; }
+object *is_symbol_proc(object *arguments)  { return is_symbol(car(arguments)) ? true : false; }
+object *is_integer_proc(object *arguments) { return numberp(car(arguments)) ? true : false; }
+object *is_char_proc(object *arguments)    { return characterp(car(arguments)) ? true : false; }
+object *is_string_proc(object *arguments)  { return is_string(car(arguments)) ? true : false; }
+object *is_pair_proc(object *arguments)    { return is_pair(car(arguments)) ? true : false; }
 char is_compound_proc(object *obj);
 
+/**is_procedure_proc()
+ *this function is used to determine whether the given procedure is a primitive or compound procedure
+ * Parameters:
+ *-arguments, the object that we are trying to determine the type of procedure from
+ * Returns:
+ *-true if primitive,
+ *-false if compound
+ */
 object *is_procedure_proc(object *arguments) {
     object *obj;
     
@@ -322,34 +368,36 @@ object *is_procedure_proc(object *arguments) {
                 true :
                 false;
 }
+/* end of procedure determining functions*/ 
 
-object *char_to_integer_proc(object *arguments) {
-    return make_fixnum((car(arguments))->character);
-}
-
-object *integer_to_char_proc(object *arguments) {
-    return make_character((car(arguments))->number);
-}
-
+/**foo_to_bar()
+ *The below functions are used to convert objects from one object type to another they all follow the same format
+ * Parameters:
+ *-arguments, the object that we are converting to a new type
+ * Returns:
+ *-the given object with an updated type
+ */
+object *char_to_integer_proc(object *arguments) { return make_fixnum((car(arguments))->character); }
+object *integer_to_char_proc(object *arguments) { return make_character((car(arguments))->number); }
 object *number_to_string_proc(object *arguments) {
     char buffer[100];
 
     sprintf(buffer, "%ld", (car(arguments))->number);
     return make_string(buffer);
 }
+object *string_to_number_proc(object *arguments) { return make_fixnum(atoi((car(arguments))->string)); }
+object *symbol_to_string_proc(object *arguments) { return make_string((car(arguments))->symbol); }
+object *string_to_symbol_proc(object *arguments) { return make_symbol((car(arguments))->string); }
+/* end of conversion functions*/
 
-object *string_to_number_proc(object *arguments) {
-    return make_fixnum(atoi((car(arguments))->string));
-}
-
-object *symbol_to_string_proc(object *arguments) {
-    return make_string((car(arguments))->symbol);
-}
-
-object *string_to_symbol_proc(object *arguments) {
-    return make_symbol((car(arguments))->string);
-}
-
+/**add_proc()
+ *This function is used to actually preform the named calculation
+ *used for additionn
+ * Parameters:
+ *-arguements, the actual list of arguements for the procedure
+ * Returns:
+ *-a new fixnum object with the correct value of the operation performed on the given operands
+ */
 object *add_proc(object *arguments) {
     long result = 0;
     double resultf = 0;
@@ -370,6 +418,14 @@ object *add_proc(object *arguments) {
     }
 }
 
+/**sub_proc()
+ *this function is used to actually preform the named calculation
+ *used for subtraction
+ * Parameters:
+ *-arguements, the actual list of arguements for the procedure
+ * Returns:
+ *-a new fixnum object with the correct value of the operation performed on the given operands
+ */
 object *sub_proc(object *arguments) {
     long result = 0;
     double resultf = 0;
@@ -396,6 +452,14 @@ object *sub_proc(object *arguments) {
     }
 }
 
+/**mul_proc()
+ *this function is used to actually preform the named calculation
+ *used for multiplication
+ * Parameters:
+ *-arguements, the actual list of arguements for the procedure
+ * Returns:
+ *-a new fixnum object with the correct value of the operation performed on the given operands
+ */
 object *mul_proc(object *arguments) {
     long result = 1;
     double resultf = 1;
@@ -416,7 +480,15 @@ object *mul_proc(object *arguments) {
     }
 }
 
-//assumes that all 0's will be found at compile time
+/**quotient_proc
+ *this function is used to actually preform the named calculation
+ *used for division
+ *assumes that all 0's will be found at compile time
+ * Parameters:
+ *-arguements, the actual list of arguements for the procedure
+ * Returns:
+ *-a new fixnum object with the correct value of the operation performed on the given operands
+ */
 object *quotient_proc(object *arguments) {
     long result = 0;
     double resultf = 0;
@@ -443,6 +515,14 @@ object *quotient_proc(object *arguments) {
     }
 }
 
+/**remainder_proc() 
+ *this function is used to actually preform the named calculation
+ *used for the modulo operation(a.k.a remainder)
+ * Parameters:
+ *-arguements, the actual list of arguements for the procedure
+ * Returns:
+ *-a new fixnum object with the correct value of the operation performed on the given operands
+ */
 object *remainder_proc(object *arguments) {
     long result = 0;
     double resultf = 0;
@@ -459,6 +539,14 @@ object *remainder_proc(object *arguments) {
     }
 }
 
+/**is_number_equal_proc()
+ *This function is used to check equivalence between the given arguments this is used exclusivly for numbers
+ *and operates differently than the is_eq_proq function defined below
+ * Parameters:
+ *-arguements, the actual list of arguements for the procedure
+ * Returns:
+ *-a new fixnum object with the correct value of the operation performed on the given operands
+ */
 object *is_number_equal_proc(object *arguments) {
     long value;
     
@@ -471,6 +559,13 @@ object *is_number_equal_proc(object *arguments) {
     return true;
 }
 
+/**is_less_than_proc()
+ *This function is used to check if the first or prior argument(s) is less than the second or later argument(s)
+ * Parameters:
+ *-arguements, the actual list of arguements for the procedure
+ * Returns:
+ *-a new fixnum object with the correct value of the operation performed on the given operands
+ */
 object *is_less_than_proc(object *arguments) {
     long previous;
     long next;
@@ -488,6 +583,13 @@ object *is_less_than_proc(object *arguments) {
     return true;
 }
 
+/**is_greater_than_proc()
+ *This function is used to check if the first or prior argument(s) is greater than the seconde or later argument(s)
+ * Parameters:
+ *-arguements, the actual list of arguements for the procedure
+ * Returns:
+ *-a new fixnum object with the correct value of the operation performed on the given operands
+ */
 object *is_greater_than_proc(object *arguments) {
     long previous;
     long next;
@@ -505,16 +607,26 @@ object *is_greater_than_proc(object *arguments) {
     return true;
 }
 
-object *cons_proc(object *arguments) {
-    return cons(car(arguments), cadr(arguments));
-}
-
-object *car_proc(object *arguments) {
-    return caar(arguments);
-}
-
+/**foo_proc()
+ *these 3 are functions are used by eval to get the arguements of a procedure
+ *removes the first car/cdr 
+ *this function represents the actual car/cdr procedures on the back end as well
+ * Parameters:
+ *-arguements, a list of objects to cons/evaluate in other functions
+ * Returns:
+ * the next objects in the given arguments
+ */
+object *cons_proc(object *arguments) { return cons(car(arguments), cadr(arguments)); }
+object *car_proc(object *arguments) { return caar(arguments); }
 object *cdr_proc(object *arguments) {return cdar(arguments);}
 
+/**set_car()/set_cdr()
+ *These two functions are used to allow the user, to call the set_car and set_cdr functions
+ * Parameters:
+ *-arguments the object we are assigning to car/cdr
+ * Returns:
+ *-ok_symbol, an object to display the proper completion of the functions
+ */
 object *set_car_proc(object *arguments) {
     set_car(car(arguments), cadr(arguments));
     printf("In set car proc");
@@ -611,7 +723,14 @@ object *equal_to_proc(object *arguments) {
     }
 }
 
-object *equal_to_proc_v2(object *arguments) {
+/**is_eq_proc()
+ *this function is used to determine whether two arguments are equivalent
+ * Parameters:
+ *-arguements, the actual list of arguements for the procedure
+ * Returns:
+ *-a new fixnum object with the correct value of the operation performed on the given operands
+ */
+object *is_eq_proc(object *arguments) {
     object *obj1;
     object *obj2;
     
@@ -652,6 +771,16 @@ object *equal_to_proc_v2(object *arguments) {
     }
 }
 
+/**make_compound_proc()
+ *this function is used to make a compound procedure
+ *a compound procedure is a user defined function such as factorial where the user creates and defines how the procedure will work
+ * Parameters: 
+ *-parameters,the nessecary paramters as defined in our struct object
+ *-body, the actual compound procedure we are creating 
+ *-env, the environment we are using this procedure in
+ * Returns:
+ *-a new object representing the compound procedure
+ */
 object *make_compound_proc(object *parameters, object *body,
                            object* env) {
     object *obj;
@@ -664,25 +793,42 @@ object *make_compound_proc(object *parameters, object *body,
     return obj;
 }
 
-object *list_proc(object *arguments) {return arguments;}
-char is_compound_proc(object *obj) {return obj->obj_type == COMPOUND_PROC;}
-object *enclosing_environment(object *env) {return cdr(env);}
-object *first_frame(object *env) {return car(env);}
-object *make_frame(object *variables, object *values) {return cons(variables, values);}
-object *frame_variables(object *frame) {return car(frame);}
-object *frame_values(object *frame) {return cdr(frame);}
+object *list_proc(object *arguments) { return arguments; }
+char is_compound_proc(object *obj) { return obj->obj_type == COMPOUND_PROC; }
+object *enclosing_environment(object *env) { return cdr(env); }
+object *first_frame(object *env) { return car(env); }
+object *make_frame(object *variables, object *values) { return cons(variables, values); }
+object *frame_variables(object *frame) { return car(frame); }
+object *frame_values(object *frame) { return cdr(frame); }
 
+/**add_binding_to_frame()
+ *Allows the user to make local variables
+ * Parameters:
+ *-var, is the variable you are creating
+ *-val, is the value of the created variable
+ *-frame, the frame of the environment this variable will be on
+ */
 void add_binding_to_frame(object *var, object *val, 
                           object *frame) {
     set_car(frame, cons(var, car(frame)));
     set_cdr(frame, cons(val, cdr(frame)));
 }
 
-object *extend_environment(object *vars, object *vals,
-                           object *base_env) {
-    return cons(make_frame(vars, vals), base_env);
-}
+/**extend_environment()
+ *This function is used to make mor frames for the given environment
+ * Parameters:
+ *-vars, the variables we are extending
+ *-vals, the values of the variables we are extending
+ *-base_env, the environment we are adding frames to
+ */
+object *extend_environment(object *vars, object *vals, object *base_env) { return cons(make_frame(vars, vals), base_env);}
 
+/**lookup_variable_value()
+ *This function is used to lookup a variable from our environment
+ * Parameters:
+ *-var, the variable we are looking for
+ *-env, the environment we are searching through
+ */
 object *lookup_variable_value(object *var, object *env) {
 //printf("Number of objects in environment %d\n", count_objects(env));
     object *frame;
@@ -705,6 +851,13 @@ object *lookup_variable_value(object *var, object *env) {
     exit(1);
 }
 
+/**lookup_variable_type()
+ *This function is used to update a given variable
+ * Parameters:
+ *-var, the variable we are updating
+ *-val, the value we are changing the variable to
+ *-env, the environment of the variable
+ */
 object *lookup_variable_type(object *var, object *env) {
 //printf("Number of objects in environment %d\n", count_objects(env));
     object *frame;
@@ -727,6 +880,13 @@ object *lookup_variable_type(object *var, object *env) {
     exit(1);
 }
 
+/**set_variable_value()
+ *This function is used to update a given variable
+ * Parameters:
+ *-var, the variable we are updating
+ *-val, the value we are changing the variable to
+ *-env, the environment of the variable
+ */
 void set_variable_value(object *var, object *val, object *env) {
     object *frame;
     object *vars;
@@ -751,6 +911,13 @@ void set_variable_value(object *var, object *val, object *env) {
     exit(1);
 }
 
+/**define_variable()
+ *This function is used to define a variable for the user, and is what calls the creation function described above
+ * Parameters:
+ *-var, the variable(s) we are defining
+ *-val, the value(s) we are using when defining var
+ *-env, the environment the variable(s) will be bound to
+ */
 void define_variable(object *var, object *val, object *env) {
   object *frame, *vars, *vals;
     frame = first_frame(env);    
@@ -768,6 +935,11 @@ void define_variable(object *var, object *val, object *env) {
     add_binding_to_frame(var, val, frame);
 }
 
+/**setup_environment()
+ *This function is used to initilize an environment, it is what makes sure the lists of contained memory and variables are cleared
+ * Returns:
+ *-an object pointer with the new environment
+ */
 object *setup_environment(void) {
     object *initial_env;
     
@@ -778,6 +950,9 @@ object *setup_environment(void) {
     return initial_env;
 }
 
+/**init()
+ *this function intializes all our procedures, environments, symbols, etc.
+ */
 void init(void) {
     the_empty_list = alloc_object();
     the_empty_list->obj_type = EMPTY_LIST;

@@ -47,7 +47,7 @@ EXP	([Ee][-+]?[0-9]+)
 "exp"   { yylval.fn = B_exp; return FUNCT; }
 "log"   { yylval.fn = B_log; return FUNCT; }
 "print" { yylval.fn = B_print; return FUNCT; }
-"return" { yylval.fn = B_return; return FUNCT; }
+"return" { yylval.fn = B_return; return RETURN; }
  /* debug hack */
 "debug"[0-9]+ { debug = atoi(&yytext[5]); printf("debug set to %d\n", debug); }
 
@@ -59,7 +59,7 @@ EXP	([Ee][-+]?[0-9]+)
 "."?[0-9]+{EXP}? { yylval.d = atof(yytext); return NUMBER; }
 
 "//".*"\n"  
-"/*"(.|\0|\n)*?"*/" 
+"/*"[^*/]*"*/" 
 [ \t\n]   /* ignore white space */
 
 	/** [\n]    /* ignore white space */

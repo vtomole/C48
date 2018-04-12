@@ -5,6 +5,7 @@
 #include <math.h>
 #include "expression.h"
 #include "read_file.c"
+//#include "convert.c"
 
 
 /* symbol table */
@@ -189,7 +190,7 @@ void dodef(struct symbol *name, struct symlist *syms, struct ast *func){
 static double callbuiltin(struct fncall *);
 static double calluser(struct ufncall *);
 
-double eval(struct ast *a){
+double eval_ast(struct ast *a){
   double v;
 
   if(!a) {
@@ -206,36 +207,36 @@ double eval(struct ast *a){
 
     /* assignment */
   case '=': v = ((struct symasgn *)a)->s->value =
-      eval(((struct symasgn *)a)->v); break;
+      eval_ast(((struct symasgn *)a)->v); break;
 
     /* expressions */
-  case '+': v = eval(a->l) + eval(a->r); break;
-  case '-': v = eval(a->l) - eval(a->r); break;
-  case '*': v = eval(a->l) * eval(a->r); break;
-  case '/': v = eval(a->l) / eval(a->r); break;
-  case '%': v = (int)eval(a->l) % (int)eval(a->r); break;
-  case '|': v = fabs(eval(a->l)); break;
-  case 'M': v = -eval(a->l); break;
+  case '+': v = eval_ast(a->l) + eval_ast(a->r); break;
+  case '-': v = eval_ast(a->l) - eval_ast(a->r); break;
+  case '*': v = eval_ast(a->l) * eval_ast(a->r); break;
+  case '/': v = eval_ast(a->l) / eval_ast(a->r); break;
+  case '%': v = (int)eval_ast(a->l) % (int)eval_ast(a->r); break;
+  case '|': v = fabs(eval_ast(a->l)); break;
+  case 'M': v = -eval_ast(a->l); break;
 
     /* comparisons */
-  case '1': v = (eval(a->l) > eval(a->r))? 1 : 0; break;
-  case '2': v = (eval(a->l) < eval(a->r))? 1 : 0; break;
-  case '3': v = (eval(a->l) != eval(a->r))? 1 : 0; break;
-  case '4': v = (eval(a->l) == eval(a->r))? 1 : 0; break;
-  case '5': v = (eval(a->l) >= eval(a->r))? 1 : 0; break;
-  case '6': v = (eval(a->l) <= eval(a->r))? 1 : 0; break;
+  case '1': v = (eval_ast(a->l) > eval_ast(a->r))? 1 : 0; break;
+  case '2': v = (eval_ast(a->l) < eval_ast(a->r))? 1 : 0; break;
+  case '3': v = (eval_ast(a->l) != eval_ast(a->r))? 1 : 0; break;
+  case '4': v = (eval_ast(a->l) == eval_ast(a->r))? 1 : 0; break;
+  case '5': v = (eval_ast(a->l) >= eval_ast(a->r))? 1 : 0; break;
+  case '6': v = (eval_ast(a->l) <= eval_ast(a->r))? 1 : 0; break;
 
   /* control flow */
   /* null if/else/do expressions allowed in the grammar, so check for them */
   case 'I': 
-    if( eval( ((struct flow *)a)->cond) != 0) {
+    if( eval_ast( ((struct flow *)a)->cond) != 0) {
       if( ((struct flow *)a)->tl) {
-	      v = eval( ((struct flow *)a)->tl);
+	      v = eval_ast( ((struct flow *)a)->tl);
       } else
 	      v = 0.0;		/* a default value */
     } else {
       if( ((struct flow *)a)->el) {
-        v = eval(((struct flow *)a)->el);
+        v = eval_ast(((struct flow *)a)->el);
       } else
 	v = 0.0;		/* a default value */
     }
@@ -245,12 +246,12 @@ double eval(struct ast *a){
     v = 0.0;		/* a default value */
     
     if( ((struct flow *)a)->tl) {
-      while( eval(((struct flow *)a)->cond) != 0)
-	      v = eval(((struct flow *)a)->tl);
+      while( eval_ast(((struct flow *)a)->cond) != 0)
+	      v = eval_ast(((struct flow *)a)->tl);
     }
     break;			/* last value is value */
 	              
-  case 'L': eval(a->l); v = eval(a->r); break;
+  case 'L': eval_ast(a->l); v = eval_ast(a->r); break;
 
   case 'F': v = callbuiltin((struct fncall *)a); break;
 
@@ -264,7 +265,7 @@ double eval(struct ast *a){
 static double callbuiltin(struct fncall *f){
 
   enum bifs functype = f->functype;
-  double v = eval(f->l);
+  double v = eval_ast(f->l);
 
  switch(functype) {
  case B_sqrt:
@@ -276,9 +277,7 @@ static double callbuiltin(struct fncall *f){
  case B_print:
    printf("= %4.4g\n", v);
    return v;
- case B_return:
-   //printf("= %4.4g\n", v);
-   return v;
+ 
  default:
    yyerror("Unknown built-in function %d", functype);
    return 0.0;
@@ -320,10 +319,10 @@ static double calluser(struct ufncall *f){
     }
 
     if(args->nodetype == 'L') {	/* if this is a list node */
-      newval[i] = eval(args->l);
+      newval[i] = eval_ast(args->l);
       args = args->r;
     } else {			/* if it's the end of the list */
-      newval[i] = eval(args);
+      newval[i] = eval_ast(args);
       args = NULL;
     }
   }
@@ -341,7 +340,7 @@ static double calluser(struct ufncall *f){
   free(newval);
 
   /* evaluate the function */
-  v = eval(fn->func);
+  v = eval_ast(fn->func);
 
   /* put the dummies back */
   sl = fn->syms;
@@ -407,6 +406,7 @@ void yyerror(char *s, ...){
 }
 
 int main(int argc, char *argv[]){
+  init(); 
   if(argc > 1 && argv[1][0] == 'r'){
     open_file("test.txt");
   }

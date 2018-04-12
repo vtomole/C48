@@ -1,7 +1,6 @@
 #include "convert.h"
 
-
-
+//Builds properly
 object *convert_symlist(struct symlist *syms){
   if(syms == NULL){ return the_empty_list; }
   object *obj = make_symbol(syms->sym->name);
@@ -9,21 +8,24 @@ object *convert_symlist(struct symlist *syms){
 }
 
 
+//Builds properly
 object *convert_func(struct symbol *func){
-  object *b, *params, *expr;
-  
+  object *b, *fun, *params, *expr;
+
   params = convert_symlist(func->syms);
   expr = convert_expr(func->func);
   
-  b = make_symbol(func->name);
-  b = cons(b, cons(params, the_empty_list));
-  b = cons(b, cons(expr, the_empty_list));
+  fun = cons(make_symbol(func->name), params);
   
-  return cons(define_symbol, cons(b, the_empty_list));  
+  return cons(define_symbol, cons(fun, cons(expr, the_empty_list)));         
 }
 
+//Builds properly
 object *convert_exprlist(struct ast *a){
-  if(a->nodetype == 'L') {
+  if(!a){
+    return the_empty_list;
+  }
+  else if(a->nodetype == 'L') {
     object *obj = convert_expr(a->l);
     return cons(obj, convert_exprlist(a->r));
   }
@@ -33,12 +35,14 @@ object *convert_exprlist(struct ast *a){
   }
 }
 
+//Builds properly
 object *convert_funccall(struct ufncall *f){
   object *name = make_symbol(f->s->name);
   object *list = convert_exprlist(f->l);
-  return cons(name, cons(list, the_empty_list));
+  return cons(name, list);
 }
 
+//Builds properly
 object *convert_builtinfunc(struct fncall *f){
   char *str;
   switch(f->functype){
@@ -54,16 +58,14 @@ object *convert_builtinfunc(struct fncall *f){
    case B_print:
      str = "print";
      break;
-   case B_return:
-     str = "return";
-     break;
   }
   
   object *name = make_symbol(str);
   object *list = convert_exprlist(f->l);
-  return cons(name, cons(list, the_empty_list));
+  return cons(name, list);
 }
 
+//Builds properly
 object *convert_varexpr(struct ast* a){
  object *var = make_symbol(((struct symasgn*)a)->s->name);
  object *expr = convert_expr(((struct symasgn*)a)->v);
@@ -74,9 +76,10 @@ object *convert_varexpr(struct ast* a){
 object *convert_expr(struct ast* a){
   object *car, *cdr, *op, *obj;
   object *cond, *tl, *el;
+  char *operation = malloc(sizeof(char));
   char *val;
   int num;
-  printf("node type %c\n", a->nodetype);
+  //printf("node type %c\n", a->nodetype);
   if(!a)
     return the_empty_list;
   
@@ -99,12 +102,14 @@ object *convert_expr(struct ast* a){
   case 'L':
     car = convert_expr(a->l);
     cdr = convert_expr(a->r);
+    if(cdr->obj_type != PAIR){ cdr = cons(cdr, the_empty_list); }
     return cons(car, cdr);
   /** Creates Operation Objects**/
   case '+': case '-': case '*':  case '/':  case '%':
     car = convert_expr(a->l);
     cdr = convert_expr(a->r);
-    op = make_symbol((char *)a->nodetype);
+    sprintf(operation, "%c", a->nodetype);
+    op = make_symbol(operation);
     return cons(op, cons(car, cons(cdr, the_empty_list)));
 
   /** Creates Comparison Object **/
@@ -126,7 +131,7 @@ object *convert_expr(struct ast* a){
   case '4': 
     car = convert_expr(a->l);
     cdr = convert_expr(a->r);
-    op = make_symbol("==");
+    op = make_symbol("=");
     return cons(op, cons(car, cons(cdr, the_empty_list)));
   case '5': 
     car = convert_expr(a->l);
@@ -150,4 +155,6 @@ object *convert_expr(struct ast* a){
     return cons(if_symbol, cons(cond, cons(tl, cons(el, the_empty_list))));
   }
 }
+
+
 

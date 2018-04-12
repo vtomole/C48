@@ -17,7 +17,7 @@ clean:
 	rm -f parser.tab.c lexer.lex.c parser.tab.h test
 
 open:
-	gedit expression.c expression.h parser.y lexer.l Makefile & 
+	gedit expression.c expression.h parser.y lexer.l convert.c &
 
 display: 
 	 dot tree.dot -Tpng -o tree.png
