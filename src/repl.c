@@ -29,19 +29,13 @@ int main(int argc, char **argv){
   fp = fopen("hello.sexpr", "r");
   while (1) {
     printf("repl> ");
-<<<<<<< HEAD
-    //print(eval(typecheck(read(stdin), the_global_environment), the_global_environment));
-    //print(eval(read(stdin), the_global_environment));
-    print(typecheck(read(stdin), the_global_environment));
-=======
-    print(eval(typecheck(read(stdin), the_global_environment),the_global_environment));
->>>>>>> 3a3ebf39a414335a5b22463de7dfb4761a3043ab
-    printf("\n");
-    }
+    print(eval(typecheck(read(stdin), the_global_environment), the_global_environment));
+    
+    }*/
   object *temp_list = the_empty_list;
-  object *add =  make_symbol("%");
-  object *num1 = make_fixnum(6);
-  object *num2 = make_fixnum(4);
+  object *add =  make_symbol("==");
+  object *num1 = make_character('a');
+  object *num2 = make_character('b');
   temp_list = cons(num2, temp_list);
   temp_list = cons(num1, temp_list);
   temp_list = cons(add, temp_list);
@@ -62,8 +56,8 @@ int main(int argc, char **argv){
 
   fclose(fp);*/
 
-  object *obj = cons(make_symbol("+"), cons(make_fixnum(4), cons(make_fixnum(5), the_empty_list)));
-  print(obj);
+  //object *obj = cons(make_symbol("+"), cons(make_fixnum(4), cons(make_fixnum(5), the_empty_list)));
+  //print(obj);
 
   
   return 0;
