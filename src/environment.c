@@ -271,13 +271,14 @@ primitive_type char_to_enum(char* proc){
      strcmp(proc, "/") == 0 ||
      strcmp(proc, "%") == 0){
     return MATH;
+  }else if(strcmp(proc, "<>") == 0 ||
+           strcmp(proc, "==") == 0){   
+     return EQUALITY;
   }else if(strcmp(proc, ">")  == 0 || 
            strcmp(proc, "<")  == 0 ||
-     	   strcmp(proc, "<>") == 0 ||
-           strcmp(proc, "==") == 0 ||
 	   strcmp(proc, ">=") == 0 ||
            strcmp(proc, "<=") == 0){
-     return EQUALITY;
+    return COMPARISON;
   }else{
     return CHAR;
   }
@@ -302,7 +303,12 @@ object *set_acceptable(object *obj, primitive_type prim_type){
     //print(obj->primitive_proc.acceptables);
     break;
   case 2:
-    obj->primitive_proc.acceptables = cons(make_string("CHAR"),  the_empty_list);break;
+    obj->primitive_proc.acceptables = cons(make_fixnum(FIXNUM), cons (make_fixnum(FLOAT), cons (make_fixnum(CHARACTER), cons (make_fixnum(STRING), cons (make_fixnum(BOOLEAN), the_empty_list)))));
+    //print(obj->primitive_proc.acceptables);
+    break;
+  case 3:
+    obj->primitive_proc.acceptables = cons(make_fixnum(CHARACTER),  the_empty_list);
+    break;
   default:
     //printf("This should not happen after PLUS\n");
     obj->primitive_proc.acceptables = the_empty_list;
@@ -639,6 +645,232 @@ object *set_cdr_proc(object *arguments) {
     return ok_symbol;
 }
 
+object *greater_than_proc(object *arguments) {
+    long previousNum;
+    long nextNum;
+    double previousFloat;
+    double nextFloat;
+    char previousChar;
+    char nextChar;
+    char* previousString;
+    char* nextString;
+    int previousBool;
+    int nextBool;
+
+    switch (car(arguments)->obj_type) {
+        case FIXNUM:	    
+	    previousNum = (car(arguments))->number;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextNum = (car(arguments))->number;
+		if (previousNum > nextNum) {
+		    previousNum = nextNum;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+	case FLOAT:
+	    previousFloat = (car(arguments))->decimal;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextFloat = (car(arguments))->decimal;
+		if (previousFloat > nextFloat) {
+		    previousFloat = nextFloat;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+        case CHARACTER:    
+	    previousChar = (car(arguments))->character;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextChar = (car(arguments))->character;
+		if (previousChar > nextChar) {
+		    previousChar = nextChar;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+        case STRING:	    
+	    previousString = (car(arguments))->string;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextString = (car(arguments))->string;
+		if (strcmp(previousString, 
+                           nextString) > 0) {
+		    previousString = nextString;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+        default:
+            return (car(arguments) > cadr(arguments)) ? true : false;
+    }
+}
+
+object *less_than_proc(object *arguments) {
+    long previousNum;
+    long nextNum;
+    double previousFloat;
+    double nextFloat;
+    char previousChar;
+    char nextChar;
+    char* previousString;
+    char* nextString;
+    int previousBool;
+    int nextBool;
+
+    switch (car(arguments)->obj_type) {
+        case FIXNUM:	    
+	    previousNum = (car(arguments))->number;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextNum = (car(arguments))->number;
+		if (previousNum < nextNum) {
+		    previousNum = nextNum;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+	case FLOAT:
+	    previousFloat = (car(arguments))->decimal;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextFloat = (car(arguments))->decimal;
+		if (previousFloat < nextFloat) {
+		    previousFloat = nextFloat;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+        case CHARACTER:    
+	    previousChar = (car(arguments))->character;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextChar = (car(arguments))->character;
+		if (previousChar < nextChar) {
+		    previousChar = nextChar;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+        case STRING:	    
+	    previousString = (car(arguments))->string;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextString = (car(arguments))->string;
+		if (strcmp(previousString, 
+                           nextString) < 0) {
+		    previousString = nextString;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+        default:
+            return (car(arguments) < cadr(arguments)) ? true : false;
+    }
+}
+
+object *not_equal_to_proc(object *arguments) {
+    long previousNum;
+    long nextNum;
+    double previousFloat;
+    double nextFloat;
+    char previousChar;
+    char nextChar;
+    char* previousString;
+    char* nextString;
+    int previousBool;
+    int nextBool;
+
+    switch (car(arguments)->obj_type) {
+        case FIXNUM:	    
+	    previousNum = (car(arguments))->number;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextNum = (car(arguments))->number;
+		if (previousNum != nextNum) {
+		    previousNum = nextNum;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+	case FLOAT:
+	    previousFloat = (car(arguments))->decimal;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextFloat = (car(arguments))->decimal;
+		if (previousFloat != nextFloat) {
+		    previousFloat = nextFloat;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+        case CHARACTER:    
+	    previousChar = (car(arguments))->character;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextChar = (car(arguments))->character;
+		if (previousChar != nextChar) {
+		    previousChar = nextChar;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+        case STRING:	    
+	    previousString = (car(arguments))->string;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextString = (car(arguments))->string;
+		if (strcmp(previousString, 
+                           nextString) != 0) {
+		    previousString = nextString;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+	case BOOLEAN:	    
+	    previousBool = (car(arguments))->boolean;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextBool = (car(arguments))->boolean;
+		if (previousBool != nextBool) {
+		    previousBool = nextBool;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+        default:
+            return (car(arguments) != cadr(arguments)) ? true : false;
+    }
+}
+
 object *equal_to_proc(object *arguments) {
     long previousNum;
     long nextNum;
@@ -720,6 +952,148 @@ object *equal_to_proc(object *arguments) {
             break;
         default:
             return (car(arguments) == cadr(arguments)) ? true : false;
+    }
+}
+
+object *greater_or_equal_to_proc(object *arguments) {
+    long previousNum;
+    long nextNum;
+    double previousFloat;
+    double nextFloat;
+    char previousChar;
+    char nextChar;
+    char* previousString;
+    char* nextString;
+    int previousBool;
+    int nextBool;
+
+    switch (car(arguments)->obj_type) {
+        case FIXNUM:	    
+	    previousNum = (car(arguments))->number;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextNum = (car(arguments))->number;
+		if (previousNum >= nextNum) {
+		    previousNum = nextNum;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+	case FLOAT:
+	    previousFloat = (car(arguments))->decimal;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextFloat = (car(arguments))->decimal;
+		if (previousFloat >= nextFloat) {
+		    previousFloat = nextFloat;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+        case CHARACTER:    
+	    previousChar = (car(arguments))->character;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextChar = (car(arguments))->character;
+		if (previousChar >= nextChar) {
+		    previousChar = nextChar;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+        case STRING:	    
+	    previousString = (car(arguments))->string;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextString = (car(arguments))->string;
+		if (strcmp(previousString, 
+                           nextString) != 0) {
+		    previousString = nextString;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+        default:
+            return (car(arguments) >= cadr(arguments)) ? true : false;
+    }
+}
+
+object *less_or_equal_to_proc(object *arguments) {
+    long previousNum;
+    long nextNum;
+    double previousFloat;
+    double nextFloat;
+    char previousChar;
+    char nextChar;
+    char* previousString;
+    char* nextString;
+    int previousBool;
+    int nextBool;
+
+    switch (car(arguments)->obj_type) {
+        case FIXNUM:	    
+	    previousNum = (car(arguments))->number;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextNum = (car(arguments))->number;
+		if (previousNum <= nextNum) {
+		    previousNum = nextNum;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+	case FLOAT:
+	    previousFloat = (car(arguments))->decimal;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextFloat = (car(arguments))->decimal;
+		if (previousFloat <= nextFloat) {
+		    previousFloat = nextFloat;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+        case CHARACTER:    
+	    previousChar = (car(arguments))->character;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextChar = (car(arguments))->character;
+		if (previousChar <= nextChar) {
+		    previousChar = nextChar;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+        case STRING:	    
+	    previousString = (car(arguments))->string;
+	    while (!is_the_empty_list(arguments = cdr(arguments))) {
+		nextString = (car(arguments))->string;
+		if (strcmp(previousString, 
+                           nextString) <= 0) {
+		    previousString = nextString;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    return true;
+            break;
+        default:
+            return (car(arguments) <= cadr(arguments)) ? true : false;
     }
 }
 
@@ -1010,12 +1384,12 @@ void init(void) {
 
     add_procedure("="        , is_number_equal_proc);
 
-    //add_procedure(">"        , greater_than_proc);
-    //add_procedure("<"        , less_than_proc);
-    //add_procedure("<>"	     , not_equal_to_proc);
+    add_procedure(">"        , greater_than_proc);
+    add_procedure("<"        , less_than_proc);
+    add_procedure("<>"	     , not_equal_to_proc);
     add_procedure("=="	     , equal_to_proc);
-    //add_procedure(">="	     , greater_or_equal_to_proc);
-    //add_procedure("<="	     , less_or_equal_to_proc);
+    add_procedure(">="	     , greater_or_equal_to_proc);
+    add_procedure("<="	     , less_or_equal_to_proc);
 
     add_procedure("cons"    , cons_proc);
     add_procedure("car"     , car_proc);
