@@ -1,6 +1,5 @@
 #include "convert.h"
 
-//Builds properly
 object *convert_symlist(struct symlist *syms){
   if(syms == NULL){ return the_empty_list; }
   object *obj = make_symbol(syms->sym->name);
@@ -8,7 +7,6 @@ object *convert_symlist(struct symlist *syms){
 }
 
 
-//Builds properly
 object *convert_func(struct symbol *func){
   object *b, *fun, *params, *expr;
 
@@ -20,7 +18,6 @@ object *convert_func(struct symbol *func){
   return cons(define_symbol, cons(fun, cons(expr, the_empty_list)));         
 }
 
-//Builds properly
 object *convert_exprlist(struct ast *a){
   if(!a){
     return the_empty_list;
@@ -35,14 +32,12 @@ object *convert_exprlist(struct ast *a){
   }
 }
 
-//Builds properly
 object *convert_funccall(struct ufncall *f){
   object *name = make_symbol(f->s->name);
   object *list = convert_exprlist(f->l);
   return cons(name, list);
 }
 
-//Builds properly
 object *convert_builtinfunc(struct fncall *f){
   char *str;
   switch(f->functype){
@@ -65,11 +60,11 @@ object *convert_builtinfunc(struct fncall *f){
   return cons(name, list);
 }
 
-//Builds properly
 object *convert_varexpr(struct ast* a){
  object *var = make_symbol(((struct symasgn*)a)->s->name);
  object *expr = convert_expr(((struct symasgn*)a)->v);
  object *varexpr = cons(var, cons(expr, the_empty_list));
+ varexpr = cons(varexpr, the_empty_list);
  return cons(let_symbol, cons(varexpr, the_empty_list)); 
 }
 
@@ -101,9 +96,13 @@ object *convert_expr(struct ast* a){
     return convert_varexpr(a);
   case 'L':
     car = convert_expr(a->l);
-    cdr = convert_expr(a->r);
-    if(cdr->obj_type != PAIR){ cdr = cons(cdr, the_empty_list); }
-    return cons(car, cdr);
+    cdr = cons(convert_expr(a->r), the_empty_list);
+    object *temp = car;
+    while(temp->cons_cell.cdr != the_empty_list){
+      temp = temp->cons_cell.cdr;
+    }
+    temp->cons_cell.cdr = cdr;
+    return car;
   /** Creates Operation Objects**/
   case '+': case '-': case '*':  case '/':  case '%':
     car = convert_expr(a->l);
@@ -152,7 +151,7 @@ object *convert_expr(struct ast* a){
     cond = convert_expr(((struct flow*)a)->cond);
     tl = convert_expr(((struct flow*)a)->tl);
     el = convert_expr(((struct flow*)a)->el);
-    return cons(if_symbol, cons(cond, cons(tl, cons(el, the_empty_list))));
+    return make_if(cond, tl, el);
   }
 }
 
