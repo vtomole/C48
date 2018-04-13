@@ -59,7 +59,7 @@ EXP	([Ee][-+]?[0-9]+)
 "."?[0-9]+{EXP}? { yylval.d = atof(yytext); return NUMBER; }
 
 "//".*"\n"  
-"/*"[^*/]*"*/" 
+"/*"(\n|([^*][^/]))*"*/" 
 [ \t\n]   /* ignore white space */
 
 	/** [\n]    /* ignore white space */
