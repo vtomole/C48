@@ -33,9 +33,9 @@ int main(int argc, char **argv){
     
     }*/
   object *temp_list = the_empty_list;
-  object *add =  make_symbol("==");
-  object *num1 = make_character('a');
-  object *num2 = make_character('b');
+  object *add =  make_symbol(">");
+  object *num1 = make_string("apple");
+  object *num2 = make_string("banana");
   temp_list = cons(num2, temp_list);
   temp_list = cons(num1, temp_list);
   temp_list = cons(add, temp_list);
