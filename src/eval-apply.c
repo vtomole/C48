@@ -42,8 +42,8 @@ char is_tagged_list(object *expression, object *tag) {
     return 0;
 }
 
-char is_quoted(object *expression) { return is_tagged_list(expression, quote_symbol);
-char is_definition(object *exp) { return is_tagged_list(exp, define_symbol); } }
+char is_quoted(object *expression) { return is_tagged_list(expression, quote_symbol);}
+char is_definition(object *exp) { return is_tagged_list(exp, define_symbol); } 
 char is_assignment(object *exp) { return is_tagged_list(exp, set_symbol); }
 object *text_of_quotation(object *exp) { return cadr(exp); }
 object *assignment_variable(object *exp) { return car(cdr(exp)); }
