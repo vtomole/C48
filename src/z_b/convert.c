@@ -1,15 +1,5 @@
 #include "convert.h"
 
-void test_print(){
-  object *obj = cons(make_symbol("+"), 
-                  cons(make_fixnum(4),  
-                    cons(make_fixnum(5), 
-                      the_empty_list)));
-  print(obj);
-  printf("\n");
-}
-
-//Builds properly
 object *convert_symlist(struct symlist *syms){
   if(syms == NULL){ return the_empty_list; }
   object *obj = make_symbol(syms->sym->name);
@@ -17,7 +7,6 @@ object *convert_symlist(struct symlist *syms){
 }
 
 
-//Builds properly
 object *convert_func(struct symbol *func){
   object *b, *fun, *params, *expr;
 
@@ -30,7 +19,10 @@ object *convert_func(struct symbol *func){
 }
 
 object *convert_exprlist(struct ast *a){
-  if(a->nodetype == 'L') {
+  if(!a){
+    return the_empty_list;
+  }
+  else if(a->nodetype == 'L') {
     object *obj = convert_expr(a->l);
     return cons(obj, convert_exprlist(a->r));
   }
@@ -40,14 +32,12 @@ object *convert_exprlist(struct ast *a){
   }
 }
 
-//Builds properly
 object *convert_funccall(struct ufncall *f){
   object *name = make_symbol(f->s->name);
   object *list = convert_exprlist(f->l);
   return cons(name, list);
 }
 
-//Builds properly (except return)
 object *convert_builtinfunc(struct fncall *f){
   char *str;
   switch(f->functype){
@@ -63,9 +53,6 @@ object *convert_builtinfunc(struct fncall *f){
    case B_print:
      str = "print";
      break;
-   case B_return:
-     str = "return";
-     break;
   }
   
   object *name = make_symbol(str);
@@ -73,11 +60,11 @@ object *convert_builtinfunc(struct fncall *f){
   return cons(name, list);
 }
 
-//Builds properly
 object *convert_varexpr(struct ast* a){
  object *var = make_symbol(((struct symasgn*)a)->s->name);
  object *expr = convert_expr(((struct symasgn*)a)->v);
  object *varexpr = cons(var, cons(expr, the_empty_list));
+ varexpr = cons(varexpr, the_empty_list);
  return cons(let_symbol, cons(varexpr, the_empty_list)); 
 }
 
@@ -94,7 +81,6 @@ object *convert_expr(struct ast* a){
   switch(a->nodetype){
   case 'K': 
     num = (float)((struct numval *)a)->number;
-    //num = ((struct numval *)a)->number;
     return make_fixnum(num);
   case 'M':
     num = (float)-((struct numval *)a)->number;
@@ -110,8 +96,13 @@ object *convert_expr(struct ast* a){
     return convert_varexpr(a);
   case 'L':
     car = convert_expr(a->l);
-    cdr = convert_expr(a->r);
-    return cons(car, cdr);
+    cdr = cons(convert_expr(a->r), the_empty_list);
+    object *temp = car;
+    while(temp->cons_cell.cdr != the_empty_list){
+      temp = temp->cons_cell.cdr;
+    }
+    temp->cons_cell.cdr = cdr;
+    return car;
   /** Creates Operation Objects**/
   case '+': case '-': case '*':  case '/':  case '%':
     car = convert_expr(a->l);
@@ -139,7 +130,7 @@ object *convert_expr(struct ast* a){
   case '4': 
     car = convert_expr(a->l);
     cdr = convert_expr(a->r);
-    op = make_symbol("==");
+    op = make_symbol("=");
     return cons(op, cons(car, cons(cdr, the_empty_list)));
   case '5': 
     car = convert_expr(a->l);
@@ -160,7 +151,9 @@ object *convert_expr(struct ast* a){
     cond = convert_expr(((struct flow*)a)->cond);
     tl = convert_expr(((struct flow*)a)->tl);
     el = convert_expr(((struct flow*)a)->el);
-    return cons(if_symbol, cons(cond, cons(tl, cons(el, the_empty_list))));
+    return make_if(cond, tl, el);
   }
 }
+
+
 

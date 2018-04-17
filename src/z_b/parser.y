@@ -19,7 +19,7 @@
 %token <fn> FUNCT
 %token EOL 
 
-%token IF THEN ELSE WHILE DO FUN FOR END
+%token IF THEN ELSE WHILE DO FUN FOR END RETURN
 
 
 %nonassoc <fn> CMP
@@ -39,11 +39,11 @@ stmt:IF '(' exp ')' '{' list '}'                   { $$ = newflow('I', $3, $6, N
    | IF '(' exp ')'  '{' list '}' ELSE '{'list '}'  { $$ = newflow('I', $3, $6, $10); }
    | IF '(' exp ')'  '{' list '}' ELSE stmt         { $$ = newflow('I', $3, $6, $9); }
    | WHILE '(' exp ')'  '{' list '}'                { $$ = newflow('W', $3, $6, NULL); }    
-   | exp
+   | exp ';'
 ;
 
 list: /* nothing */ { $$ = NULL; }
-   | stmt ';' list { if ($3 == NULL) $$ = $1; else $$ = newast('L', $1, $3); }
+   | stmt list { if ($2 == NULL) $$ = $1; else $$ = newast('L', $1, $2); }
    ;
 
 exp: exp CMP exp          { $$ = newcmp($2, $1, $3); }
@@ -60,6 +60,7 @@ exp: exp CMP exp          { $$ = newcmp($2, $1, $3); }
    | NAME                 { $$ = newref($1); }
    | NAME '=' exp         { $$ = newasgn($1, $3); }
    | NAME '(' explist ')' { $$ = newcall($1, $3); }
+   | RETURN exp           { $$ = $2; }
 ;
 
 explist:            { $$ = NULL; }
@@ -73,15 +74,13 @@ symlist:      { $$ = NULL; }
 
 calclist: /* nothing */
   | calclist EOL
-  | calclist stmt ';' 
+  | calclist stmt
     //{ if(debug) dumpast($2, 0); printf("= %4.4g\n> ", eval_ast($2)); treefree($2); }
     { if(debug) dumpast($2, 0); print(convert_expr($2)); treefree($2); printf("\n"); }
-    //{ test_print(); }
             
   | calclist FUN NAME '(' symlist ')' '{' list '}' 
     //{ dodef($3, $5, $8); printf("Defined %s\n> ", $3->name); }
 	  { dodef($3, $5, $8); print(convert_func($3)); printf("\n"); }
-	  //{ test_print(); }
   
   | calclist error  { yyerrok; printf("> "); }
  ;

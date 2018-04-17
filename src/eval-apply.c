@@ -85,10 +85,14 @@ object *definition_value(object *exp) {
 
 object *make_if(object *predicate, object *consequent,
                 object *alternative) {
+    object *end = the_empty_list;
+    if(alternative->obj_type != EMPTY_LIST){
+      end = cons(alternative, the_empty_list);
+    }
     return cons(if_symbol,
                 cons(predicate,
                      cons(consequent,
-                          cons(alternative, the_empty_list))));
+                          end)));
 }
 
 char is_if(object *expression) { return is_tagged_list(expression, if_symbol); }
