@@ -76,6 +76,7 @@ object *cons(object *car, object *cdr);
 object *car(object *pair);
 object *cdr(object *pair);
 
+//Boolean Functions
 char is_the_empty_list(object *obj) { return obj == the_empty_list; }
 char booleanp(object *obj) { return obj->obj_type == BOOLEAN; }
 char is_false(object *obj) {return obj == false; }
@@ -644,6 +645,13 @@ object *set_cdr_proc(object *arguments) {
     printf("IN set cdr proc");
     return ok_symbol;
 }
+/**greater_than_proc()
+ *This function is used to check if the first or prior argument(s) is greater than the seconde or later argument(s)
+ * Parameters:
+ *-arguements, the actual list of arguements for the procedure
+ * Returns:
+ *-a new boolean object holding true or false
+ */
 
 object *greater_than_proc(object *arguments) {
     long previousNum;
@@ -715,7 +723,13 @@ object *greater_than_proc(object *arguments) {
             return (car(arguments) > cadr(arguments)) ? true : false;
     }
 }
-
+/**less_than_proc()
+ *This function is used to check if the first or prior argument(s) is greater than the seconde or later argument(s)
+ * Parameters:
+ *-arguements, the actual list of arguements for the procedure
+ * Returns:
+ *-a new boolean object holding true or false
+ */
 object *less_than_proc(object *arguments) {
     long previousNum;
     long nextNum;
@@ -787,6 +801,13 @@ object *less_than_proc(object *arguments) {
     }
 }
 
+/**not_equal_to_proc()
+ *This function is used to check if the first or prior argument(s) is greater than the seconde or later argument(s)
+ * Parameters:
+ *-arguements, the actual list of arguements for the procedure
+ * Returns:
+ *-a new boolean object holding true or false
+ */
 object *not_equal_to_proc(object *arguments) {
     long previousNum;
     long nextNum;
@@ -871,6 +892,13 @@ object *not_equal_to_proc(object *arguments) {
     }
 }
 
+/**equal_to_proc()
+ *This function is used to check if the first or prior argument(s) is greater than the seconde or later argument(s)
+ * Parameters:
+ *-arguements, the actual list of arguements for the procedure
+ * Returns:
+ *-a new boolean object holding true or false
+ */
 object *equal_to_proc(object *arguments) {
     long previousNum;
     long nextNum;
@@ -955,6 +983,13 @@ object *equal_to_proc(object *arguments) {
     }
 }
 
+/**greater_than_or_equal_to_proc()
+ *This function is used to check if the first or prior argument(s) is greater than the seconde or later argument(s)
+ * Parameters:
+ *-arguements, the actual list of arguements for the procedure
+ * Returns:
+ *-a new boolean object holding true or false
+ */
 object *greater_or_equal_to_proc(object *arguments) {
     long previousNum;
     long nextNum;
@@ -1026,6 +1061,13 @@ object *greater_or_equal_to_proc(object *arguments) {
     }
 }
 
+/**less_than_or_equal_to_proc()
+ *This function is used to check if the first or prior argument(s) is greater than the seconde or later argument(s)
+ * Parameters:
+ *-arguements, the actual list of arguements for the procedure
+ * Returns:
+ *-a new object holding true or false returning of the same type as the arguements
+ */
 object *less_or_equal_to_proc(object *arguments) {
     long previousNum;
     long nextNum;
@@ -1169,6 +1211,8 @@ object *make_compound_proc(object *parameters, object *body,
 
 object *list_proc(object *arguments) { return arguments; }
 char is_compound_proc(object *obj) { return obj->obj_type == COMPOUND_PROC; }
+
+//Environment functions
 object *enclosing_environment(object *env) { return cdr(env); }
 object *first_frame(object *env) { return car(env); }
 object *make_frame(object *variables, object *values) { return cons(variables, values); }
@@ -1379,8 +1423,8 @@ void init(void) {
     add_procedure("+"        , add_proc);
     add_procedure("-"        , sub_proc);
     add_procedure("*"        , mul_proc);
-    add_procedure("/" 	     , quotient_proc);
-    add_procedure("%"	     , remainder_proc);
+    add_procedure("/"        , quotient_proc);
+    add_procedure("%"        , remainder_proc);
 
     add_procedure("="        , is_number_equal_proc);
 

@@ -1,4 +1,9 @@
 #include "print.h"
+/**print_pair()
+ *This function is used to print a given pair, mainly for debug purposes
+ * Parameters:
+ *-pair, the pair you want to print
+ */
 void print_pair(object *pair) {
     object *car_obj;
     object *cdr_obj;
@@ -19,6 +24,12 @@ void print_pair(object *pair) {
     }
 }
 
+/**print()
+ *This function recursively prints the given expression with head obj,
+ *the format for print matches the s-expresion format we use i.e. 3*2+2 = (+ (* 3 2) 2)
+ * Parameters:
+ *-obj, The start of the list/expression/code tree to be printed
+ */
 void print(object *obj) {
     char c;
     char *str;
