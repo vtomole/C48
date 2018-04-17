@@ -645,6 +645,13 @@ object *set_cdr_proc(object *arguments) {
     printf("IN set cdr proc");
     return ok_symbol;
 }
+/**greater_than_proc()
+ *This function is used to check if the first or prior argument(s) is greater than the seconde or later argument(s)
+ * Parameters:
+ *-arguements, the actual list of arguements for the procedure
+ * Returns:
+ *-a new boolean object holding true or false
+ */
 
 object *greater_than_proc(object *arguments) {
     long previousNum;
@@ -716,7 +723,13 @@ object *greater_than_proc(object *arguments) {
             return (car(arguments) > cadr(arguments)) ? true : false;
     }
 }
-
+/**less_than_proc()
+ *This function is used to check if the first or prior argument(s) is greater than the seconde or later argument(s)
+ * Parameters:
+ *-arguements, the actual list of arguements for the procedure
+ * Returns:
+ *-a new boolean object holding true or false
+ */
 object *less_than_proc(object *arguments) {
     long previousNum;
     long nextNum;
@@ -788,6 +801,13 @@ object *less_than_proc(object *arguments) {
     }
 }
 
+/**not_equal_to_proc()
+ *This function is used to check if the first or prior argument(s) is greater than the seconde or later argument(s)
+ * Parameters:
+ *-arguements, the actual list of arguements for the procedure
+ * Returns:
+ *-a new boolean object holding true or false
+ */
 object *not_equal_to_proc(object *arguments) {
     long previousNum;
     long nextNum;
@@ -872,6 +892,13 @@ object *not_equal_to_proc(object *arguments) {
     }
 }
 
+/**equal_to_proc()
+ *This function is used to check if the first or prior argument(s) is greater than the seconde or later argument(s)
+ * Parameters:
+ *-arguements, the actual list of arguements for the procedure
+ * Returns:
+ *-a new boolean object holding true or false
+ */
 object *equal_to_proc(object *arguments) {
     long previousNum;
     long nextNum;
@@ -956,6 +983,13 @@ object *equal_to_proc(object *arguments) {
     }
 }
 
+/**greater_than_or_equal_to_proc()
+ *This function is used to check if the first or prior argument(s) is greater than the seconde or later argument(s)
+ * Parameters:
+ *-arguements, the actual list of arguements for the procedure
+ * Returns:
+ *-a new boolean object holding true or false
+ */
 object *greater_or_equal_to_proc(object *arguments) {
     long previousNum;
     long nextNum;
@@ -1027,6 +1061,13 @@ object *greater_or_equal_to_proc(object *arguments) {
     }
 }
 
+/**less_than_or_equal_to_proc()
+ *This function is used to check if the first or prior argument(s) is greater than the seconde or later argument(s)
+ * Parameters:
+ *-arguements, the actual list of arguements for the procedure
+ * Returns:
+ *-a new object holding true or false returning of the same type as the arguements
+ */
 object *less_or_equal_to_proc(object *arguments) {
     long previousNum;
     long nextNum;
