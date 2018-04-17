@@ -134,7 +134,7 @@ tailcall:
 			acceptables = procedure->primitive_proc.acceptables;
 		
 			//Determine the type of the first operand
-			primary_type = car(cdr(type_arguments));'
+			primary_type = car(cdr(type_arguments));
 	  
 			//check the remaining operands and make sure they match the first
 			while (!is_the_empty_list(type_arguments)) {
