@@ -76,6 +76,7 @@ object *cons(object *car, object *cdr);
 object *car(object *pair);
 object *cdr(object *pair);
 
+//Boolean Functions
 char is_the_empty_list(object *obj) { return obj == the_empty_list; }
 char booleanp(object *obj) { return obj->obj_type == BOOLEAN; }
 char is_false(object *obj) {return obj == false; }
@@ -694,6 +695,8 @@ object *make_compound_proc(object *parameters, object *body,
 
 object *list_proc(object *arguments) { return arguments; }
 char is_compound_proc(object *obj) { return obj->obj_type == COMPOUND_PROC; }
+
+//Environment functions
 object *enclosing_environment(object *env) { return cdr(env); }
 object *first_frame(object *env) { return car(env); }
 object *make_frame(object *variables, object *values) { return cons(variables, values); }
@@ -904,8 +907,8 @@ void init(void) {
     add_procedure("+"        , add_proc);
     add_procedure("-"        , sub_proc);
     add_procedure("*"        , mul_proc);
-    add_procedure("/" , quotient_proc);
-    add_procedure("%", remainder_proc);
+    add_procedure("/"        , quotient_proc);
+    add_procedure("%"        , remainder_proc);
     add_procedure("="        , is_number_equal_proc);
     add_procedure("<"        , is_less_than_proc);
     add_procedure(">"        , is_greater_than_proc);

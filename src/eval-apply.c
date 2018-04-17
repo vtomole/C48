@@ -1,15 +1,37 @@
 #include "eval-apply.h"
+
 /*Temporary import of print if this breaks expression.c this is why*/
+/**print()
+ *this function is used to print our token_list/code tree
+ * Parameters:
+ *-obj, the object pointer representing the head of the list/tree we want to print
+ */
 void print(object *obj);
+object *make_lambda(object *parameters, object *body);
+
+/**self_evaluatingp()
+ *this function checks whether the function is primitive
+ * Parameters:
+ *-exp, the procedure we are trying to check
+ * Returns:
+ *-1 if the object is a primitive_proc,
+ *-0 otherwise
+ */
 int self_evaluatingp(object *exp) {
     return booleanp(exp) || numberp(exp) || characterp(exp) || floatp(exp) ||
            is_string(exp);
 }
 
-char variablep(object *expression) {
-    return is_symbol(expression);
-}
+char variablep(object *expression) { return is_symbol(expression); }
 
+/**is_tagged_list()
+ *this function checks whether we have tagged the list
+ * Parameters:
+ *-expression,
+ * Returns:
+ *-1 if the first object of expression is a symbor and tag is set
+ *-0 otherwise
+ */
 char is_tagged_list(object *expression, object *tag) {
     object *the_car;
 
@@ -20,30 +42,21 @@ char is_tagged_list(object *expression, object *tag) {
     return 0;
 }
 
-char is_quoted(object *expression) {
-    return is_tagged_list(expression, quote_symbol);
-}
+char is_quoted(object *expression) { return is_tagged_list(expression, quote_symbol);
+char is_definition(object *exp) { return is_tagged_list(exp, define_symbol); } }
+char is_assignment(object *exp) { return is_tagged_list(exp, set_symbol); }
+object *text_of_quotation(object *exp) { return cadr(exp); }
+object *assignment_variable(object *exp) { return car(cdr(exp)); }
+object *assignment_value(object *exp) { return car(cdr(cdr(exp))); }
 
-object *text_of_quotation(object *exp) {
-    return cadr(exp);
-}
-
-char is_assignment(object *exp) {
-    return is_tagged_list(exp, set_symbol);
-}
-
-object *assignment_variable(object *exp) {
-    return car(cdr(exp));
-}
-
-object *assignment_value(object *exp) {
-    return car(cdr(cdr(exp)));
-}
-
-char is_definition(object *exp) {
-    return is_tagged_list(exp, define_symbol);
-}
-
+/**definition_variable()
+ *this function checks ??
+ * Parameters:
+ *-exp, the object we are checking the definition of
+ * Returns:
+ *-cadr(exp) the value of the given object, if the object is a symbol/operator
+ *-caadr(exp) the rest of the given list, otherwise
+ */
 object *definition_variable(object *exp) {
     if (is_symbol(cadr(exp))) {
         return cadr(exp);
@@ -53,8 +66,14 @@ object *definition_variable(object *exp) {
     }
 }
 
-object *make_lambda(object *parameters, object *body);
-
+/**definition_value()
+ *this function checks ??
+ * Parameters:
+ *-exp, the object we are defining the of value of
+ * Returns:
+ *-cadr(exp) the value of the given object, if the object is a symbol/operator
+ *-caadr(exp) the rest of the given list, otherwise
+ */
 object *definition_value(object *exp) {
     if (is_symbol(cadr(exp))) {
         return caddr(exp);
@@ -72,17 +91,9 @@ object *make_if(object *predicate, object *consequent,
                           cons(alternative, the_empty_list))));
 }
 
-char is_if(object *expression) {
-    return is_tagged_list(expression, if_symbol);
-}
-
-object *if_predicate(object *exp) {
-    return cadr(exp);
-}
-
-object *if_consequent(object *exp) {
-    return caddr(exp);
-}
+char is_if(object *expression) { return is_tagged_list(expression, if_symbol); }
+object *if_predicate(object *exp) { return cadr(exp); }
+object *if_consequent(object *exp) { return caddr(exp); }
 
 object *if_alternative(object *exp) {
     if (is_the_empty_list(cdddr(exp))) {
@@ -93,65 +104,21 @@ object *if_alternative(object *exp) {
     }
 }
 
-object *make_lambda(object *parameters, object *body) {
-    return cons(lambda_symbol, cons(parameters, body));
-}
-
-char is_lambda(object *exp) {
-    return is_tagged_list(exp, lambda_symbol);
-}
-
-object *lambda_parameters(object *exp) {
-    return cadr(exp);
-}
-
-object *lambda_body(object *exp) {
-    return cddr(exp);
-}
-
-object *make_begin(object *seq) {
-    return cons(begin_symbol, seq);
-}
-
-char is_begin(object *exp) {
-    return is_tagged_list(exp, begin_symbol);
-}
-
-object *begin_actions(object *exp) {
-    return cdr(exp);
-}
-
-char is_last_exp(object *seq) {
-    return is_the_empty_list(cdr(seq));
-}
-
-object *first_exp(object *seq) {
-    return car(seq);
-}
-
-object *rest_exps(object *seq) {
-    return cdr(seq);
-}
-
-char is_cond(object *exp) {
-    return is_tagged_list(exp, cond_symbol);
-}
-
-object *cond_clauses(object *exp) {
-    return cdr(exp);
-}
-
-object *cond_predicate(object *clause) {
-    return car(clause);
-}
-
-object *cond_actions(object *clause) {
-    return cdr(clause);
-}
-
-char is_cond_else_clause(object *clause) {
-    return cond_predicate(clause) == else_symbol;
-}
+object *make_lambda(object *parameters, object *body) { return cons(lambda_symbol, cons(parameters, body)); }
+char is_lambda(object *exp) { return is_tagged_list(exp, lambda_symbol); }
+object *lambda_parameters(object *exp) { return cadr(exp); }
+object *lambda_body(object *exp) { return cddr(exp); }
+object *make_begin(object *seq) { return cons(begin_symbol, seq); }
+char is_begin(object *exp) { return is_tagged_list(exp, begin_symbol); }
+object *begin_actions(object *exp) { return cdr(exp); }
+char is_last_exp(object *seq) { return is_the_empty_list(cdr(seq)); }
+object *first_exp(object *seq) { return car(seq); }
+object *rest_exps(object *seq) { return cdr(seq); }
+char is_cond(object *exp) { return is_tagged_list(exp, cond_symbol); }
+object *cond_clauses(object *exp) { return cdr(exp); }
+object *cond_predicate(object *clause) { return car(clause); }
+object *cond_actions(object *clause) { return cdr(clause); }
+char is_cond_else_clause(object *clause) { return cond_predicate(clause) == else_symbol; }
 
 object *sequence_to_exp(object *seq) {
     if (is_the_empty_list(seq)) {
@@ -192,60 +159,22 @@ object *expand_clauses(object *clauses) {
     }
 }
 
-object *cond_to_if(object *exp) {
-    return expand_clauses(cond_clauses(exp));
-}
-
-object *make_application(object *operator, object *operands) {
-    return cons(operator, operands);
-}
-
-char is_application(object *exp) {
-    return is_pair(exp);
-}
-
-object *operator(object *exp) {
-    return car(exp);
-}
-
-object *operands(object *exp) {
-    return cdr(exp);
-}
-
-char is_no_operands(object *ops) {
-    return is_the_empty_list(ops);
-}
-
-object *first_operand(object *ops) {
-    return car(ops);
-}
-
-object *rest_operands(object *ops) {
-    return cdr(ops);
-}
-
-char is_let(object *exp) {
-    return is_tagged_list(exp, let_symbol);
-}
-
-object *let_bindings(object *exp) {
-    return cadr(exp);
-}
-
-object *let_body(object *exp) {
-    return cddr(exp);
-}
-
-object *binding_parameter(object *binding) {
-    return car(binding);
-}
-
-object *binding_argument(object *binding) {
-    return cadr(binding);
-}
+object *cond_to_if(object *exp) { return expand_clauses(cond_clauses(exp)); }
+object *make_application(object *operator, object *operands) { return cons(operator, operands); }
+char is_application(object *exp) { return is_pair(exp); }
+object *operator(object *exp) { return car(exp); }
+object *operands(object *exp) { return cdr(exp); }
+char is_no_operands(object *ops) { return is_the_empty_list(ops); }
+object *first_operand(object *ops) { return car(ops); }
+object *rest_operands(object *ops) { return cdr(ops); }
+char is_let(object *exp) { return is_tagged_list(exp, let_symbol); }
+object *let_bindings(object *exp) { return cadr(exp); }
+object *let_body(object *exp) { return cddr(exp); }
+object *binding_parameter(object *binding) { return car(binding); }
+object *binding_argument(object *binding) { return cadr(binding); }
 
 object *bindings_parameters(object *bindings) {
-    return is_the_empty_list(bindings) ?
+	return is_the_empty_list(bindings) ?
                the_empty_list :
                cons(binding_parameter(car(bindings)),
                     bindings_parameters(cdr(bindings)));
@@ -258,13 +187,8 @@ object *bindings_arguments(object *bindings) {
                     bindings_arguments(cdr(bindings)));
 }
 
-object *let_parameters(object *exp) {
-    return bindings_parameters(let_bindings(exp));
-}
-
-object *let_arguments(object *exp) {
-    return bindings_arguments(let_bindings(exp));
-}
+object *let_parameters(object *exp) { return bindings_parameters(let_bindings(exp)); }
+object *let_arguments(object *exp) { return bindings_arguments(let_bindings(exp)); }
 
 object *let_to_application(object *exp) {
     return make_application(
@@ -300,7 +224,6 @@ object *eval_definition(object *exp, object *env) {
     //print(exp);
     return ok_symbol;
 }
-
 
 
 object *eval(object *exp, object *env) {
