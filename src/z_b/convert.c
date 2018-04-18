@@ -71,7 +71,7 @@ object *convert_varexpr(struct ast* a){
 
 
 object *convert_expr(struct ast* a){
-  object *car, *cdr, *op, *obj, *sym, *name;
+  object *car, *cdr, *op, *obj, *sym, *name, *list;
   object *cond, *tl, *el;
   char *operation = malloc(sizeof(char));
   char *val;
@@ -94,7 +94,8 @@ object *convert_expr(struct ast* a){
   case 'A':
     car = make_symbol(((struct arraylist *)a)->name->name);
     cdr = convert_exprlist(((struct arraylist *)a)->exp);
-    obj = cons(define_symbol, cons(car, cons(cdr, the_empty_list)));
+    list = cons(quote_symbol, (cons(cdr, the_empty_list)));
+    obj = cons(define_symbol, cons(car, cons(list, the_empty_list)));
     return obj;
   case 'S':
     sym = make_symbol("nth");
