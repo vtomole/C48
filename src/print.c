@@ -2,7 +2,6 @@
 void print_pair(object *pair) {
     object *car_obj;
     object *cdr_obj;
-    
     car_obj = car(pair);
     cdr_obj = cdr(pair);
     print(car_obj);
@@ -22,7 +21,7 @@ void print_pair(object *pair) {
 void print(object *obj) {
     char c;
     char *str;
-    
+    //printf("\nprinting..\n");
     switch (obj->obj_type) {
         case EMPTY_LIST:
             printf("()");
