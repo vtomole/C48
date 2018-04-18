@@ -45,7 +45,7 @@ void print(object *obj) {
             printf("%s", obj->symbol);
             break;
         case FIXNUM:
-            printf("%lu", obj->number);
+            printf("%ld", obj->number);
             break;
         case FLOAT:
             printf("%f", obj->decimal);

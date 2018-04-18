@@ -438,7 +438,7 @@ object *sub_proc(object *arguments) {
     double resultf = 0;
     
     if(car(arguments)->obj_type == FIXNUM){
-	    result += (car(arguments))->number;
+	    result += (car(arguments))->number; //adds the first number to the list (will cause issues with 1 variable)
 	    arguments = cdr(arguments);
 
 	    while (!is_the_empty_list(arguments)) {
