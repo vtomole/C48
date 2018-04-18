@@ -1,4 +1,3 @@
-//Preliminary File for the implementation of Garbage collector
 //#include "./environment.c"
 
 /**
@@ -6,8 +5,7 @@
 * Parameters:
 * - root, the starting point of the code tree we are sweeping over 
 */
-void gc_mark(object *root)
-{
+void gc_mark(object *root){
 	struct Allocation *a;
 	a = (struct Allocation *)
 		((char *) &root->cons_cell - offsetof(struct Allocation, pair));
@@ -22,10 +20,8 @@ void gc_mark(object *root)
 }
 /**
 * gc is function that collects free memory by calling free on the unused marked locations
-*
 */
-void gc()
-{
+void gc(){
 	struct Allocation *a, **p;
 	/*gc_mark(sym_table); we dont have a sym table */
 	/* Free unmarked allocations */
