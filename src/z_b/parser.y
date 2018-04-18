@@ -61,7 +61,14 @@ exp: exp CMP exp          { $$ = newcmp($2, $1, $3); }
    | NAME '=' exp         { $$ = newasgn($1, $3); }
    | NAME '(' explist ')' { $$ = newcall($1, $3); }
    | RETURN exp           { $$ = $2; }
+   | NAME '['']' '=' '[' explist ']'
+                          { $$ = newarraylist($1, $6); }
+   | NAME '[' exp ']'     { $$ = getarrayindex($1, $3); }
+   | NAME '[' exp ']' '=' exp
+                          { $$ = setarrayindex($1, $3, $6); }
+   
 ;
+
 
 explist:            { $$ = NULL; }
  | exp

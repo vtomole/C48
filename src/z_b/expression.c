@@ -57,18 +57,9 @@ struct ast *newast(int nodetype, struct ast *l, struct ast *r){
   return a;
 }
 
-struct ast *newnum(double d){
 
-  struct numval *a = malloc(sizeof(struct numval));
-  
-  if(!a) {
-    yyerror("out of space");
-    exit(0);
-  }
-  a->nodetype = 'K';
-  a->number = d;
-  return (struct ast *)a;
-}
+
+
 
 struct ast *newcmp(int cmptype, struct ast *l, struct ast *r){
   
@@ -109,6 +100,60 @@ struct ast *newcall(struct symbol *s, struct ast *l){
   a->nodetype = 'C';
   a->l = l;
   a->s = s;
+  return (struct ast *)a;
+}
+
+struct ast *newarraylist(struct symbol *s, struct ast *l){
+
+  struct arraylist *al = malloc(sizeof(struct arraylist));
+  
+  if(!al) {
+    yyerror("out of space");
+    exit(0);
+  }
+  al->nodetype = 'A';
+  al->name = s;
+  al->exp = l;
+  return (struct ast *)al;
+}
+
+struct ast *setarrayindex(struct symbol *s, struct ast *index, struct ast *exp){
+  struct arraylist *al = malloc(sizeof(struct arraylist));
+  
+  if(!al) {
+    yyerror("out of space");
+    exit(0);
+  }
+  al->nodetype = 'S';
+  al->name = s;
+  al->exp = exp;
+  al->index = index;
+  return (struct ast *)al;
+}
+
+struct ast *getarrayindex(struct symbol *s, struct ast *index){
+  struct arraylist *al = malloc(sizeof(struct arraylist));
+  
+  if(!al) {
+    yyerror("out of space");
+    exit(0);
+  }
+  al->nodetype = 'G';
+  al->name = s;
+  al->index = index;
+  return (struct ast *)al;
+}
+
+struct ast *newnum(double d){
+
+  struct numval *a = malloc(sizeof(struct numval));
+  
+  if(!a) {
+    yyerror("out of space");
+    exit(0);
+  }
+  a->nodetype = 'K';
+  a->number = d;
   return (struct ast *)a;
 }
 
@@ -166,6 +211,7 @@ struct symlist *newsymlist(struct symbol *sym, struct symlist *next){
   sl->next = next;
   return sl;
 }
+
 
 void symlistfree(struct symlist *sl){
 
@@ -387,6 +433,17 @@ void treefree(struct ast *a){
     free( ((struct flow *)a)->cond);
     if( ((struct flow *)a)->tl) free( ((struct flow *)a)->tl);
     if( ((struct flow *)a)->el) free( ((struct flow *)a)->el);
+    break;
+    
+  case 'A': 
+    treefree(((struct arraylist*)a)->exp);
+    break;
+  case 'S': 
+    treefree(((struct arraylist*)a)->index);
+    treefree(((struct arraylist*)a)->exp);
+    break;
+  case 'G':
+    treefree(((struct arraylist*)a)->index);
     break;
 
   default: printf("internal error: free bad node %c\n", a->nodetype);

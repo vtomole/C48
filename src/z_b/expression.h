@@ -34,6 +34,7 @@ void symlistfree(struct symlist *sl);
  *  S list of symbols
  *  F built in function call
  *  C user function call
+ *  A array
  */ 
 
 enum bifs {			/* built-in functions */
@@ -41,16 +42,24 @@ enum bifs {			/* built-in functions */
   B_exp,
   B_log,
   B_print,
-  B_return
 };
 
 /* nodes in the Abstract Syntax Tree */
 /* all have common initial nodetype */
 
+
+
 struct ast {
   int nodetype;
   struct ast *l;
   struct ast *r;
+};
+
+struct arraylist {
+  int nodetype;
+  struct symbol *name;
+  struct ast *exp;
+  struct ast *index;
 };
 
 struct fncall {			/* built-in function */
@@ -89,6 +98,9 @@ struct symasgn {
 };
 
 /* build an AST */
+struct ast *newarraylist(struct symbol *s, struct ast *l);
+struct ast *setarrayindex(struct symbol *s, struct ast *index, struct ast *exp);
+struct ast *getarrayindex(struct symbol *s, struct ast *index);
 struct ast *newast(int nodetype, struct ast *l, struct ast *r);
 struct ast *newcmp(int cmptype, struct ast *l, struct ast *r);
 struct ast *newfunc(int functype, struct ast *l);
