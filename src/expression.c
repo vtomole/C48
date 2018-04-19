@@ -1,18 +1,16 @@
-#  include <stdio.h>
-#  include <stdlib.h>
-#  include <stdarg.h>
-#  include <string.h>
-#  include <math.h>
-#  include "expression.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <string.h>
+#include <math.h>
+#include "expression.h"
+#include "read_file.c"
+//#include "convert.c"
 
-
-int yyparse();
 
 /* symbol table */
 /* hash a symbol */
-static unsigned
-symhash(char *sym)
-{
+static unsigned symhash(char *sym){
   unsigned int hash = 0;
   unsigned c;
 
@@ -21,9 +19,7 @@ symhash(char *sym)
   return hash;
 }
 
-struct symbol *
-lookup(char* sym)
-{
+struct symbol *lookup(char* sym){
   struct symbol *sp = &symtab[symhash(sym)%NHASH];
   int scount = NHASH;		/* how many have we looked at */
 
@@ -61,18 +57,9 @@ struct ast *newast(int nodetype, struct ast *l, struct ast *r){
   return a;
 }
 
-struct ast *newnum(double d){
 
-  struct numval *a = malloc(sizeof(struct numval));
-  
-  if(!a) {
-    yyerror("out of space");
-    exit(0);
-  }
-  a->nodetype = 'K';
-  a->number = d;
-  return (struct ast *)a;
-}
+
+
 
 struct ast *newcmp(int cmptype, struct ast *l, struct ast *r){
   
@@ -113,6 +100,60 @@ struct ast *newcall(struct symbol *s, struct ast *l){
   a->nodetype = 'C';
   a->l = l;
   a->s = s;
+  return (struct ast *)a;
+}
+
+struct ast *newarraylist(struct symbol *s, struct ast *l){
+
+  struct arraylist *al = malloc(sizeof(struct arraylist));
+  
+  if(!al) {
+    yyerror("out of space");
+    exit(0);
+  }
+  al->nodetype = 'A';
+  al->name = s;
+  al->exp = l;
+  return (struct ast *)al;
+}
+
+struct ast *setarrayindex(struct symbol *s, struct ast *index, struct ast *exp){
+  struct arraylist *al = malloc(sizeof(struct arraylist));
+  
+  if(!al) {
+    yyerror("out of space");
+    exit(0);
+  }
+  al->nodetype = 'S';
+  al->name = s;
+  al->exp = exp;
+  al->index = index;
+  return (struct ast *)al;
+}
+
+struct ast *getarrayindex(struct symbol *s, struct ast *index){
+  struct arraylist *al = malloc(sizeof(struct arraylist));
+  
+  if(!al) {
+    yyerror("out of space");
+    exit(0);
+  }
+  al->nodetype = 'G';
+  al->name = s;
+  al->index = index;
+  return (struct ast *)al;
+}
+
+struct ast *newnum(double d){
+
+  struct numval *a = malloc(sizeof(struct numval));
+  
+  if(!a) {
+    yyerror("out of space");
+    exit(0);
+  }
+  a->nodetype = 'K';
+  a->number = d;
   return (struct ast *)a;
 }
 
@@ -171,6 +212,7 @@ struct symlist *newsymlist(struct symbol *sym, struct symlist *next){
   return sl;
 }
 
+
 void symlistfree(struct symlist *sl){
 
   struct symlist *nsl;
@@ -194,9 +236,7 @@ void dodef(struct symbol *name, struct symlist *syms, struct ast *func){
 static double callbuiltin(struct fncall *);
 static double calluser(struct ufncall *);
 
-
-
-double evaluate(struct ast *a){
+double eval_ast(struct ast *a){
   double v;
 
   if(!a) {
@@ -213,35 +253,36 @@ double evaluate(struct ast *a){
 
     /* assignment */
   case '=': v = ((struct symasgn *)a)->s->value =
-      evaluate(((struct symasgn *)a)->v); break;
+      eval_ast(((struct symasgn *)a)->v); break;
 
     /* expressions */
-  case '+': v = evaluate(a->l) + evaluate(a->r); break;
-  case '-': v = evaluate(a->l) - evaluate(a->r); break;
-  case '*': v = evaluate(a->l) * evaluate(a->r); break;
-  case '/': v = evaluate(a->l) / evaluate(a->r); break;
-  case '|': v = fabs(evaluate(a->l)); break;
-  case 'M': v = -evaluate(a->l); break;
+  case '+': v = eval_ast(a->l) + eval_ast(a->r); break;
+  case '-': v = eval_ast(a->l) - eval_ast(a->r); break;
+  case '*': v = eval_ast(a->l) * eval_ast(a->r); break;
+  case '/': v = eval_ast(a->l) / eval_ast(a->r); break;
+  case '%': v = (int)eval_ast(a->l) % (int)eval_ast(a->r); break;
+  case '|': v = fabs(eval_ast(a->l)); break;
+  case 'M': v = -eval_ast(a->l); break;
 
     /* comparisons */
-  case '1': v = (evaluate(a->l) > evaluate(a->r))? 1 : 0; break;
-  case '2': v = (evaluate(a->l) < evaluate(a->r))? 1 : 0; break;
-  case '3': v = (evaluate(a->l) != evaluate(a->r))? 1 : 0; break;
-  case '4': v = (evaluate(a->l) == evaluate(a->r))? 1 : 0; break;
-  case '5': v = (evaluate(a->l) >= evaluate(a->r))? 1 : 0; break;
-  case '6': v = (evaluate(a->l) <= evaluate(a->r))? 1 : 0; break;
+  case '1': v = (eval_ast(a->l) > eval_ast(a->r))? 1 : 0; break;
+  case '2': v = (eval_ast(a->l) < eval_ast(a->r))? 1 : 0; break;
+  case '3': v = (eval_ast(a->l) != eval_ast(a->r))? 1 : 0; break;
+  case '4': v = (eval_ast(a->l) == eval_ast(a->r))? 1 : 0; break;
+  case '5': v = (eval_ast(a->l) >= eval_ast(a->r))? 1 : 0; break;
+  case '6': v = (eval_ast(a->l) <= eval_ast(a->r))? 1 : 0; break;
 
   /* control flow */
   /* null if/else/do expressions allowed in the grammar, so check for them */
   case 'I': 
-    if( evaluate( ((struct flow *)a)->cond) != 0) {
+    if( eval_ast( ((struct flow *)a)->cond) != 0) {
       if( ((struct flow *)a)->tl) {
-	v = evaluate( ((struct flow *)a)->tl);
+	      v = eval_ast( ((struct flow *)a)->tl);
       } else
-	v = 0.0;		/* a default value */
+	      v = 0.0;		/* a default value */
     } else {
       if( ((struct flow *)a)->el) {
-        v = evaluate(((struct flow *)a)->el);
+        v = eval_ast(((struct flow *)a)->el);
       } else
 	v = 0.0;		/* a default value */
     }
@@ -251,12 +292,12 @@ double evaluate(struct ast *a){
     v = 0.0;		/* a default value */
     
     if( ((struct flow *)a)->tl) {
-      while( evaluate(((struct flow *)a)->cond) != 0)
-	v = evaluate(((struct flow *)a)->tl);
+      while( eval_ast(((struct flow *)a)->cond) != 0)
+	      v = eval_ast(((struct flow *)a)->tl);
     }
     break;			/* last value is value */
 	              
-  case 'L': evaluate(a->l); v = evaluate(a->r); break;
+  case 'L': eval_ast(a->l); v = eval_ast(a->r); break;
 
   case 'F': v = callbuiltin((struct fncall *)a); break;
 
@@ -270,7 +311,7 @@ double evaluate(struct ast *a){
 static double callbuiltin(struct fncall *f){
 
   enum bifs functype = f->functype;
-  double v = evaluate(f->l);
+  double v = eval_ast(f->l);
 
  switch(functype) {
  case B_sqrt:
@@ -282,15 +323,14 @@ static double callbuiltin(struct fncall *f){
  case B_print:
    printf("= %4.4g\n", v);
    return v;
+ 
  default:
    yyerror("Unknown built-in function %d", functype);
    return 0.0;
  }
 }
 
-static double
-calluser(struct ufncall *f)
-{
+static double calluser(struct ufncall *f){
   struct symbol *fn = f->s;	/* function name */
   struct symlist *sl;		/* dummy arguments */
   struct ast *args = f->l;	/* actual arguments */
@@ -325,10 +365,10 @@ calluser(struct ufncall *f)
     }
 
     if(args->nodetype == 'L') {	/* if this is a list node */
-      newval[i] = evaluate(args->l);
+      newval[i] = eval_ast(args->l);
       args = args->r;
     } else {			/* if it's the end of the list */
-      newval[i] = evaluate(args);
+      newval[i] = eval_ast(args);
       args = NULL;
     }
   }
@@ -346,7 +386,7 @@ calluser(struct ufncall *f)
   free(newval);
 
   /* evaluate the function */
-  v = evaluate(fn->func);
+  v = eval_ast(fn->func);
 
   /* put the dummies back */
   sl = fn->syms;
@@ -362,9 +402,8 @@ calluser(struct ufncall *f)
 }
 
 
-void
-treefree(struct ast *a)
-{
+void treefree(struct ast *a){
+  if(!a) return;
   switch(a->nodetype) {
 
     /* two subtrees */
@@ -372,6 +411,7 @@ treefree(struct ast *a)
   case '-':
   case '*':
   case '/':
+  case '%':
   case '1':  case '2':  case '3':  case '4':  case '5':  case '6':
   case 'L':
     treefree(a->r);
@@ -394,6 +434,17 @@ treefree(struct ast *a)
     if( ((struct flow *)a)->tl) free( ((struct flow *)a)->tl);
     if( ((struct flow *)a)->el) free( ((struct flow *)a)->el);
     break;
+    
+  case 'A': 
+    treefree(((struct arraylist*)a)->exp);
+    break;
+  case 'S': 
+    treefree(((struct arraylist*)a)->index);
+    treefree(((struct arraylist*)a)->exp);
+    break;
+  case 'G':
+    treefree(((struct arraylist*)a)->index);
+    break;
 
   default: printf("internal error: free bad node %c\n", a->nodetype);
   }	  
@@ -402,9 +453,7 @@ treefree(struct ast *a)
 
 }
 
-void
-yyerror(char *s, ...)
-{
+void yyerror(char *s, ...){
   va_list ap;
   va_start(ap, s);
 
@@ -413,19 +462,25 @@ yyerror(char *s, ...)
   fprintf(stderr, "\n");
 }
 
-int
-main()
-{
-  printf("> "); 
+int main(int argc, char *argv[]){
+  init(); 
+  if(argc > 1 && argv[1][0] == 'r'){
+    open_file("test.txt");
+  }
+  else{
+    //printf("In else statement\n");
+    printf("> ");
+  }
   return yyparse();
 }
 
+
+
 /* debugging: dump out an AST */
 int debug = 0;
-void
-dumpast(struct ast *a, int level)
-{
 
+void dumpast(struct ast *a, int level){
+  
   printf("%*s", 2*level, "");	/* indent to this level */
   level++;
 
@@ -446,7 +501,7 @@ dumpast(struct ast *a, int level)
     dumpast( ((struct symasgn *)a)->v, level); return;
 
     /* expressions */
-  case '+': case '-': case '*': case '/': case 'L':
+  case '+': case '-': case '*': case '/': case '%': case 'L':
   case '1': case '2': case '3':
   case '4': case '5': case '6': 
     printf("binop %c\n", a->nodetype);
@@ -481,3 +536,6 @@ dumpast(struct ast *a, int level)
     return;
   }
 }
+
+
+

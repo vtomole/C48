@@ -63,13 +63,15 @@ object *convert_builtinfunc(struct fncall *f){
 object *convert_varexpr(struct ast* a){
  object *var = make_symbol(((struct symasgn*)a)->s->name);
  object *expr = convert_expr(((struct symasgn*)a)->v);
- object *varexpr = cons(var, cons(expr, the_empty_list));
- varexpr = cons(varexpr, the_empty_list);
- return cons(let_symbol, cons(varexpr, the_empty_list)); 
+ //object *varexpr = cons(var, cons(expr, the_empty_list));
+ //varexpr = cons(varexpr, the_empty_list);
+ return cons(define_symbol, cons(var, cons(expr, the_empty_list))); 
 }
 
+
+
 object *convert_expr(struct ast* a){
-  object *car, *cdr, *op, *obj;
+  object *car, *cdr, *op, *obj, *sym, *name, *list;
   object *cond, *tl, *el;
   char *operation = malloc(sizeof(char));
   char *val;
@@ -88,6 +90,27 @@ object *convert_expr(struct ast* a){
   case 'N':
     val = ((struct symref *)a)->s->name;
     return make_symbol(val);
+  
+  case 'A':
+    car = make_symbol(((struct arraylist *)a)->name->name);
+    cdr = convert_exprlist(((struct arraylist *)a)->exp);
+    list = cons(quote_symbol, (cons(cdr, the_empty_list)));
+    obj = cons(define_symbol, cons(car, cons(list, the_empty_list)));
+    return obj;
+  case 'S':
+    sym = make_symbol("nth");
+    name = make_symbol(((struct arraylist *)a)->name->name);
+    car = convert_expr(((struct arraylist *)a)->index);
+    car = cons(sym, cons(car, cons(name, the_empty_list)));
+    cdr = convert_expr(((struct arraylist *)a)->exp);
+    return cons(define_symbol, cons(car, cons(cdr, the_empty_list)));
+  case 'G':
+    sym = make_symbol("nth");
+    name = make_symbol(((struct arraylist *)a)->name->name);
+    car = convert_expr(((struct arraylist *)a)->index);
+    return cons(sym, cons(car, cons(name, the_empty_list)));
+      
+  
   case 'C':
     return convert_funccall((struct ufncall*)a);
   case 'F':
