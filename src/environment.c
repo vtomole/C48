@@ -280,7 +280,13 @@ primitive_type char_to_enum(char* proc){
 	   strcmp(proc, ">=") == 0 ||
            strcmp(proc, "<=") == 0){
     return COMPARISON;
-  }else{
+  }else if (strcmp(proc, "atom?") == 0 ||
+	    strcmp(proc, "null?") == 0 ||
+	    strcmp(proc, "pair?") == 0){
+    return PREDICATE;
+  } 
+  
+  else{
     return CHAR;
   }
 }
@@ -310,6 +316,7 @@ object *set_acceptable(object *obj, primitive_type prim_type){
   case 3:
     obj->primitive_proc.acceptables = cons(make_fixnum(CHARACTER),  the_empty_list);
     break;
+    
   default:
     //printf("This should not happen after PLUS\n");
     obj->primitive_proc.acceptables = the_empty_list;
@@ -1210,7 +1217,17 @@ object *make_compound_proc(object *parameters, object *body,
 }
 
 object *list_proc(object *arguments) { return arguments; }
+
+
+object *print_proc(object *exp)
+{
+  print(car(exp));
+  printf("\n");
+  return ok_symbol;
+
+}
 char is_compound_proc(object *obj) { return obj->obj_type == COMPOUND_PROC; }
+
 
 //Environment functions
 object *enclosing_environment(object *env) { return cdr(env); }
@@ -1441,6 +1458,7 @@ void init(void) {
     add_procedure("set-car!", set_car_proc);
     add_procedure("set-cdr!", set_cdr_proc);
     add_procedure("list"    , list_proc);
+    add_procedure("print"    , print_proc);
 
     //add_procedure("eq?", is_eq_proc);
 }
