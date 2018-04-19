@@ -6,7 +6,7 @@ fun factorial(i){
 }
 
 fun main(){
-	return factorial(5);
+    print("Hello world");
 }
 
 main();

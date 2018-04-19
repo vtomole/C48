@@ -8,7 +8,7 @@ int open_file(const char *name){
   char *cpy = malloc(sizeof(char) * length);
   strcpy(cpy, "./");
   strcat(cpy, name);
-  printf("trying to open %s\n", cpy);
+  //printf("trying to open %s\n", cpy);
   FILE *file;
   file = fopen(cpy, "r");
   if(!file){

@@ -18,7 +18,7 @@ repl:
 clean:
 	rm -f parser.tab.c lexer.lex.c parser.tab.h test
 
-.PHONY: all repl clean
+.PHONY: all repl test clean
 
 open:
 	gedit expression.c expression.h parser.y lexer.l convert.c &

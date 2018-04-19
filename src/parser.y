@@ -83,11 +83,18 @@ calclist: /* nothing */
   | calclist EOL
   | calclist stmt
     //{ if(debug) dumpast($2, 0); printf("= %4.4g\n> ", eval_ast($2)); treefree($2); }
-    { if(debug) dumpast($2, 0); print(eval(convert_expr($2), the_global_environment)); treefree($2); printf("\n"); }
+    {
+      if(debug) dumpast($2, 0);
+      eval(convert_expr($2), the_global_environment);
+      treefree($2);\
+    }
             
   | calclist FUN NAME '(' symlist ')' '{' list '}' 
     //{ dodef($3, $5, $8); printf("Defined %s\n> ", $3->name); }
-	  { dodef($3, $5, $8); print(eval(convert_func($3), the_global_environment)); printf("\n"); }
+	  {
+	    dodef($3, $5, $8);
+	    eval(convert_func($3), the_global_environment);
+	  }
   
   | calclist error  { yyerrok; printf("> "); }
  ;
