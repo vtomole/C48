@@ -1,4 +1,9 @@
 #include "eval-apply.h"
+//forward Declarations
+int num_operators(object *exp);
+int is_predicate_type(object *exp);
+
+
 /**eval_assignmenttp()
  *This function is used to 
  * Parameters:
@@ -126,8 +131,20 @@ tailcall:
         goto tailcall;
     } 
 	else if (is_application(exp)) {
-		//printf("It's apply \n");
+	  printf("%d\n",num_operators(exp));
+	  if(num_operators(exp) <= 0){
+	    fprintf(stderr, "Type error: Not enough arguments\n");
+	    exit(1);
+	  }
+	  else if(num_operators(exp) < 2) {
+	    if(is_predicate_type(exp) == 0){
+	      fprintf(stderr, "Type error: Not enough arguments\n");
+	      exit(1);
+	    }
+	  }
+	  
 		procedure = eval(operator(exp), env);
+		//print(procedure);
 		arguments = list_of_values(operands(exp), env);
 		type_arguments = list_of_values(operands(exp), env);	
 		if (primitivep(procedure)) {
@@ -139,7 +156,7 @@ tailcall:
 			//check the remaining operands and make sure they match the first
 			while (!is_the_empty_list(type_arguments)) {
 				if(primary_type->obj_type != car(type_arguments)->obj_type){
-					fprintf(stderr, "Type error expression\n");
+					fprintf(stderr, "Type error: Variables Have non-same types\n");
 					exit(1);
 				}	      
 				type_arguments = cdr(type_arguments);
@@ -157,7 +174,7 @@ tailcall:
 			}
 	  
 			if(type_flag == 0){
-				fprintf(stderr, "Type error variables\n");
+				fprintf(stderr, "Type error: variables don't match accepted types for given expression\n");
 				exit(1);
 			}
 
@@ -186,4 +203,24 @@ tailcall:
     }
     fprintf(stderr, "eval illegal state\n");
     exit(1);
+}
+
+int num_operators(object *exp){
+  int count = 0;
+  object *cur = cdr(exp);
+  while(!is_the_empty_list(cur)){
+      count++;
+      cur = cdr(cur);
+  }
+  return count;
+}
+
+int is_predicate_type(object *exp){
+  
+  if(strcmp(operator(exp)->symbol,"null?") == 0 ||
+     strcmp(operator(exp)->symbol,"pair?") == 0 ||
+     strcmp(operator(exp)->symbol,"atom?") == 0){
+    return 1;
+  }
+  return 0;
 }
