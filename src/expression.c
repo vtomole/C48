@@ -462,14 +462,13 @@ void yyerror(char *s, ...){
   fprintf(stderr, "\n");
 }
 
-int main(int argc, char *argv[]){
+int main (int argc, char **argv){
   init(); 
-  if(argc > 1 && argv[1][0] == 'r'){
-    open_file("test.txt");
+  if(argc > 1){
+    open_file(argv[1]);
   }
   else{
-    //printf("In else statement\n");
-    printf("> ");
+    fprintf(stderr, "Please provide file to run\n");
   }
   return yyparse();
 }
