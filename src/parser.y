@@ -1,60 +1,8 @@
 %{
 #  include <stdio.h>
 #  include <stdlib.h>
-#  include <string.h>
-#  include "environment.c"
-#  include "eval-apply.c"
-#  include "print.c"
 #  include "expression.h"
-#include <ctype.h>
-#include "read.c"
-
-int yylex();
-
-/* (+ 5 6) -> cons(left (cons right (cons left null)  null))    */
-object *convert_ast(struct ast *e){
-  if(!e){
-    yyerror("Internal error, null eval");
-  }
-  switch (e->nodetype) {
-  /*constant*/
-  case 'K': return make_fixnum(((struct numval *)e)->number);
-
-/*name reference*/
-  case 'N' : return make_fixnum(((struct symref *)e)->s->value);
-
-    /*assignment */
-    /*case '=':  return create_symbol(((struct symasgn *)e)->s->value);*/
- 
-  case '+':
-    return cons(make_symbol("+"),cons(convert_ast(e->l), cons(convert_ast(e->r), the_empty_list)));
-
-  case '-':
-    return cons(make_symbol("-"),cons(convert_ast(e->l), cons(convert_ast(e->r), the_empty_list)));
-    
-  case '*':
-    return cons(make_symbol("*"),cons(convert_ast(e->l), cons(convert_ast(e->r), the_empty_list)));
-
-    case '/':
-    return cons(make_symbol("/"),cons(convert_ast(e->l), cons(convert_ast(e->r), the_empty_list)));
-
-    /*comparisons*/ 
-  case '1': return cons(make_symbol(">"),cons(convert_ast(e->l), cons(convert_ast(e->r), the_empty_list)));
-
-  case '2': return cons(make_symbol("<"),cons(convert_ast(e->l), cons(convert_ast(e->r), the_empty_list)));
-
-  case '3': return cons(make_symbol("!="),cons(convert_ast(e->l), cons(convert_ast(e->r), the_empty_list)));
-
-  case '4': return cons(make_symbol("=="),cons(convert_ast(e->l), cons(convert_ast(e->r), the_empty_list)));
-
-  case '5': return cons(make_symbol(">="),cons(convert_ast(e->l), cons(convert_ast(e->r), the_empty_list)));
-
-  case '6': return cons(make_symbol("<="),cons(convert_ast(e->l), cons(convert_ast(e->r), the_empty_list)));
-
-  /*control flow*/
-
-  }  
-}
+#  include "convert.c"
 %}
 
 %union {
@@ -66,18 +14,18 @@ object *convert_ast(struct ast *e){
 }
 
 /* declare tokens */
-%token <d> NUM
+%token <d> NUMBER
 %token <s> NAME
-%token <fn> FUNC
-%token EOL
+%token <fn> FUNCT
+%token EOL 
 
-%token IF THEN ELSE WHILE DO LET
+%token IF THEN ELSE WHILE DO FUN FOR END RETURN
 
 
 %nonassoc <fn> CMP
 %right '='
 %left '+' '-'
-%left '*' '/'
+%left '*' '/' '%'
 %nonassoc '|' UMINUS
 
 %type <a> exp stmt list explist
@@ -87,18 +35,15 @@ object *convert_ast(struct ast *e){
 
 %%
 
-stmt: IF exp THEN list           { $$ = newflow('I', $2, $4, NULL); }
-   | IF exp THEN list ELSE list  { $$ = newflow('I', $2, $4, $6); }
-   | WHILE exp DO list           { $$ = newflow('W', $2, $4, NULL); }
-   | exp
+stmt:IF '(' exp ')' '{' list '}'                   { $$ = newflow('I', $3, $6, NULL); }
+   | IF '(' exp ')'  '{' list '}' ELSE '{'list '}'  { $$ = newflow('I', $3, $6, $10); }
+   | IF '(' exp ')'  '{' list '}' ELSE stmt         { $$ = newflow('I', $3, $6, $9); }
+   | WHILE '(' exp ')'  '{' list '}'                { $$ = newflow('W', $3, $6, NULL); }    
+   | exp ';'
 ;
 
 list: /* nothing */ { $$ = NULL; }
-   | stmt ';' list { if ($3 == NULL)
-	                $$ = $1;
-                      else
-			$$ = newast('L', $1, $3);
-                    }
+   | stmt list { if ($2 == NULL) $$ = $1; else $$ = newast('L', $1, $2); }
    ;
 
 exp: exp CMP exp          { $$ = newcmp($2, $1, $3); }
@@ -106,39 +51,44 @@ exp: exp CMP exp          { $$ = newcmp($2, $1, $3); }
    | exp '-' exp          { $$ = newast('-', $1,$3);}
    | exp '*' exp          { $$ = newast('*', $1,$3); }
    | exp '/' exp          { $$ = newast('/', $1,$3); }
+   | exp '%' exp          { $$ = newast('%', $1,$3); }
    | '|' exp              { $$ = newast('|', $2, NULL); }
    | '(' exp ')'          { $$ = $2; }
    | '-' exp %prec UMINUS { $$ = newast('M', $2, NULL); }
-   | NUM               { $$ = newnum($1); }
-   | FUNC '(' explist ')' { $$ = newfunc($1, $3); }
+   | NUMBER               { $$ = newnum($1); }
+   | FUNCT '(' explist ')'{ $$ = newfunc($1, $3); }
    | NAME                 { $$ = newref($1); }
    | NAME '=' exp         { $$ = newasgn($1, $3); }
    | NAME '(' explist ')' { $$ = newcall($1, $3); }
+   | RETURN exp           { $$ = $2; }
+   | NAME '['']' '=' '[' explist ']'
+                          { $$ = newarraylist($1, $6); }
+   | NAME '[' exp ']'     { $$ = getarrayindex($1, $3); }
+   | NAME '[' exp ']' '=' exp
+                          { $$ = setarrayindex($1, $3, $6); }
+   
 ;
 
-explist: exp
+
+explist:            { $$ = NULL; }
+ | exp
  | exp ',' explist  { $$ = newast('L', $1, $3); }
 ;
-symlist: NAME       { $$ = newsymlist($1, NULL); }
+symlist:      { $$ = NULL; }
+ | NAME       { $$ = newsymlist($1, NULL); }
  | NAME ',' symlist { $$ = newsymlist($1, $3); }
 ;
 
 calclist: /* nothing */
-  | calclist stmt EOL {
-    if(debug) dumpast($2, 0);
-    init();
-    print(convert_ast($2));
-    printf("\n");
-    print(eval(convert_ast($2), the_global_environment));
-    printf("\n");
-    printf(">");
-    //printf("= %4.4g\n> ", evaluate($2));
-     treefree($2);
-    }
-  | calclist LET NAME '(' symlist ')' '=' list EOL {
-                       dodef($3, $5, $8);
-                       printf("Defined %s\n> ", $3->name); }
-
-  | calclist error EOL { yyerrok; printf("> "); }
+  | calclist EOL
+  | calclist stmt
+    //{ if(debug) dumpast($2, 0); printf("= %4.4g\n> ", eval_ast($2)); treefree($2); }
+    { if(debug) dumpast($2, 0); print(eval(convert_expr($2), the_global_environment)); treefree($2); printf("\n"); }
+            
+  | calclist FUN NAME '(' symlist ')' '{' list '}' 
+    //{ dodef($3, $5, $8); printf("Defined %s\n> ", $3->name); }
+	  { dodef($3, $5, $8); print(eval(convert_func($3), the_global_environment)); printf("\n"); }
+  
+  | calclist error  { yyerrok; printf("> "); }
  ;
 %%
