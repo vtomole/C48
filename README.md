@@ -22,9 +22,9 @@ print("Hello World");
 Now you can run this program through the interpreter to execute it
 
 ```
-$ make
+$ make test
 
-$ ./repl hello.c48
+$ ./test hello.c48
 ```
 
 You should see
