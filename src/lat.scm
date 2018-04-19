@@ -5,4 +5,4 @@
      ((atom? (car l)) (lat (cdr l)))
      (else #f))))
 
-(lat '( 1 2 2 ))
+(lat 1)

@@ -2,4 +2,4 @@
   (lambda (x)
   (* x x)))
 
-(print (square 10))
+(print "Hello World")
