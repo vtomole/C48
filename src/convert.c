@@ -15,7 +15,10 @@ object *convert_func(struct symbol *func){
   
   fun = cons(make_symbol(func->name), params);
   
-  return cons(define_symbol, cons(fun, cons(expr, the_empty_list)));         
+  return cons(define_symbol, 
+              cons(fun, 
+                    expr 
+                        ));         
 }
 
 object *convert_exprlist(struct ast *a){
@@ -83,10 +86,10 @@ object *convert_expr(struct ast* a){
   switch(a->nodetype){
   case 'K': 
     num = (float)((struct numval *)a)->number;
-    return make_fixnum(num);
+    return make_float(num);
   case 'M':
     num = (float)-((struct numval *)a)->number;
-    return make_fixnum(num);
+    return make_float(num);
   case 'N':
     val = ((struct symref *)a)->s->name;
     return make_symbol(val);
@@ -116,10 +119,14 @@ object *convert_expr(struct ast* a){
   case 'F':
     return convert_builtinfunc((struct fncall*)a);
   case '=':
+    //return cons(convert_varexpr(a), the_empty_list);
     return convert_varexpr(a);
   case 'L':
-    car = convert_expr(a->l);
-    cdr = cons(convert_expr(a->r), the_empty_list);
+    car = cons(convert_expr(a->l), the_empty_list);
+    //cdr = cons(convert_expr(a->r), the_empty_list);
+    cdr = convert_expr(a->r);
+    if(a->r->nodetype != 'L')
+	cdr = cons(cdr, the_empty_list);
     object *temp = car;
     while(temp->cons_cell.cdr != the_empty_list){
       temp = temp->cons_cell.cdr;
@@ -132,7 +139,8 @@ object *convert_expr(struct ast* a){
     cdr = convert_expr(a->r);
     sprintf(operation, "%c", a->nodetype);
     op = make_symbol(operation);
-    return cons(op, cons(car, cons(cdr, the_empty_list)));
+    obj = cons(op, cons(car, cons(cdr, the_empty_list)));
+    return obj;
 
   /** Creates Comparison Object **/
   case '1': 
