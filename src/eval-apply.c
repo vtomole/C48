@@ -89,6 +89,7 @@ object *make_if(object *predicate, object *consequent,
     if(alternative->obj_type != EMPTY_LIST){
       end = cons(alternative, the_empty_list);
     }
+	printf("built if statement\n");
     return cons(if_symbol,
                 cons(predicate,
                      cons(consequent,

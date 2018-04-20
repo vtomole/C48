@@ -1,9 +1,9 @@
-/*fun factorial(i){
+fun factorial(i){
 	if(i == 1){
 		return 1;
 	}
 	return i * factorial(i - 1);
-}*/
+}
 
 
 fun square(i){
@@ -11,14 +11,8 @@ fun square(i){
 }
 
 fun main(){
-	//print(3);
-	//
-	y = 6+4;
-6+4;
-	print(square(y));
-
-print(67);
-print(43110);
+	print(factorial(5));
+	//print(square(5));
 }
 
 main();

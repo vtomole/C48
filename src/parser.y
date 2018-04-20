@@ -85,6 +85,7 @@ calclist: /* nothing */
     //{ if(debug) dumpast($2, 0); printf("= %4.4g\n> ", eval_ast($2)); treefree($2); }
     {
       if(debug) dumpast($2, 0);
+      print(convert_expr($2));
       eval(convert_expr($2), the_global_environment);
       treefree($2);\
     }
@@ -93,6 +94,7 @@ calclist: /* nothing */
     //{ dodef($3, $5, $8); printf("Defined %s\n> ", $3->name); }
 	  {
 	    dodef($3, $5, $8);
+	    print(convert_func($3));
 	    eval(convert_func($3), the_global_environment);
 	  }
   

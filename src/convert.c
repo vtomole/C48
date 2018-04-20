@@ -122,17 +122,18 @@ object *convert_expr(struct ast* a){
     //return cons(convert_varexpr(a), the_empty_list);
     return convert_varexpr(a);
   case 'L':
-    car = cons(convert_expr(a->l), the_empty_list);
+    //car = cons(convert_expr(a->l), the_empty_list);
+    car = convert_expr(a->l);
     //cdr = cons(convert_expr(a->r), the_empty_list);
     cdr = convert_expr(a->r);
-    if(a->r->nodetype != 'L')
+    /*if(a->r->nodetype != 'L')
 	cdr = cons(cdr, the_empty_list);
     object *temp = car;
     while(temp->cons_cell.cdr != the_empty_list){
       temp = temp->cons_cell.cdr;
     }
-    temp->cons_cell.cdr = cdr;
-    return car;
+    temp->cons_cell.cdr = cdr;*/
+    return cons(car, cons(cdr, the_empty_list));
   /** Creates Operation Objects**/
   case '+': case '-': case '*':  case '/':  case '%':
     car = convert_expr(a->l);
