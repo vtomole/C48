@@ -1,0 +1,9 @@
+*.~
+*.txt#
+*.c#
+*.#repl.c
+*.#read.c
+*.#print.c
+*repl
+*#parser.c
+*#factorial.c48# 
