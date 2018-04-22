@@ -5,8 +5,14 @@ fun factorial(i){
 	return i * factorial(i - 1);
 }
 
+
+fun square(i){
+	return i * i;
+}
+
 fun main(){
-    print("Hello world");
+	print(factorial(5));
+	//print(square(5));
 }
 
 main();

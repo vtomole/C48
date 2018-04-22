@@ -34,13 +34,14 @@ int main(int argc, char **argv){
     }*/
 
   /*object *temp_list = the_empty_list;
-  object *add =  make_symbol("-");
-  object *num1 = make_fixnum(1);
-  object *num2 = make_fixnum(3);
+  object *add =  make_symbol("*");
+  object *num1 = make_float(1.1);
+  object *num2 = make_float(3);
   temp_list = cons(num2, temp_list);
   temp_list = cons(num1, temp_list);
   temp_list = cons(add, temp_list);
-  print(eval(typecheck(temp_list, the_global_environment),the_global_environment));
+  //print(eval(typecheck(temp_list, the_global_environment),the_global_environment));
+  print(eval(temp_list, the_global_environment));
   print(temp_list);*/
 
   fp = fopen(argv[1], "r");
