@@ -17,20 +17,6 @@ int count_objects(object* cursor){
   return c;
 }
 
-/**Allocation
-*This struct is used for our garbage collector to maintain a list of allocated blocks of memory
-* Fields:
-*-pair, the cons_Cell we are allocation memory to
-*-mark, 1 if marked 0 if not marked, initialzed to 1
-*-next, a pointer to the next place we allocated memory to
-*/
-struct Allocation {
-	
-         struct cons_cell pair;
-	int mark : 1;
-	struct Allocation *next;
-};
-
 /*list used for the garbage collector*/
 struct Allocation *global_allocations = NULL;
 
