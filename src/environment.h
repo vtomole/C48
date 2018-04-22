@@ -85,5 +85,4 @@ object *cons(object *car, object *cdr);
 object *car(object *pair);
 object *cdr(object *pair);
 
-object* cons(object *car, object *cdr);
 void  initialize_environment(void);
