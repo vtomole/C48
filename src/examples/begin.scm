@@ -1,0 +1,5 @@
+(define i 4)
+(if (= i 4) (print "Equal to 4")
+(begin (print (+ 1 2))
+       (print (* 2 4))
+       (print (- 5 3))))

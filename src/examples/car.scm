@@ -1,0 +1,7 @@
+(define our-car (x)
+  (cdr x)
+  (car x)
+  (cdr x)
+  (+ 1 2)
+  (* 4 5)
+  (car x))

@@ -1,3 +1,3 @@
-(define (fib n) (if (< n 2) n (+ (fib (- n 1)) (fib (- n 2)))))
-(define (main)  (fib 10))
+(define (factorial i) (if (= i 1) 1 (* i (factorial (- i 1)))))
+(define (main) (let ((i 5)) (factorial i)))
 (main)
