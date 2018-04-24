@@ -1,5 +1,5 @@
 
-
+/*
 fun main(){
 	6 < x;
 
@@ -8,7 +8,7 @@ fun main(){
 
 while(x > 0){
 	add();	
-	i = i + 1;
+	i = i + 1 - 8;
 	print("Hello World");
 }
 
@@ -20,10 +20,13 @@ myList[8] = 7 + 8;
 if(x > 0){
 	return 9;
 }
+*/
 
-if(x > 0){
+if(x > 10 > 7 || x < 0 || x == 5){
 	return 9;
 }
 else{
 	return 10;
 }
+
+

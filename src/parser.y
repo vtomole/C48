@@ -19,31 +19,34 @@
 %token IF THEN ELSE WHILE DO FUN FOR RETURN
 
 %nonassoc CMP_1
-%nonassoc CMP_2
+%right CMP_2
 %right '='
 %left ARITH_1
 %left ARITH_2
 %nonassoc '|' UMINUS
 
-%type <obj> exp stmt list symlist explist
+%type <obj> exp stmt list symlist explist comp
 
 %start calclist
 
 %%
 
-stmt: WHILE '(' exp ')'  '{' list '}'          { $$ = make_while_loop($3, $6); }    
+stmt: WHILE '(' comp ')'  '{' list '}'          { $$ = make_while_loop($3, $6); }    
    | exp ';'
-   | IF '(' exp ')' '{' list '}'                   { $$ = make_if_stmt($3, $6, the_empty_list); }
-   | IF '(' exp ')'  '{' list '}' ELSE '{'list '}'  { $$ = make_if_stmt($3, $6, $10); }
-   | IF '(' exp ')'  '{' list '}' ELSE stmt         { $$ = make_if_stmt($3, $6, $9); }
+   | IF '(' comp ')' '{' list '}'                   { $$ = make_if_stmt($3, $6, the_empty_list); }
+   | IF '(' comp ')'  '{' list '}' ELSE '{'list '}'  { $$ = make_if_stmt($3, $6, $10); }
+   | IF '(' comp ')'  '{' list '}' ELSE stmt         { $$ = make_if_stmt($3, $6, $9); }
 ;
 
 list: /* nothing */ { $$ = the_empty_list; }
    | stmt list      { $$ = cons($1, $2); }
    ;
+   
+comp: exp CMP_1 exp  { $$ = make_comp($2, $1, $3); }
+   | comp CMP_2 comp   { $$ = make_comp($2, $1, $3); }
+   ;
 
-exp: exp CMP_1 exp          { $$ = make_comp($2, $1, $3); }
-   | exp CMP_2 exp          { $$ = make_comp($2, $1, $3); }
+exp: comp          
    | exp ARITH_1 exp       { $$ = make_arith($2, $1, $3); }
    | exp ARITH_2 exp       { $$ = make_arith($2, $1, $3); }
    | '(' exp ')'          { $$ = $2; }
@@ -62,6 +65,12 @@ exp: exp CMP_1 exp          { $$ = make_comp($2, $1, $3); }
    | NAME '[' exp ']'     { $$ = get_array_index($1, $3); }
    | NAME '[' exp ']' '=' exp
                           { $$ = set_array_index($1, $3, $6); }
+   //| NAME '+''+'          { $$ = make_assign($1, make_arith("+", 
+   //                                                         make_symbol($1), 
+   //                                                         make_fixnum(1))); }
+   //| NAME '-''-'          { $$ = make_assign($1, make_arith("-", 
+   //                                                         make_symbol($1), 
+   //                                                         make_fixnum(1))); }
 ;
 
 explist:            { $$ = the_empty_list; }
