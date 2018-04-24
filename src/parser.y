@@ -13,7 +13,7 @@
 
 /* declare tokens */
 %token <d> NUMBER DOUBLE 
-%token <s> NAME ARITH_1 ARITH_2 CMP_1 CMP_2 FUNCT STR
+%token <s> NAME ARITH_1 ARITH_2 CMP_1 CMP_2 FUNCT STR INC
 %token EOL 
 
 %token IF THEN ELSE WHILE DO FUN FOR RETURN
@@ -65,12 +65,7 @@ exp: comp
    | NAME '[' exp ']'     { $$ = get_array_index($1, $3); }
    | NAME '[' exp ']' '=' exp
                           { $$ = set_array_index($1, $3, $6); }
-   //| NAME '+''+'          { $$ = make_assign($1, make_arith("+", 
-   //                                                         make_symbol($1), 
-   //                                                         make_fixnum(1))); }
-   //| NAME '-''-'          { $$ = make_assign($1, make_arith("-", 
-   //                                                         make_symbol($1), 
-   //                                                         make_fixnum(1))); }
+   | NAME INC             { $$ = make_increment($1, $2); }
 ;
 
 explist:            { $$ = the_empty_list; }

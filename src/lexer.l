@@ -23,6 +23,9 @@ EXP	([Ee][-+]?[0-9]+)
 "]"  |
 "["   { return yytext[0]; }
 
+"++"  { yylval.s = "+"; return INC; }
+"--"  { yylval.s = "-"; return INC; }
+
   /* arith ops */
 "+"   { yylval.s = "+"; return ARITH_1; }
 "-"   { yylval.s = "-"; return ARITH_1; }
