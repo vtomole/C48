@@ -1,19 +1,18 @@
-fun factorial(i){
-	if(i == 1){
-		return 1;
-	}
-	return i * factorial(i - 1);
-}
 
-
-fun square(i){
-	return i * i;
-}
 
 fun main(){
-	print(factorial(5));
-	//print(square(5));
+	6 < x;
+
+	6 + (8.6 - 7);
 }
 
-main();
+while(x > 0){
+	add();	
+	i = i + 1;
+	print("Hello World");
+}
 
+myList[] = [7, 8, 9];
+myList[6];
+
+myList[8] = 7 + 8;
