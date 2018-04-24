@@ -16,3 +16,14 @@ myList[] = [7, 8, 9];
 myList[6];
 
 myList[8] = 7 + 8;
+
+if(x > 0){
+	return 9;
+}
+
+if(x > 0){
+	return 9;
+}
+else{
+	return 10;
+}

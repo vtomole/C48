@@ -10,6 +10,9 @@
 
 
 
+object *make_if_stmt(object *cond, object *tl, object *el){
+  return cons(if_symbol, cons(cond, cons(tl, cons(el, the_empty_list))));
+}
 
 object *get_array_index(char *name, object *index){
   object *sym = make_symbol("nth");

@@ -33,9 +33,9 @@
 
 stmt: WHILE '(' exp ')'  '{' list '}'          { $$ = make_while_loop($3, $6); }    
    | exp ';'
-   //| IF '(' exp ')' '{' list '}'                   { $$ = newflow('I', $3, $6, NULL); }
-   //| IF '(' exp ')'  '{' list '}' ELSE '{'list '}'  { $$ = newflow('I', $3, $6, $10); }
-   //| IF '(' exp ')'  '{' list '}' ELSE stmt         { $$ = newflow('I', $3, $6, $9); }
+   | IF '(' exp ')' '{' list '}'                   { $$ = make_if_stmt($3, $6, the_empty_list); }
+   | IF '(' exp ')'  '{' list '}' ELSE '{'list '}'  { $$ = make_if_stmt($3, $6, $10); }
+   | IF '(' exp ')'  '{' list '}' ELSE stmt         { $$ = make_if_stmt($3, $6, $9); }
 ;
 
 list: /* nothing */ { $$ = the_empty_list; }
