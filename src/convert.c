@@ -26,9 +26,10 @@ object *set_array_index(char *name, object *index, object *expr){
 }
 
 object *make_define_array(char *name, object *list){
-  object *n = make_symbol(name);
-  list = cons(quote_symbol, cons(list, the_empty_list));
-  return cons(define_symbol, cons(n , list));
+  object *n = make_symbol(name);  
+  list = cons (quote_symbol, cons(list, the_empty_list));
+  list = cons(n, cons(list, the_empty_list));
+  return cons(define_symbol, list);
 }
 
 object *make_assign(char *name, object *expr){
