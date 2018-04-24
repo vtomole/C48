@@ -60,6 +60,12 @@ object *make_while_loop(object *cond, object *expr){
   return cons(w, cons(cond, cons(expr, the_empty_list)));
 }
 
+object *make_for_loop(object *assign, object *cond, object *inc, object *expr){
+  expr = cons(expr, cons(inc, the_empty_list));
+  object *w = make_while_loop(cond, expr);
+  return cons(assign, cons(w, the_empty_list));
+}
+
 object *make_increment(char *name, char *op){
   object *n = make_symbol(name);
   object *num = make_fixnum(1);

@@ -31,11 +31,12 @@
 
 %%
 
-stmt: WHILE '(' comp ')'  '{' list '}'          { $$ = make_while_loop($3, $6); }    
-   | exp ';'
-   | IF '(' comp ')' '{' list '}'                   { $$ = make_if_stmt($3, $6, the_empty_list); }
+stmt: WHILE '(' comp ')'  '{' list '}'    { $$ = make_while_loop($3, $6); }    
+   | IF '(' comp ')' '{' list '}'         { $$ = make_if_stmt($3, $6, the_empty_list); }
    | IF '(' comp ')'  '{' list '}' ELSE '{'list '}'  { $$ = make_if_stmt($3, $6, $10); }
    | IF '(' comp ')'  '{' list '}' ELSE stmt         { $$ = make_if_stmt($3, $6, $9); }
+   | FOR '(' exp ';' comp ';' exp ')' '{' list '}'   { $$ = make_for_loop($3, $5, $7, $10); }
+   | exp ';'
 ;
 
 list: /* nothing */ { $$ = the_empty_list; }
