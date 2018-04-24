@@ -17,20 +17,6 @@ int count_objects(object* cursor){
   return c;
 }
 
-/**Allocation
-*This struct is used for our garbage collector to maintain a list of allocated blocks of memory
-* Fields:
-*-pair, the cons_Cell we are allocation memory to
-*-mark, 1 if marked 0 if not marked, initialzed to 1
-*-next, a pointer to the next place we allocated memory to
-*/
-struct Allocation {
-	
-         struct cons_cell pair;
-	int mark : 1;
-	struct Allocation *next;
-};
-
 /*list used for the garbage collector*/
 struct Allocation *global_allocations = NULL;
 
@@ -52,29 +38,6 @@ object* alloc_object(){
   return obj;
 
 }
-
-/*global variables*/
-object *the_empty_list;
-object *false;
-object *true;
-object *symbol_table;
-object *quote_symbol;
-object *define_symbol;
-object *set_symbol;
-object *ok_symbol;
-object *if_symbol;
-object *lambda_symbol;
-object *begin_symbol;
-object *cond_symbol;
-object *else_symbol;
-object *let_symbol;
-object *the_empty_environment;
-object *the_global_environment;
-
-/*function delcarations*/
-object *cons(object *car, object *cdr);
-object *car(object *pair);
-object *cdr(object *pair);
 
 //Boolean Functions
 char is_the_empty_list(object *obj) { return obj == the_empty_list; }
@@ -228,35 +191,6 @@ object *car(object *pair) { return pair->cons_cell.car; }
 object *cdr(object *pair) { return pair->cons_cell.cdr; }
 void set_car(object *obj, object* value) { obj->cons_cell.car = value; }
 void set_cdr(object *obj, object* value) {obj->cons_cell.cdr = value; }
-
-#define caar(obj)   car(car(obj))
-#define cadr(obj)   car(cdr(obj))
-#define cdar(obj)   cdr(car(obj))
-#define cddr(obj)   cdr(cdr(obj))
-#define caaar(obj)  car(car(car(obj)))
-#define caadr(obj)  car(car(cdr(obj)))
-#define cadar(obj)  car(cdr(car(obj)))
-#define caddr(obj)  car(cdr(cdr(obj)))
-#define cdaar(obj)  cdr(car(car(obj)))
-#define cdadr(obj)  cdr(car(cdr(obj)))
-#define cddar(obj)  cdr(cdr(car(obj)))
-#define cdddr(obj)  cdr(cdr(cdr(obj)))
-#define caaaar(obj) car(car(car(car(obj))))
-#define caaadr(obj) car(car(car(cdr(obj))))
-#define caadar(obj) car(car(cdr(car(obj))))
-#define caaddr(obj) car(car(cdr(cdr(obj))))
-#define cadaar(obj) car(cdr(car(car(obj))))
-#define cadadr(obj) car(cdr(car(cdr(obj))))
-#define caddar(obj) car(cdr(cdr(car(obj))))
-#define cadddr(obj) car(cdr(cdr(cdr(obj))))
-#define cdaaar(obj) cdr(car(car(car(obj))))
-#define cdaadr(obj) cdr(car(car(cdr(obj))))
-#define cdadar(obj) cdr(car(cdr(car(obj))))
-#define cdaddr(obj) cdr(car(cdr(cdr(obj))))
-#define cddaar(obj) cdr(cdr(car(car(obj))))
-#define cddadr(obj) cdr(cdr(car(cdr(obj))))
-#define cdddar(obj) cdr(cdr(cdr(car(obj))))
-#define cddddr(obj) cdr(cdr(cdr(cdr(obj))))
 
 /**char_to_enum()
  * this function is used determine the enumuration of the sent in char pointer
