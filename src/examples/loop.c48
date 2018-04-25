@@ -1,3 +1,13 @@
-for (i = 0; i < 100; i++){
-    print(i);
-}	
+#scm ./examples/loop
+
+
+fun fn (){
+    print("Hello World");
+    }
+
+
+ floop (0, 5, fn);
+
+
+
+
