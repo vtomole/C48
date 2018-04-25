@@ -7,10 +7,11 @@ fun bubblesort(arr, i){
 	else{
 		arr = bubbleswap(arr, 0, 1, i);
 		arr = bubblesort(arr, i - 1);
+		return arr;
 	}
 }
 
-fun bubbleswqp(arr, i, j, n){
+fun bubbleswap(arr, i, j, n){
 	if(j >= n){
 		return arr;
 	}
@@ -18,15 +19,27 @@ fun bubbleswqp(arr, i, j, n){
 		temp = arr[i];
 		arr[i] = arr[j];
 		arr[j] = arr[i];
+		arr = bubbleswap(arr, i + 1, j + 1, n);
+		return arr;
+	}
+	else {
+		arr = bubbleswap(arr, i + 1, j + 1, n);
+		return arr;
 	}
 	
-	bubbleswap(arr, i + 1, j + 1, n);
+	
+}
+
+fun getfirst(arr){
+	print(arr[0]);
 }
 
 fun main(){
 	arr[] = [5, 3, 1, 4, 2, 8, 6];
 	size = 7;
-	bubblesort(arr, size);
+	//getfirst(arr);
+	arr = bubblesort(arr, size);
+	print(arr);
 }
 
 main();
