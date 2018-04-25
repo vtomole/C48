@@ -1,0 +1,24 @@
+input[] = [2, 4];
+
+fun that(j){
+	print("hello");
+	print(j);
+}
+
+fun countDown(c){
+	c--;
+	c;
+}
+
+fun loop2(x, y, inc, funct, input){
+	if(x == y){
+		1;
+	}else{
+		c = countList(input);
+		funct(c);
+		x = inc(x);
+		loop2( x, y, inc, funct, input);
+	}
+}
+
+loop2(10, 0, countDown, that, input);
