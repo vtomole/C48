@@ -37,6 +37,11 @@ stmt: WHILE '(' comp ')'  '{' list '}'    { $$ = make_while_loop($3, $6); }
    | IF '(' comp ')'  '{' list '}' ELSE stmt         { $$ = make_if_elseif_stmt($3, $6, $9); }
    | FOR '(' NUMBER ';' NUMBER ')' '{' list '}'   { $$ = make_for_loop($3, $5, $8); }
    | exp ';'
+   | FUN NAME '(' symlist ')' '{' list '}' 
+	  {
+	    $$ = make_define_func($2, $4, $7);
+	    
+	  }
 ;
 
 list: /* nothing */ { $$ = the_empty_list; }
@@ -92,15 +97,7 @@ calclist: /* nothing */
 	    gc();
     }
             
-  | calclist FUN NAME '(' symlist ')' '{' list '}' 
-    //{ dodef($3, $5, $8); printf("Defined %s\n> ", $3->name); }
-	  {
-	    struct object *function = make_define_func($3, $5, $8);
-	    print(function);
-	    printf("\n");
-	    print(eval(function, the_global_environment));
-		  gc();
-	  }
+  
   
   | calclist error EOL { yyerrok; }
  ;
