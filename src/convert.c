@@ -83,7 +83,7 @@ object *make_define_array(char *name, object *list){
   return cons(define_symbol, list);
 }
 
-/** make_define_array()
+/** make_assign()
  * Makes a 'assign expression to varable' object
  * Parameters:
  * -name, the name of the variable
