@@ -17,9 +17,7 @@ void load_file_scm(char* fileName){
   while (!feof(fp)) {
     exp = read(fp);
     eval(exp, the_global_environment);
-    printf("Hi");  
   }
-  printf("Nope\n");
 
   fclose(fp);
 }
