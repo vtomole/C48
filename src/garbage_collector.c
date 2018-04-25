@@ -1,4 +1,5 @@
 //#include "./environment.c"
+#include <stddef.h>
 
 /**
 * gc_mark is the function we use to mark when and where we have called malloc

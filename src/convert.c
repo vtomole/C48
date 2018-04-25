@@ -9,6 +9,7 @@
 #include "eval-apply.c"
 #include "print.c"
 #include "read.c"
+#include "garbage_collector.c"
 
 void load_file_scm(char* fileName){
   FILE  *fp = fopen(fileName, "r");
