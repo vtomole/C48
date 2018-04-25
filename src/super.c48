@@ -1,0 +1,4 @@
+#c48 examples/array
+#c48 examples/hello
+
+print("high");

@@ -1,0 +1,3 @@
+(define (fib n) (print n) (cond ((< n 2) (begin n)) (else (+ (fib (- n 1)) (fib (- n 2))))))
+ok(define (main) (print (fib 10)))
+ok

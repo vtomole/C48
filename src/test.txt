@@ -1,3 +1,4 @@
+//#scm ./examples/loop
 
 /*
 fun main(){
@@ -21,21 +22,15 @@ if(x > 0){
 	return 9;
 }*/
 
-i = 0;
-x = 0;
-i++;
-
-if(x > 10){
-	h = 0;
-	return 9;
-}else if(x > 20){
-	j = 0;
-}else{
-	k = 0;
+fun loop2(x, y){
+	print(x);
+	if(x == y){
+		1;
+	}else{
+		loop2( x + 1 , y);
+	}
 }
 
-for(i = 0; i < 100; i++){
-	print("Hello World");
-}
+loop2(1, 10);
 
 

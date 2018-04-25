@@ -183,14 +183,10 @@ object *make_while_loop(object *cond, object *expr){
  * Returns:
  * The object of 'for loop'
  */
-object *make_for_loop(object *assign, object *cond, object *inc, object *expr){
-	object* temp = expr;
-	while(temp->cons_cell.cdr != the_empty_list){  
-		temp = cdr(temp);
-	}
-  temp->cons_cell.cdr = cons(inc, the_empty_list);
-  object *w = make_while_loop(cond, expr);
-  return cons(assign, w);
+object *make_for_loop(double from, double to, object *expr){
+  object *f = make_fixnum(from);
+  object *t = make_fixnum(to);
+  return cons(make_symbol("for-loop"), cons(f, cons(t, expr)));
 }
 
 
