@@ -1,11 +1,13 @@
 fun factorial(i){
    if(i == 1) {
-      return 1;
+	  1;
+   }else{
+      i * factorial(i - 1);
    }
-   return i * factorial(i - 1);
 }
 
 fun main() { 
-   i = 5;
-   print (factorial(i));
+   print(factorial(5));
 }
+
+main();
