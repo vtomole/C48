@@ -61,11 +61,14 @@ EXP	([Ee][-+]?[0-9]+)
 "log"   { yylval.s = "log";   return FUNCT; }
 "print" { yylval.s = "print"; return FUNCT; }
 "return" { return RETURN; }
+"#scm" { return ISCM; }
+"#c48" { return IC48; }
 
 
  /* names */
-"\""[a-zA-Z0-9 '?;:,.<>{}!@#$%^&*()]*"\""  { yylval.s = strdup(yytext); return STR; }
+\"[a-zA-Z0-9 '?;:,.<>{}!@#$%^&*()]*\"  { yylval.s = strdup(yytext); return STR; }
 [a-zA-Z][a-zA-Z0-9]*  { yylval.s = strdup(yytext); return NAME; }
+[a-zA-Z/.][a-zA-Z0-9/_]*  { yylval.s = strdup(yytext); return FILENAME; }
 [0-9]+                { yylval.d = atof(yytext); return NUMBER; }
 [0-9]+"."[0-9]*{EXP}? |
 "."?[0-9]+{EXP}? { yylval.d = atof(yytext); return DOUBLE; }

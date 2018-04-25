@@ -65,7 +65,7 @@ void print(object *obj) {
             break;
         case STRING:
             str = obj->string;
-            putchar('"');
+            //putchar('"');
             while (*str != '\0') {
                 switch (*str) {
                     case '\n':
@@ -74,15 +74,15 @@ void print(object *obj) {
                     case '\\':
                         printf("\\\\");
                         break;
-                    case '"':
-                        printf("\\\"");
-                        break;
+                    //case '"':
+                       // printf("\\\"");
+                       // break;
                     default:
                         putchar(*str);
                 }
                 str++;
             }
-            putchar('"');
+            //putchar('"');
             break;
         case PAIR:
             printf("(");

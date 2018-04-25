@@ -13,7 +13,7 @@ int open_file(const char *name){
   file = fopen(cpy, "r");
   if(!file){
     fprintf(stderr, "File does not exist.");
-    return 0;
+    exit(0);
   }
   yyset_in(file);
   return 1;

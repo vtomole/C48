@@ -13,10 +13,10 @@
 
 /* declare tokens */
 %token <d> NUMBER DOUBLE 
-%token <s> NAME ARITH_1 ARITH_2 CMP_1 CMP_2 FUNCT STR INC
+%token <s> NAME ARITH_1 ARITH_2 CMP_1 CMP_2 FUNCT STR INC FILENAME
 %token EOL 
 
-%token IF THEN ELSE WHILE DO FUN FOR RETURN
+%token IF THEN ELSE WHILE DO FUN FOR RETURN ISCM IC48
 
 %nonassoc CMP_1
 %right CMP_2
@@ -60,7 +60,7 @@ exp: comp
    | FUNCT '(' explist ')'{ $$ = cons(make_symbol($1), $3); }
    | '|' exp              { $$ = cons(make_symbol("|"), $2); }
    | RETURN exp           { $$ = $2; }
-   | STR                  { $$ = make_symbol($1); }
+   | STR                  { $$ = make_string($1); }
    | NAME '['']' '=' '[' explist ']'
                           { $$ = make_define_array($1, $6); }
    | NAME '[' exp ']'     { $$ = get_array_index($1, $3); }
@@ -75,18 +75,20 @@ explist:            { $$ = the_empty_list; }
 ;
 
 symlist:            { $$ = the_empty_list; }
- | NAME             { $$ = make_symbol($1); }
+ | NAME             { $$ = cons(make_symbol($1), the_empty_list); }
  | NAME ',' symlist { $$ = cons(make_symbol($1), $3); }
 ;
 
 calclist: /* nothing */
   | calclist EOL
+  | calclist ISCM FILENAME { include_scm($3); }
+  | calclist IC48 FILENAME { include_c48($3); }
   | calclist stmt
     //{ if(debug) dumpast($2, 0); printf("= %4.4g\n> ", eval_ast($2)); treefree($2); }
     {
       print($2);
       printf("\n");
-      eval($2, the_global_environment);
+      print(eval($2, the_global_environment));
     }
             
   | calclist FUN NAME '(' symlist ')' '{' list '}' 
@@ -95,7 +97,7 @@ calclist: /* nothing */
 	    struct object *function = make_define_func($3, $5, $8);
 	    print(function);
 	    printf("\n");
-	    eval(function, the_global_environment);
+	    print(eval(function, the_global_environment));
 	  }
   
   | calclist error EOL { yyerrok; }

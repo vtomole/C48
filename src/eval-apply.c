@@ -19,7 +19,7 @@ object *make_lambda(object *parameters, object *body);
  */
 int self_evaluatingp(object *exp) {
     return booleanp(exp) || numberp(exp) || characterp(exp) || floatp(exp) ||
-           is_string(exp);
+           is_string(exp) || exp == the_empty_list;
 }
 
 char variablep(object *expression) { return is_symbol(expression); }
@@ -87,9 +87,9 @@ object *make_if(object *predicate, object *consequent,
                 object *alternative) {
     object *end = the_empty_list;
     if(alternative->obj_type != EMPTY_LIST){
-      end = cons(alternative, the_empty_list);
+    	end = cons(alternative, the_empty_list);
     }
-	printf("built if statement\n");
+	//printf("built if statement\n");
     return cons(if_symbol,
                 cons(predicate,
                      cons(consequent,
@@ -299,8 +299,8 @@ tailcall:
             exit(1);
         }
         
-    }
-    else {
+    }else {
+	print(exp);
         fprintf(stderr, "cannot eval unknown expression type\n");
         exit(1);
     }

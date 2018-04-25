@@ -44,20 +44,33 @@ int main(int argc, char **argv){
   print(eval(temp_list, the_global_environment));
   print(temp_list);*/
 
-  fp = fopen(argv[1], "r");
+fp = fopen("./examples/array.scm", "r");
+ 
   object *exp;
-
-  
 
   while ((exp = read(fp)) != NULL) {
     //print(exp);
     //print(eval(typecheck(exp, the_global_environment), the_global_environment));
     //print(typecheck(exp, the_global_environment));
-    eval(exp, the_global_environment);
+    print(eval(exp, the_global_environment));
     //printf("\n");
     }
 
   fclose(fp);
+
+
+   fp = fopen(argv[1], "r");
+
+  while ((exp = read(fp)) != NULL) {
+    //print(exp);
+    //print(eval(typecheck(exp, the_global_environment), the_global_environment));
+    //print(typecheck(exp, the_global_environment));
+    print(eval(exp, the_global_environment));
+    //printf("\n");
+    }
+
+  fclose(fp);
+
 
   //object *obj = cons(make_symbol("+"), cons(make_fixnum(4), cons(make_fixnum(5), the_empty_list)));
   //print(obj);

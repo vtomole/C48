@@ -6,7 +6,6 @@
 #include "expression.h"
 #include "read_file.c"
 
-
 void yyerror(char *s, ...){
   va_list ap;
   va_start(ap, s);

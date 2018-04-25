@@ -3,14 +3,49 @@
 #include <stdarg.h>
 #include <string.h>
 #include <math.h>
+#include <ctype.h>
 
 #include "environment.c"
 #include "eval-apply.c"
 #include "print.c"
+#include "read.c"
 
+void load_file_scm(char* fileName){
+  FILE  *fp = fopen(fileName, "r");
+  object *exp;
 
+  while (!feof(fp)) {
+    exp = read(fp);
+    eval(exp, the_global_environment);
+    printf("Hi");  
+  }
+  printf("Nope\n");
+
+  fclose(fp);
+}
+
+void include_scm(char *fileName){
+  char *ex = ".scm";
+  int len = strlen(fileName) + strlen(ex);
+  char *f = (char*)malloc(sizeof(char) * len);
+  sprintf(f, "%s%s", fileName, ex);
+  load_file_scm(f);
+  free(f);
+}
+
+void include_c48(char *fileName){
+  char *ex = ".c48";
+  int len = strlen(fileName) + strlen(ex);
+  char *f = (char*)malloc(sizeof(char) * len);
+  sprintf(f, "%s%s", fileName, ex);
+  open_file(f);
+  //yyrestart();
+  free(f);
+}
 
 object *make_if_stmt(object *cond, object *tl, object *el){
+	if(el == the_empty_list)
+		el = cons(el, the_empty_list);
 	tl = cons(cond, cons(cons(begin_symbol, tl), the_empty_list));
 	el = cons(else_symbol, el);
 	return cons(cond_symbol, cons(tl, cons(el, the_empty_list)));
