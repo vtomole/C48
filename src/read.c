@@ -1,16 +1,39 @@
 /***************************** READ ******************************/
 
+/** is_delimiter()
+ * Checks of the character is a delimiter
+ * Parameters:
+ * -c, the ascii value of the character
+ * Returns:
+ * char, 1 if its a space, \n, (, ), ", or ;
+ *       0 if neither
+ */
 char is_delimiter(int c) {
     return isspace(c) || c == EOF ||
            c == '('   || c == ')' ||
            c == '"'   || c == ';';
 }
 
+/** is_initial()
+ * Checks of the character is an initial
+ * Parameters:
+ * -c, the ascii value of the character
+ * Returns:
+ * char, 1 if its a alpha, *, /, >, <, =, ?, or !
+ *       0 if neither
+ */
 char is_initial(int c) {
     return isalpha(c) || c == '*' || c == '/' || c == '>' ||
              c == '<' || c == '=' || c == '?' || c == '!';
 }
 
+/** peek()
+ * checks for the next character
+ * Parameters:
+ * -in, pointer to opened file
+ * Returns:
+ * char, the next character
+ */
 int peek(FILE *in) {
     int c;
 
@@ -19,6 +42,11 @@ int peek(FILE *in) {
     return c;
 }
 
+/** eat_whitespace()
+ * Removes all the spaces from the file between text and delimeters
+ * Parameters:
+ * -in, pointer to opened file
+ */
 void eat_whitespace(FILE *in) {
     int c;
     
@@ -35,6 +63,12 @@ void eat_whitespace(FILE *in) {
     }
 }
 
+/** eat_expected_string()
+ * Removes expected string from the file
+ * Parameters:
+ * -in, pointer to opened file
+ * -str, string value
+ */
 void eat_expected_string(FILE *in, char *str) {
     int c;
 
@@ -47,6 +81,7 @@ void eat_expected_string(FILE *in, char *str) {
         str++;
     }
 }
+
 
 void peek_expected_delimiter(FILE *in) {
     if (!is_delimiter(peek(in))) {
