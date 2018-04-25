@@ -1,10 +1,10 @@
-(define (for-loop start stop fn)
+(define (floop start stop fn)
       (cond
         ((> start stop) (quote ()))
-        ((= start stop) (list(fn )))
-        (else (cons (fn ) (for-loop (+ start 1) stop fn))) 
+        ((= start stop) (list(fn start)))
+        (else (cons (fn start) (floop (+ start 1) stop fn))) 
        )
-      )
+     )
 
 
 
