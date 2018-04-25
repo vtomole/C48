@@ -19,6 +19,9 @@
  * The object of the if statement with else 
  */
 object *make_if_stmt(object *cond, object *tl, object *el){
+	if(el == the_empty_list){
+	  el = cons(the_empty_list, the_empty_list);
+	}
 	tl = cons(cond, cons(cons(begin_symbol, tl), the_empty_list));
 	el = cons(else_symbol, el);
 	return cons(cond_symbol, cons(tl, cons(el, the_empty_list)));
