@@ -1,7 +1,12 @@
-(define (loop-rec i limit)
-  (if (= i limit) #t
-      (begin (print i)
-	     (loop-rec (+ i 1) 100))))
+(define (for-loop start stop fn)
+      (cond
+        ((> start stop) (quote ()))
+        ((= start stop) (list(fn start)))
+        (else (cons (fn start) (for-loop (+ start 1) stop fn))) 
+       )
+      )
 
-(loop-rec 0 100)
+(define (fn a)
+        (print (* a a)))
 
+(for-loop 0 5 fn)
