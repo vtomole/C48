@@ -1,16 +1,39 @@
 /***************************** READ ******************************/
 
+/** is_delimiter()
+ * Checks of the character is a delimiter
+ * Parameters:
+ * -c, the ascii value of the character
+ * Returns:
+ * char, 1 if its a space, \n, (, ), ", or ;
+ *       0 if neither
+ */
 char is_delimiter(int c) {
     return isspace(c) || c == EOF ||
            c == '('   || c == ')' ||
            c == '"'   || c == ';';
 }
 
+/** is_initial()
+ * Checks of the character is an initial
+ * Parameters:
+ * -c, the ascii value of the character
+ * Returns:
+ * char, 1 if its a alpha, *, /, >, <, =, ?, or !
+ *       0 if neither
+ */
 char is_initial(int c) {
     return isalpha(c) || c == '*' || c == '/' || c == '>' ||
              c == '<' || c == '=' || c == '?' || c == '!';
 }
 
+/** peek()
+ * checks for the next character
+ * Parameters:
+ * -in, pointer to opened file
+ * Returns:
+ * char, the next character
+ */
 int peek(FILE *in) {
     int c;
 
@@ -19,6 +42,11 @@ int peek(FILE *in) {
     return c;
 }
 
+/** eat_whitespace()
+ * Removes all the spaces from the file between text and delimeters
+ * Parameters:
+ * -in, pointer to opened file
+ */
 void eat_whitespace(FILE *in) {
     int c;
     
@@ -35,6 +63,12 @@ void eat_whitespace(FILE *in) {
     }
 }
 
+/** eat_expected_string()
+ * Removes expected string from the file
+ * Parameters:
+ * -in, pointer to opened file
+ * -str, string value
+ */
 void eat_expected_string(FILE *in, char *str) {
     int c;
 
@@ -48,13 +82,25 @@ void eat_expected_string(FILE *in, char *str) {
     }
 }
 
+/**peek_expected_delimiter()
+ *This function checks for a delimiters in the expected locations of the file 
+ *through calls to peek, if they aren't there the code exits for improper delimiters
+ *Parameters:
+ *-in, the file we are reading from
+ */
 void peek_expected_delimiter(FILE *in) {
     if (!is_delimiter(peek(in))) {
         fprintf(stderr, "character not followed by delimiter\n");
         exit(1);
     }
 }
-
+/** read_character()
+ *This function reads through the file and makes each character that is in the file
+ *Parameters:
+ *-in, the file we are reading from
+ * Returns:
+ *-an list of objects representing the characters in the file in the order they were read in.
+ */
 object *read_character(FILE *in) {
     int c;
 
@@ -84,6 +130,13 @@ object *read_character(FILE *in) {
 
 object *read(FILE *in);
 
+/**read_pair()
+ *This function reads through the file and makes pairs from each correct pair in the file
+ *Parameters:
+ *-in, the file we are reading from
+ * Returns:
+ *-an list of objects representing the pairs in the file in the order they were read in.
+ */
 object *read_pair(FILE *in) {
     int c;
     object *car_obj;
@@ -125,6 +178,13 @@ object *read_pair(FILE *in) {
     }
 }
 
+/**read()
+ *This function reads through the file and generates the preliminary code tree.
+ *Parameters:
+ *-in, the file we are reading from
+ * Returns:
+ *-an list of objects representing the pairs in the file in the order they were read in.
+ */
 object *read(FILE *in) {
     int c;
     short sign = 1;
