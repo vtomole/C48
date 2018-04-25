@@ -5,9 +5,6 @@
 #include <math.h>
 #include "expression.h"
 
-<<<<<<< HEAD
-=======
-
 /** open_file()
  * Opens the code file for the lexer and parser
  * to convert to s-expressions
@@ -39,7 +36,6 @@ int open_file(const char *name){
  * Parameters:
  * -s, list of string to print error message 
  */
->>>>>>> 4380cb5b167995bd8be7bf74395b10ddbe8d5268
 void yyerror(char *s, ...){
   va_list ap;
   va_start(ap, s);
