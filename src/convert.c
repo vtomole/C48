@@ -11,15 +11,15 @@
 
 
 object *make_if_stmt(object *cond, object *tl, object *el){
-	tl = cons(cond, cons(begin_symbol, tl));
+	tl = cons(cond, cons(cons(begin_symbol, tl), the_empty_list));
 	el = cons(else_symbol, el);
 	return cons(cond_symbol, cons(tl, cons(el, the_empty_list)));
 }
 
 object *make_if_elseif_stmt(object *cond, object *tl, object *stmt){
-	tl = cons(cond, cons(begin_symbol, tl));
+	tl = cons(cond, cons(cons(begin_symbol, tl), the_empty_list));
 	stmt = cdr(stmt);
-	return cons(cond_symbol, cons(tl, cons(stmt, the_empty_list)));
+	return cons(cond_symbol, cons(tl, stmt));
 }
 
 object *get_array_index(char *name, object *index){
