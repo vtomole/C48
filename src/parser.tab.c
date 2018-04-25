@@ -462,7 +462,7 @@ static const yytype_uint8 yyrline[] =
       46,    47,    50,    51,    52,    53,    54,    55,    56,    57,
       58,    59,    60,    61,    62,    63,    64,    66,    67,    69,
       72,    73,    74,    77,    78,    79,    82,    83,    84,    85,
-      86,    94,   103
+      86,    95,   105
 };
 #endif
 
@@ -1511,29 +1511,31 @@ yyreduce:
       print((yyvsp[0].obj));
       printf("\n");
       print(eval((yyvsp[0].obj), the_global_environment));
+	    gc();
     }
-#line 1516 "parser.tab.c" /* yacc.c:1646  */
+#line 1517 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 96 "parser.y" /* yacc.c:1646  */
+#line 97 "parser.y" /* yacc.c:1646  */
     {
 	    struct object *function = make_define_func((yyvsp[-6].s), (yyvsp[-4].obj), (yyvsp[-1].obj));
 	    print(function);
 	    printf("\n");
 	    print(eval(function, the_global_environment));
+		  gc();
 	  }
-#line 1527 "parser.tab.c" /* yacc.c:1646  */
+#line 1529 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 103 "parser.y" /* yacc.c:1646  */
+#line 105 "parser.y" /* yacc.c:1646  */
     { yyerrok; }
-#line 1533 "parser.tab.c" /* yacc.c:1646  */
+#line 1535 "parser.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1537 "parser.tab.c" /* yacc.c:1646  */
+#line 1539 "parser.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1761,5 +1763,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 105 "parser.y" /* yacc.c:1906  */
+#line 107 "parser.y" /* yacc.c:1906  */
 

@@ -83,6 +83,7 @@ object *symbol_table;
 object *quote_symbol;
 object *define_symbol;
 object *set_symbol;
+object *setcar_symbol;
 object *ok_symbol;
 object *if_symbol;
 object *lambda_symbol;

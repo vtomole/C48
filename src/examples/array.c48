@@ -2,7 +2,11 @@
 
 fun array(){
 	a[] = [56, 45, 89, 128];
+	print(a);
+	a[1] = 2;
 	print(a[1]);
+	print(a);
+print(a[1]);
 }
 
 array();

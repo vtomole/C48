@@ -89,6 +89,25 @@ object *get_array_index(char *name, object *index){
   return cons(sym, cons(index, cons(n, the_empty_list)));
 }
 
+object *get_nth_cdr(char *name, object *index){
+  object *sym = make_symbol("nthcdr");
+  object *n = make_symbol(name);
+  return cons(sym, cons(index, cons(n, the_empty_list)));
+}
+
+/** make_assign()
+ * Makes a 'assign expression to varable' object
+ * Parameters:
+ * -name, the name of the variable
+ * -expr, expression to assign
+ * Returns:
+ * The object of 'assign expression to varable'
+ */
+object *make_assign(char *name, object *expr){
+  object *n = make_symbol(name);
+  return cons(define_symbol, cons(n, cons(expr, the_empty_list)));
+}
+
 /** set_array_index()
  * Makes a 'set array element at index to expression' object
  * Parameters:
@@ -99,8 +118,9 @@ object *get_array_index(char *name, object *index){
  * The object of 'a set array element at index to expression'
  */
 object *set_array_index(char *name, object *index, object *expr){
-  object *i = get_array_index(name, index);
-  return cons(define_symbol, cons(i, cons(expr, the_empty_list)));
+  object *i = get_nth_cdr(name, index);
+  //object *def = make_assign(get_array_index(name, index), make_fixnum(0));
+  return cons(setcar_symbol, cons(i, cons(expr, the_empty_list)));
 }
 
 /** make_define_array()
@@ -116,19 +136,6 @@ object *make_define_array(char *name, object *list){
   list = cons (quote_symbol, cons(list, the_empty_list));
   list = cons(n, cons(list, the_empty_list));
   return cons(define_symbol, list);
-}
-
-/** make_assign()
- * Makes a 'assign expression to varable' object
- * Parameters:
- * -name, the name of the variable
- * -expr, expression to assign
- * Returns:
- * The object of 'assign expression to varable'
- */
-object *make_assign(char *name, object *expr){
-  object *n = make_symbol(name);
-  return cons(define_symbol, cons(n, cons(expr, the_empty_list)));
 }
 
 /** make_arith()

@@ -1338,6 +1338,7 @@ void init(void) {
     quote_symbol = make_symbol("quote");
     define_symbol = make_symbol("define");
     set_symbol = make_symbol("set!");
+    setcar_symbol = make_symbol("set-car!");
     ok_symbol = make_symbol("ok");
     if_symbol = make_symbol("if");
     lambda_symbol = make_symbol("lambda");

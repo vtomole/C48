@@ -15,10 +15,10 @@ fun bubbleswap(arr, i, j, n){
 	if(j >= n){
 		return arr;
 	}
-	else if(arr[i] < arr[j]){
+	else if(arr[i] > arr[j]){
 		temp = arr[i];
 		arr[i] = arr[j];
-		arr[j] = arr[i];
+		arr[j] = temp;
 		arr = bubbleswap(arr, i + 1, j + 1, n);
 		return arr;
 	}
@@ -39,6 +39,7 @@ fun main(){
 	size = 7;
 	//getfirst(arr);
 	arr = bubblesort(arr, size);
+	print(" ");
 	print(arr);
 }
 

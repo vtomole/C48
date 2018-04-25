@@ -66,7 +66,7 @@ EXP	([Ee][-+]?[0-9]+)
 
 
  /* names */
-\"[a-zA-Z0-9 '?;:,.<>{}!@#$%^&*()]*\"  { yylval.s = strdup(yytext); return STR; }
+\".[^/"]*\"  { yylval.s = strdup(yytext); return STR; }
 [a-zA-Z][a-zA-Z0-9]*  { yylval.s = strdup(yytext); return NAME; }
 [a-zA-Z/.][a-zA-Z0-9/_]*  { yylval.s = strdup(yytext); return FILENAME; }
 [0-9]+                { yylval.d = atof(yytext); return NUMBER; }
