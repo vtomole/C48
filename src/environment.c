@@ -577,13 +577,13 @@ object *cdr_proc(object *arguments) {return cdar(arguments);}
  */
 object *set_car_proc(object *arguments) {
     set_car(car(arguments), cadr(arguments));
-    printf("In set car proc");
+    //printf("In set car proc");
     return ok_symbol;
 }
 
 object *set_cdr_proc(object *arguments) {
     set_cdr(car(arguments), cadr(arguments));
-    printf("IN set cdr proc");
+    //printf("IN set cdr proc");
     return ok_symbol;
 }
 /**greater_than_proc()

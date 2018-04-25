@@ -39,7 +39,6 @@ fun main(){
 	size = 7;
 	//getfirst(arr);
 	arr = bubblesort(arr, size);
-	print(" ");
 	print(arr);
 }
 

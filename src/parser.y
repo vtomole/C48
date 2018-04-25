@@ -91,9 +91,9 @@ calclist: /* nothing */
   | calclist stmt
     //{ if(debug) dumpast($2, 0); printf("= %4.4g\n> ", eval_ast($2)); treefree($2); }
     {
-      print($2);
-      printf("\n");
-      print(eval($2, the_global_environment));
+      //print($2);
+      //printf("\n");
+      eval($2, the_global_environment);
 	    gc();
     }
             

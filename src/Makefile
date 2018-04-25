@@ -7,7 +7,7 @@
 # programs in chapter 3
 
 
-test:	lexer.l parser.y expression.h expression.c
+c48:	lexer.l parser.y expression.h expression.c
 	bison -d parser.y && \
 	flex -olexer.lex.c lexer.l && \
 	cc -g -o $@ parser.tab.c lexer.lex.c expression.c -lm
