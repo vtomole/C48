@@ -1,36 +1,57 @@
 //#scm ./examples/loop
 
+
 /*
+fun add(x , y, z){
+	return x + y + z;
+}
+
 fun main(){
-	6 < x;
+	x = 1;
+	y = 2;
+	z = 3;
+	a = add(x, y, z);
+	print(a);
 
-	6 + (8.6 - 7);
 }
+main();
+*/
 
-while(x > 0){
-	add();	
-	i = i + 1 - 8;
-	print("Hello World");
-}
-
-myList[] = [7, 8, 9];
-myList[6];
-
-myList[8] = 7 + 8;
-
-if(x > 0){
-	return 9;
-}*/
-
-fun loop2(x, y){
-	print(x);
-	if(x == y){
-		1;
-	}else{
-		loop2( x + 1 , y);
+fun forloop(i, n, c, inc){
+	fun loop(i, n, c, inc){
+		if(c(i, n)){
+			print(i);
+			i = inc(i);
+			print(i);
+			loop(i, n, c, inc);
+		}
+		else {
+			print(i);
+		}
 	}
+	
+	loop(i, n, c, inc);
+	
 }
 
-loop2(1, 10);
+fun inc(i){
+	i++;
+	return i;
+}
+
+fun condition(i, n){
+	return i < n;
+}
+
+
+
+fun hello(){
+	print("Hello world");
+}
+
+
+i = 0;
+forloop(i, 100, condition, inc);
+
 
 
