@@ -6,7 +6,12 @@
 #include "expression.h"
 #include "read_file.c"
 
-
+/** yyerror()
+ * Prints error message and 
+ * what line the code has a syntax error
+ * Parameters:
+ * -s, list of string to print error message 
+ */
 void yyerror(char *s, ...){
   va_list ap;
   va_start(ap, s);
@@ -15,6 +20,7 @@ void yyerror(char *s, ...){
   vfprintf(stderr, s, ap);
   fprintf(stderr, "\n");
 }
+
 
 int main (int argc, char **argv){
   init(); 
