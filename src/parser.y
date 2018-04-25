@@ -31,10 +31,10 @@
 
 %%
 
-stmt: WHILE '(' comp ')'  '{' list '}'    { $$ = make_while_loop($3, $6); }    
-   | IF '(' comp ')' '{' list '}'         { $$ = make_if_stmt($3, $6, the_empty_list); }
-   | IF '(' comp ')'  '{' list '}' ELSE '{'list '}'  { $$ = make_if_stmt($3, $6, $10); }
-   | IF '(' comp ')'  '{' list '}' ELSE stmt         { $$ = make_if_elseif_stmt($3, $6, $9); }
+stmt: WHILE '(' exp ')'  '{' list '}'    { $$ = make_while_loop($3, $6); }    
+   | IF '(' exp ')' '{' list '}'         { $$ = make_if_stmt($3, $6, the_empty_list); }
+   | IF '(' exp ')'  '{' list '}' ELSE '{'list '}'  { $$ = make_if_stmt($3, $6, $10); }
+   | IF '(' exp ')'  '{' list '}' ELSE stmt         { $$ = make_if_elseif_stmt($3, $6, $9); }
    | FOR '(' NUMBER ';' NUMBER ')' '{' list '}'   { $$ = make_for_loop($3, $5, $8); }
    | exp ';'
    | FUN NAME '(' symlist ')' '{' list '}' 
