@@ -89,6 +89,7 @@ calclist: /* nothing */
       print($2);
       printf("\n");
       print(eval($2, the_global_environment));
+	  gc();
     }
             
   | calclist FUN NAME '(' symlist ')' '{' list '}' 
@@ -98,6 +99,7 @@ calclist: /* nothing */
 	    print(function);
 	    printf("\n");
 	    print(eval(function, the_global_environment));
+		gc();
 	  }
   
   | calclist error EOL { yyerrok; }
