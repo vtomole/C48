@@ -86,7 +86,7 @@ calclist: /* nothing */
     {
       print($2);
       printf("\n");
-      //eval($2, the_global_environment);
+      eval($2, the_global_environment);
     }
             
   | calclist FUN NAME '(' symlist ')' '{' list '}' 

@@ -12,13 +12,11 @@
 
 object *make_if_stmt(object *cond, object *tl, object *el){
   object *exp;
-  if(el == the_empty_list){
-    exp = cons(if_symbol, cons(cond, cons(car(tl), cons(el, the_empty_list))));
-  }
-  else{
-    exp = cons(if_symbol, cons(cond, cons(car(tl), cons(car(el), the_empty_list))));
-  }    
-    return exp;
+	tl = cons(begin_symbol, tl);
+	el = cons(begin_symbol, el);
+	exp = cons(if_symbol, cons(cond, cons(tl, cons(el, the_empty_list))));
+	//exp = cons(cond_symbol, cons(cond, cons(tl, 
+  return exp;
 }
 
 object *get_array_index(char *name, object *index){
@@ -61,9 +59,13 @@ object *make_while_loop(object *cond, object *expr){
 }
 
 object *make_for_loop(object *assign, object *cond, object *inc, object *expr){
-  expr = cons(expr, cons(inc, the_empty_list));
+	object* temp = expr;
+	while(temp->cons_cell.cdr != the_empty_list){  
+		temp = cdr(temp);
+	}
+  temp->cons_cell.cdr = cons(inc, the_empty_list);
   object *w = make_while_loop(cond, expr);
-  return cons(assign, cons(w, the_empty_list));
+  return cons(assign, w);
 }
 
 object *make_increment(char *name, char *op){

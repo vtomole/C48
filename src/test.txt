@@ -21,15 +21,17 @@ if(x > 0){
 	return 9;
 }
 */
-
+i = 0;
+x = 0;
 i++;
 
-if(x > 10 || x < 0 || x == 5){
+/*if(x > 10 || x < 0 || x == 5){
+	h = 0;
 	return 9;
 }
 else{
 	return 10;
-}
+}*/
 
 for(i = 0; i < 100; i++){
 	print("Hello World");

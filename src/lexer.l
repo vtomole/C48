@@ -38,7 +38,7 @@ EXP	([Ee][-+]?[0-9]+)
 ">"   { yylval.s = ">";   return CMP_1; }
 "<"   { yylval.s = "<";   return CMP_1; }
 "!="  { yylval.s = "!=";  return CMP_1; }
-"=="  { yylval.s = "==";  return CMP_1; } 
+"=="  { yylval.s = "=";  return CMP_1; } 
 ">="  { yylval.s = ">=";  return CMP_1; } 
 "<="  { yylval.s = "<=";  return CMP_1; }
 "||"  { yylval.s = "or";  return CMP_2; }
