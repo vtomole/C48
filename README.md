@@ -1,5 +1,5 @@
 # c48
-Contact: sdmay18-35@iastate.edu
+Contact: vtomole@iastate.edu
 
 # Getting started
 
@@ -22,9 +22,7 @@ print("Hello World");
 Now you can run this program through the interpreter to execute it
 
 ```
-$ make test
-
-$ ./test hello.c48
+$ ./c48 hello.c48
 ```
 
 You should see
@@ -102,18 +100,6 @@ if(a < 10){
 
 ```
 
-
-# Structures
-
-A structure is a type that allows a programmers to hold several data types of different kinds
-
-```
-struct node {
-   int value;
-   node next;
-} 
-
-```
 # Recursion
 
 Recursion is when a functions is defined in terms of itself. It is when a function calls itself. One recursive program is called the factorial. Here is the factorial in C48
@@ -135,65 +121,6 @@ fun main() {
 
 This should give you the factorial of 5, which is 120.
 
-# Examples
-
-## FizzBuzz
-What is is: A program that prints integers from 1 to 100
-- For multiples of 3, print Fizz instead of the number
-- For multiples of 5 print Buzz instead of the number
-- For multiples of 3 and 5 print FizzBuzz instead of the number
-
-```
-func main (){
-  for(i = 0; i < 100; i++){
-    if(i % 3 == 0){
-      print("Fizz");
-    }
-    else if (i % 5 == 0){
-      print("Buzz");
-    }
-    else if (i % 3 == 0 || i %5 == 0){
-      print("FizzBuzz");
-    }
-    else{
-      print(i);
-    }
-  }
-}
-
-```
-
-## QuickSort
-
-```
-fun quickSort(arr){
-  less = [];
-  pivotList = [];
-  more = [];
-  if(size(arr) <= 1){
-    return arr;
-  }
-  else{
-    pivot = arr[0];
-    for (i=0; i < size(arr); i++){
-      if (i < pivot){
-	less.append(i);
-      }
-      else if (i > pivot){
-	more.append(i);
-      }
-      else{
-	pivotList.append(i);
-      }
-      less = quickSort(less);
-      more = quickSort(more);
-      return less + pivotList + more;
-      }
-    }
-}
-
-```
 
 
 
-Reference: rosettacode.org/wiki/Category:Programming_Tasks
