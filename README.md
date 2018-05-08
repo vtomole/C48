@@ -33,54 +33,6 @@ $ Hello World
 
 Congratulations on running your first C48 program!
 
-# Syntax
-A c48 program is composed of tokens. A token can be a keyword, and identifier, a constant, a string, or a symbol.
-
---**Comments** are ignored by the intepreter. They can start as // or /* */.
-
---**Identifiers** is a name used to indetify a variable, function, or anything else a user has defined. These are case sensitive
-
-```
-square x ascv hello 
-
-```
-
-
---**Keywords** are reserved so that you cannot uses them as a constant or any other identifiers
-
-```
-case fun struct 
-else if switch
-for return
-
-```
-
-
-# Data types
---**Booleans** are either ```True``` or ```False```
-
---**Numbers** can be integers(```1``` and ```2```)
-
---**Characters** are a single byte of an integer type. ```A```
-
---**Strings** are sequences of Unicode characters. ```"Hello World"```
-
---**Lists** are a linear collections of elements. ```(1, 2, 3, 4, 5)```
-
---**Arrays** Can store a collection of elements that can be identified by the index. ```int balance[5] = {1, 2.0, 3, 4, 5};```
-
---**Functions** are procedures that return values. ```int add (int x, int y) { return x + y}; ```
-
-# Loops
-
-Loops are for executing a block of code several times. The following loop prints "Hello C48" 10 times in a row.
-
-```
-for(i = 0; i < 10; i++){
-  print("Hello C48");
- }		   
-
-```
 
 # Conditionals
 
