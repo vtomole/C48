@@ -19,62 +19,22 @@ int main(int argc, char **argv){
   FILE  *fp, *fp1, *fp2;
   /* USES S EXPRESSIONS */
   init();
-  /*fp1 = fopen("hello.c48", "r");
-  fgets (str, 10000, fp1);
-  res = prefix(str);
-  fclose(fp1);
-  fp2 = fopen("hello.sexpr", "w");
-  fprintf(fp2, "%s", res);
-  fclose(fp2);
-  fp = fopen("hello.sexpr", "r");
-  while (1) {
-    printf("repl> ");
-    print(eval(typecheck(read(stdin), the_global_environment), the_global_environment));
-    
-    }*/
+  
 
-  /*object *temp_list = the_empty_list;
-  object *add =  make_symbol("*");
-  object *num1 = make_float(1.1);
-  object *num2 = make_float(3);
-  temp_list = cons(num2, temp_list);
-  temp_list = cons(num1, temp_list);
-  temp_list = cons(add, temp_list);
-  //print(eval(typecheck(temp_list, the_global_environment),the_global_environment));
-  print(eval(temp_list, the_global_environment));
-  print(temp_list);*/
-
-fp = fopen("./examples/array.scm", "r");
+  fp = fopen(argv[1], "r");
  
   object *exp;
 
-  while ((exp = read(fp)) != NULL) {
+  while (!feof(fp)) {
     //print(exp);
     //print(eval(typecheck(exp, the_global_environment), the_global_environment));
     //print(typecheck(exp, the_global_environment));
+    exp = read(fp);
     print(eval(exp, the_global_environment));
     //printf("\n");
     }
 
   fclose(fp);
-
-
-   fp = fopen(argv[1], "r");
-
-  while ((exp = read(fp)) != NULL) {
-    //print(exp);
-    //print(eval(typecheck(exp, the_global_environment), the_global_environment));
-    //print(typecheck(exp, the_global_environment));
-    print(eval(exp, the_global_environment));
-    //printf("\n");
-    }
-
-  fclose(fp);
-
-
-  //object *obj = cons(make_symbol("+"), cons(make_fixnum(4), cons(make_fixnum(5), the_empty_list)));
-  //print(obj);
-
   
   return 0;
 }//end of main>
