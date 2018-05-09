@@ -4,12 +4,15 @@
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
-
+//#include "expression.h"
+//#include "expression.c"
 #include "environment.c"
 #include "eval-apply.c"
+//#include "typechecker.c"
 #include "print.c"
 #include "read.c"
 #include "garbage_collector.c"
+
 
 void load_file_scm(char* fileName){
   FILE  *fp = fopen(fileName, "r");

@@ -47,7 +47,15 @@ void yyerror(char *s, ...){
 
 
 int main (int argc, char **argv){
-  init(); 
+init();
+ 
+if(strcmp(argv[1],"-repl") == 0){
+  
+  load_file_scm(argv[2]); 
+  
+  return 0;
+ }
+  
   if(argc > 1){
     open_file(argv[1]);
   }
